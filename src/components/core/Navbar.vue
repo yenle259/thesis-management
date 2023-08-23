@@ -5,7 +5,7 @@
         <img src="../../assets/cit.png" width="50" class="rounded-full" alt="logo">
         <a href="/" class="indent-4 font-semibold">
           <!-- COLLAGE OF INFORMATION AND COMMUNICATION TECHNOLOGY -->
-          HỆ THỐNG QUẢN LÝ
+          HỆ THỐNG QUẢN LÝ ĐỀ TÀI
         </a>
         <div class="flex grow justify-center main-txt text-md">
           <a href="/home" class="mx-8 hover:text-blue-500">GIỚI THIỆU</a>
@@ -14,9 +14,9 @@
           <a href="#" class="me-8 hover:text-blue-500">BẢNG TIN</a>
         </div>
         <div class="gap-2">
-          <v-btn variant="plain" icon="mdi-search-web"></v-btn>
-          <v-btn class="me-2" variant="plain" icon="mdi-bell-outline"></v-btn>
-          <v-btn variant="tonal" rounded="xl" href="/login" color="blue"> Đăng nhập </v-btn>
+          <v-btn variant="plain" icon="mdi-magnify"></v-btn>
+          <!-- <v-btn class="me-2" variant="plain" icon="mdi-bell-outline"></v-btn> -->
+          <v-btn variant="flat" rounded="xl" href="/login" color=""> Đăng nhập </v-btn>
         </div>
       </v-row>
     </v-card-title>
