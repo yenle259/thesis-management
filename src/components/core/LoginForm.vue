@@ -17,9 +17,11 @@
           v-model="model.password"
           :readonly="loading"
           :rules="[required]"
-          clearable
           label="Mật khẩu"
           prepend-inner-icon="mdi-key-outline"
+          :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show ? 'text' : 'password'"
+          @click:append-inner="show = !show"
         ></v-text-field>
 
         <v-btn
@@ -40,6 +42,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+const show = ref(false);
 const form = ref();
 const onSubmit = ref();
 const loading = ref();

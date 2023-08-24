@@ -50,11 +50,6 @@
         </div>
       </v-row>
       <hr class="bg-white-500" />
-      <v-row class="px-2 text-white">
-        <p class="flex flex-grow">2023 Shoppin Inc.</p>
-        <p class="font-light pr-8">Privacy Policy</p>
-        <p class="font-light">Cookies</p>
-      </v-row>
     </v-col>
   </div>
 </template>
