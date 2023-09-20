@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-card class="mx-auto px-6 py-8 hover:shadow-md">
-      <v-form v-model="form" @submit.prevent="onSubmit">
-        <p class="text-center font-bold text-xl pb-4 text-blue-500">ĐĂNG NHẬP</p>
+      <v-form v-model="form">
+        <p class="text-center font-bold text-xl pb-4 text-blue-500">
+          ĐĂNG NHẬP
+        </p>
         <v-text-field
           v-model="model.studentId"
-          :readonly="loading"
-          :rules="[required]"
+          :required="true"
+          :rules="rules.studentId"
           class="mb-2"
           clearable
           label="Mã số sinh viên"
@@ -16,7 +18,7 @@
         <v-text-field
           v-model="model.password"
           :readonly="loading"
-          :rules="[required]"
+          :rules="rules.password"
           label="Mật khẩu"
           prepend-inner-icon="mdi-key-outline"
           :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
@@ -31,6 +33,7 @@
           color="primary"
           type="submit"
           variant="elevated"
+          :onclick="handleSubmit"
         >
           ĐĂNG NHẬP
         </v-btn>
@@ -40,21 +43,56 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
+import { BASE_API } from "../../../constant";
 import { ref } from "vue";
 
 const show = ref(false);
 const form = ref();
-const onSubmit = ref();
-const loading = ref();
-const required = ref();
+const loading = ref(false);
+
 const model = ref({
   studentId: "",
   password: "",
 });
-</script>
 
-<style scoped>
-.bg-basil {
-  background-color: #fffbe6 !important;
-}
-</style>
+const rules = ref({
+  studentId: [
+    (value: any) => {
+      if (value?.length == 0) return "Student ID is required";
+      if (value?.length == 8) return true;
+      return "Student ID must be have 8 characters.";
+    },
+  ],
+  password: [
+    (value: any) => {
+      if (value?.length == 0) return "Password is required";
+      if (value?.length >= 8) return true;
+      return "Password must be more than 8 characters.";
+    },
+  ],
+});
+
+const handleSubmit = (e: Event) => {
+  e.preventDefault();
+
+  axios({
+    method: "post",
+    url: BASE_API + `/auth/signup`,
+    data: {
+      studentId: model.value.studentId,
+      password: model.value.password,
+    },
+  })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      if (error.response) {
+        console.log(error.response.data);
+      }
+    });
+
+  console.log(model.value);
+};
+</script>

@@ -9,14 +9,32 @@
           <LoginForm />
         </div>
         <div class="col-span-2">
-          <InformationUpdate/>
+          <InformationUpdate />
         </div>
       </div>
     </div>
     <div>
-      <Footer/>
+      <Footer />
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import axios from "axios";
+import { ref } from "vue";
+
+import { BASE_API } from "../../constant";
+const users = ref();
+
+axios
+  .get(BASE_API + `/user`)
+  .then((res) => {
+    users.value = res.data;
+    // console.log(users.value)
+  })
+  .catch(function (error: any) {
+    console.log(error);
+  });
+
+
+</script>

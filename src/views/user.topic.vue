@@ -9,7 +9,7 @@
           <UserProfile />
         </div>
         <div class="col-span-3">
-          <UserInfo />
+          <TopicList />
         </div>
       </div>
     </div>

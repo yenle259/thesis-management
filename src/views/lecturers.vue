@@ -3,18 +3,15 @@
     <div class="bg-blue-800 px-20 text-white">
       <Navbar />
     </div>
-    <div class="px-20 pt-8 bg-sky-50">
+    <div class="px-20 py-8 bg-sky-50">
       <div class="grid grid-cols-4 ">
         <div>
           <UserProfile />
         </div>
         <div class="col-span-3">
-          <UserInfo />
+          <UserLecturerList />
         </div>
       </div>
-    </div>
-    <div>
-      <Footer />
     </div>
   </div>
 </template>
