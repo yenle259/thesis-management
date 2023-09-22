@@ -9,6 +9,7 @@
           v-model="model.studentId"
           :required="true"
           :rules="rules.studentId"
+          :error-messages="errorMessage.studentId"
           class="mb-2"
           clearable
           label="Mã số sinh viên"
@@ -19,6 +20,7 @@
           v-model="model.password"
           :readonly="loading"
           :rules="rules.password"
+          :error-messages="errorMessage.password"
           label="Mật khẩu"
           prepend-inner-icon="mdi-key-outline"
           :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
@@ -45,11 +47,16 @@
 <script setup lang="ts">
 import axios from "axios";
 import { BASE_API } from "../../../constant";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const show = ref(false);
 const form = ref();
 const loading = ref(false);
+
+const errorMessage = ref({
+  studentId: "",
+  password: "",
+});
 
 const model = ref({
   studentId: "",
@@ -73,12 +80,27 @@ const rules = ref({
   ],
 });
 
+watch(
+  () => model.value.studentId,
+  () => {
+    errorMessage.value.studentId = "";
+  }
+);
+
+watch(
+  () => model.value.password,
+  () => {
+    errorMessage.value.password = "";
+  }
+);
+
 const handleSubmit = (e: Event) => {
   e.preventDefault();
 
   axios({
     method: "post",
-    url: BASE_API + `/auth/signup`,
+    url: BASE_API + `/auth/login`,
+    withCredentials: true,
     data: {
       studentId: model.value.studentId,
       password: model.value.password,
@@ -89,10 +111,14 @@ const handleSubmit = (e: Event) => {
     })
     .catch(function (error) {
       if (error.response) {
-        console.log(error.response.data);
+        const { errors } = error.response.data;
+        if (errors.studentId) {
+          errorMessage.value.studentId = errors.studentId;
+        }
+        if (errors.password) {
+          errorMessage.value.password = errors.password;
+        }
       }
     });
-
-  console.log(model.value);
 };
 </script>
