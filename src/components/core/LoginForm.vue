@@ -48,6 +48,7 @@
 import axios from "axios";
 import { BASE_API } from "../../../constant";
 import { ref, watch } from "vue";
+import router from "@/router";
 
 const show = ref(false);
 const form = ref();
@@ -108,6 +109,7 @@ const handleSubmit = (e: Event) => {
   })
     .then(function (response) {
       console.log(response);
+      router.push("/user");
     })
     .catch(function (error) {
       if (error.response) {
