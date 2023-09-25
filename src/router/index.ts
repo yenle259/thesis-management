@@ -1,4 +1,5 @@
 // Composables
+import { useAuthStore } from "@/store/useAuthStore";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -15,6 +16,11 @@ const routes = [
         path: "/login",
         name: "Login",
         component: () => import("@/views/login.vue"),
+      },
+      {
+        path: "/signup",
+        name: "Sign Up",
+        component: () => import("@/views/signup.vue"),
       },
 
       {
@@ -49,6 +55,12 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from) => {
+  const auth = useAuthStore();
+  console.log(auth.$state);
+  // return false;
 });
 
 export default router;
