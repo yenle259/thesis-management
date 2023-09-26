@@ -8,8 +8,8 @@ export const useAuthStore = defineStore(
     const user = ref<UserDetails>();
     const token = ref<string>();
     return { user, token };
+  },
+  {
+    persist: true,
   }
-  // {
-  //   persist: true,
-  // },
 );

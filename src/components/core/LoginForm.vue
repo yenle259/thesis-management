@@ -49,10 +49,15 @@ import axios from "axios";
 import { BASE_API } from "../../../constant";
 import { ref, watch } from "vue";
 import router from "@/router";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const show = ref(false);
 const form = ref();
 const loading = ref(false);
+
+const authStore = useAuthStore();
+const { user, token } = storeToRefs(authStore);
 
 const errorMessage = ref({
   studentId: "",
@@ -107,8 +112,10 @@ const handleSubmit = (e: Event) => {
       password: model.value.password,
     },
   })
-    .then(function (response) {
-      console.log(response);
+    .then(function (res) {
+      user.value = res.data.user;
+      token.value = res.data.access_token;
+
       router.push("/user");
     })
     .catch(function (error) {
