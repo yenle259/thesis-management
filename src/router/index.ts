@@ -1,5 +1,7 @@
 // Composables
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { useAuthStore } from "@/store/useAuthStore";
+import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -32,6 +34,7 @@ const routes = [
         path: "/user",
         name: "User Profile",
         component: () => import("@/views/user.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "/lecturers",
@@ -59,8 +62,16 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const auth = useAuthStore();
-  console.log(auth.$state);
-  // return false;
+  const { user, token } = storeToRefs(auth);
+
+  if (to.meta.requiresAuth && (user.value?.role !== UserRoleEnum.Student)) {
+    return {
+      path: "/login",
+      // save the location we were at to come back later
+      query: { redirect: to.fullPath },
+    };
+  }
+  console.log(user.value);
 });
 
 export default router;
