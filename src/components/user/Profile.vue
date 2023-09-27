@@ -5,13 +5,13 @@
         <div class="mx-auto">
           <div class="text-center">
             <v-avatar color="teal" size="50">
-              <span class="text-h5">{{ user.initials }}</span>
+              <span class="text-h5">{{ user?.email.charAt(0).toLocaleUpperCase() }}</span>
             </v-avatar>
             <h3 class="pt-3 font-medium text-blue-700 text-lg">
-              {{ user.fullName }}
+              {{ user?.name }}
             </h3>
             <p class="text-caption mt-1 mb-3">
-              {{ user.email }}
+              {{ user?.email }}
             </p>
           </div>
           <!-- <v-btn rounded variant="outlined" size="small"> ĐĂNG XUẤT </v-btn> -->
@@ -47,13 +47,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useAuthStore } from "@/store/useAuthStore";
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-const user = ref({
-  initials: "YL",
-  fullName: "Le Bui Hong Yen",
-  email: "yenb1910335@student.ctu.edu.vn",
-});
+const auth = useAuthStore();
+const { user } = storeToRefs(auth);
 
 const topics = ref([
   ["DANH SÁCH GIẢNG VIÊN", "mdi-account-multiple-outline", "/lecturers"],

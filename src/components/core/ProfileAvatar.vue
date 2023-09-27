@@ -34,7 +34,7 @@
                 {{ user?.name }}
               </h3>
               <p class="text-caption">
-                {{ user?.email + "@student.ctu.edu.vn" }}
+                {{ user?.email }}
               </p>
             </v-list>
 
@@ -64,7 +64,6 @@ import axios from "axios";
 import { useAuthStore } from "@/store/useAuthStore";
 import { BASE_API } from "../../constant";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
 
 const auth = useAuthStore();
 const { user } = storeToRefs(auth);
@@ -75,9 +74,8 @@ const handleLogout = () => {
     withCredentials: true,
   })
     .then(function (res) {
-      //reset value of auth user
-      auth.$reset;
-      console.log('outttt')
+      //reset value of auth user and redirect user
+      auth.reset();
       router.push("/");
     })
     .catch(function (error) {
