@@ -7,7 +7,15 @@ export const useAuthStore = defineStore(
   () => {
     const user = ref<UserDetails>();
     const token = ref<string>();
-    return { user, token };
+
+    function reset() {
+      const newUser = ref<UserDetails>();
+      const newToken = ref<string>();
+      user.value = newUser.value;
+      token.value = newToken.value;
+    }
+
+    return { user, token, reset };
   },
   {
     persist: true,
