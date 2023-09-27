@@ -12,7 +12,7 @@
           :error-messages="errorMessage.studentId"
           class="mb-2"
           clearable
-          label="Mã số sinh viên"
+          label="Mã số định danh"
           prepend-inner-icon="mdi-account-outline"
         ></v-text-field>
 
@@ -72,7 +72,7 @@ const model = ref({
 const rules = ref({
   studentId: [
     (value: any) => {
-      if (value?.length == 0) return "Student ID is required";
+      if (value?.length == 0) return "Credential ID is required";
       return true;
     },
   ],
