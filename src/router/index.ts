@@ -64,7 +64,7 @@ router.beforeEach((to, from) => {
   const auth = useAuthStore();
   const { user, token } = storeToRefs(auth);
 
-  if (to.meta.requiresAuth && (user.value?.role !== UserRoleEnum.Student)) {
+  if (to.meta.requiresAuth && !user) {
     return {
       path: "/login",
       // save the location we were at to come back later

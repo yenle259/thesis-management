@@ -73,8 +73,7 @@ const rules = ref({
   studentId: [
     (value: any) => {
       if (value?.length == 0) return "Student ID is required";
-      if (value?.length == 8) return true;
-      return "Student ID must be have 8 characters.";
+      return true;
     },
   ],
   password: [
