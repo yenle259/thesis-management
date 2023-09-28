@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <v-card class="mx-auto px-6 py-8 hover:shadow-md">
+  <div class="w-full">
+    <v-card class="px-6 py-16 hover:shadow-md rounded-lg" variant="flat">
       <v-form v-model="form">
-        <p class="text-center font-bold text-xl pb-4 text-blue-500">
+        <p class="text-center font-bold text-2xl pb-4 text-blue-500">
           ĐĂNG NHẬP
         </p>
         <v-text-field
@@ -29,6 +29,7 @@
         ></v-text-field>
 
         <v-btn
+          class="mt-2"
           :disabled="!form"
           :loading="loading"
           block

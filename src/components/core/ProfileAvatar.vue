@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="text-center">
+    <div class="text-center ">
       <v-menu :close-on-content-click="false" location="end">
         <template v-slot:activator="{ props }">
           <v-btn
             color="teal"
-            size="50"
+            size="45"
             v-bind="props"
             icon="mdi-account"
             variant="flat"

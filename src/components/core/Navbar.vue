@@ -1,23 +1,17 @@
 <template>
-  <div class="py-2">
-    <v-card-title class="text-center justify-center py-6">
+  <div class="bg-indigo px-5 text-white fixed top-0 w-full shadow-md h-16">
+    <v-card-title class="text-center justify-center py-5">
       <v-row align="center" justify="start">
-        <img
+        <!-- <img
           src="../../assets/cit.png"
           width="50"
           class="rounded-full"
           alt="logo"
-        />
-        <a href="/" class="indent-4 font-semibold">
-          <!-- COLLAGE OF INFORMATION AND COMMUNICATION TECHNOLOGY -->
+        /> -->
+        <!-- <a href="/" class="indent-4 font-semibold">
           HỆ THỐNG QUẢN LÝ ĐỀ TÀI
-        </a>
-        <div class="flex grow justify-center main-txt text-md">
-          <a href="/home" class="mx-8 hover:text-blue-500">GIỚI THIỆU</a>
-          <a href="#" class="me-8 hover:text-blue-500">ĐÀO TẠO</a>
-          <a href="#" class="me-8 hover:text-blue-500">NGHIÊN CỨU</a>
-          <a href="#" class="me-8 hover:text-blue-500">BẢNG TIN</a>
-        </div>
+        </a> -->
+        <div class="flex grow justify-center main-txt text-md"></div>
         <div class="gap-2">
           <div v-if="user">
             <profile-avatar />

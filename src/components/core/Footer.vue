@@ -1,7 +1,7 @@
 <template>
   <div class="bg-blue-800 p-12">
     <v-col class="grid gap-8">
-      <v-row class="px-4">
+      <!-- <v-row class="px-4">
         <p
           class="me-6 text-white"
           v-for="item in linkedList"
@@ -9,7 +9,7 @@
         >
           {{ item.name }}
         </p>
-      </v-row>
+      </v-row> -->
       <hr class="bg-white-500" />
       <v-row>
         <v-col class="grid gap-y-2">

@@ -1,22 +1,19 @@
 <template>
   <div>
-    <div class="bg-blue-800 px-20 text-white">
-      <Navbar />
-    </div>
-    <div class="px-20 pt-8 bg-sky-50">
-      <div class="grid grid-cols-3 gap-4">
-        <div>
-          <LoginForm />
-        </div>
-        <div class="col-span-2">
-          <InformationUpdate/>
-        </div>
+    <div class="home px-20 bg-sky-50 m-auto">
+      <div class="h-screen w-2/5 m-auto flex items-center">
+        <LoginForm />
       </div>
     </div>
     <div>
-      <Footer/>
+      <Footer />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup></script>
+<style scoped>
+.home {
+  background-image: url("../assets/ctu_bg.png");
+}
+</style>

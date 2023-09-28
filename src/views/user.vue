@@ -1,22 +1,11 @@
 <template>
+  <!-- <Sidebar/> -->
   <div>
-    <div class="bg-blue-800 px-20 text-white">
-      <Navbar />
-    </div>
-    <div class="px-20 pt-8 bg-sky-50">
-      <div class="grid grid-cols-4 ">
-        <div>
-          <UserProfile />
-        </div>
-        <div class="col-span-3">
-          <UserInfo />
-        </div>
-      </div>
-    </div>
-    <div>
-      <Footer />
-    </div>
+    <LecturerList/>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import LecturerList from '@/components/user/LecturerList.vue';
+
+</script>

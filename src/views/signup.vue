@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="bg-blue-800 px-20 text-white">
-      <Navbar />
-    </div>
     <div class="px-20 pt-8 bg-sky-50">
       <div class="w-2/5">
         <div>

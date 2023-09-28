@@ -17,7 +17,7 @@ const routes = [
       {
         path: "/login",
         name: "Login",
-        component: () => import("@/views/login.vue"),
+        component: { default: () => import("@/views/login.vue") },
       },
       {
         path: "/signup",
@@ -33,7 +33,11 @@ const routes = [
       {
         path: "/user",
         name: "User Profile",
-        component: () => import("@/views/user.vue"),
+        components: {
+          default: () => import("@/views/user.vue"),
+          Navbar: () => import("@/components/core/Navbar.vue"),
+          Sidebar: () => import("@/components/core/Sidebar.vue"),
+        },
         meta: { requiresAuth: true },
       },
       {
