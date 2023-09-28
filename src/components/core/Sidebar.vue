@@ -2,7 +2,7 @@
   <div>
     <v-layout>
       <v-navigation-drawer
-        class="bg-indigo"
+        class="bg-indigo font-bevn"
         v-model="drawer"
         :rail="rail"
         :permanent="true"
@@ -48,29 +48,12 @@
             href="/topic-list"
             >Danh sách đề tài</v-list-item
           >
-          <!-- <v-list-group value="Admin">
-            <template v-slot:activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                prepend-icon="mdi-account-supervisor-circle"
-                >Đăng ký đề tài</v-list-item
-              >
-            </template>
-
-            <v-list-item
-              v-for="([title, icon, href], i) in menuItems"
-              :key="i"
-              :title="title"
-              :prepend-icon="icon"
-              :value="title"
-              :href="href"
-            ></v-list-item>
-          </v-list-group> -->
         </v-list>
 
         <template v-slot:append>
           <div class="pa-2">
             <v-btn
+              class="text-red"
               append-icon="mdi-logout-variant"
               rounded="lg"
               variant="flat"
@@ -82,9 +65,7 @@
           </div>
         </template>
       </v-navigation-drawer>
-      <v-main class="h-screen">
-        <!-- <Navbar /> -->
-      </v-main>
+      <v-main class="h-screen"> </v-main>
     </v-layout>
   </div>
 </template>
@@ -93,7 +74,6 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import Navbar from "./Navbar.vue";
 import axios from "axios";
 import router from "@/router";
 import { BASE_API } from "../../constant";
@@ -112,7 +92,7 @@ const handleLogout = () => {
     .then(function (res) {
       //reset value of auth user and redirect user
       auth.reset();
-      router.push("/");
+      router.push("/login");
     })
     .catch(function (error) {
       if (error.response) {
@@ -126,5 +106,9 @@ const handleLogout = () => {
 .sidenav {
   background-color: #1e40af;
   color: white;
+}
+
+.font-bevn {
+  font-family: "Be Vietnam Pro";
 }
 </style>

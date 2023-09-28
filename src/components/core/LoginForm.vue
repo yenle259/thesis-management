@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full">
-    <v-card class="px-6 py-16 hover:shadow-md rounded-lg" variant="flat">
+  <div class="w-full font-bevn">
+    <v-card class="px-6 py-8 hover:shadow-md rounded-lg" variant="flat">
       <v-form v-model="form">
         <p class="text-center font-bold text-2xl pb-4 text-blue-500">
           ĐĂNG NHẬP
@@ -131,3 +131,9 @@ const handleSubmit = (e: Event) => {
     });
 };
 </script>
+
+<style scoped>
+.font-bevn {
+  font-family: "Be Vietnam Pro";
+}
+</style>

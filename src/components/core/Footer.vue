@@ -1,20 +1,10 @@
 <template>
-  <div class="bg-blue-800 p-12">
-    <v-col class="grid gap-8">
-      <!-- <v-row class="px-4">
-        <p
-          class="me-6 text-white"
-          v-for="item in linkedList"
-          :key="item.id"
-        >
-          {{ item.name }}
-        </p>
-      </v-row> -->
-      <hr class="bg-white-500" />
-      <v-row>
+  <div class="px-12 py-6 bg-blue-500 font-bevn">
+    <div class="grid grid-cols-5 gap-6 border-y-2 py-2">
+      <div class="col-span-3">
         <v-col class="grid gap-y-2">
           <v-avatar>
-            <v-img src="../../public/shop.png" alt="Logo"></v-img>
+            <v-img src="../../assets/cit.png" alt="Logo"></v-img>
           </v-avatar>
           <p class="font-sans text-xl italic font-bold text-white">
             Trường Công nghệ Thông tin & Truyền thông - Trường Đại học Cần Thơ
@@ -24,33 +14,20 @@
             Cần Thơ, Việt Nam
           </p>
         </v-col>
-        <div class="flex items-center">
-          <div class="flex flex-row justify-center">
-            <v-row>
-              <v-col>
-                <p
-                  v-for="item in firstList"
-                  :key="item.id"
-                  class="w-24 py-2 text-white font-light"
-                >
-                  {{ item.name }}
-                </p>
-              </v-col>
-              <v-col>
-                <p
-                  v-for="item in firstList"
-                  :key="item.id"
-                  class="w-64 py-2 text-white font-light"
-                >
-                  {{ item.content }}
-                </p>
-              </v-col>
-            </v-row>
+      </div>
+      <div class="col-span-2 pt-4">
+        <div
+          class="py-2 grid grid-cols-3 text-white font-light"
+          v-for="item in firstList"
+          :key="item.id"
+        >
+          <div class="font-bold">{{ item.name }}</div>
+          <div class="col-span-2">
+            {{ item.content }}
           </div>
         </div>
-      </v-row>
-      <hr class="bg-white-500" />
-    </v-col>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -100,5 +77,10 @@ linkedList.value = [
     id: 3,
   },
 ];
-
 </script>
+
+<style scoped>
+.font-bevn {
+  font-family: "Be Vietnam Pro", sans-serif;
+}
+</style>

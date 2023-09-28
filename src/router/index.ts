@@ -6,29 +6,29 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
+    path: "/login",
+    component: () => import("@/layouts/default/LoginLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Login",
+        component: () => import("@/views/login.vue"),
+      },
+    ],
+  },
+  {
     path: "/",
     component: () => import("@/layouts/default/Default.vue"),
     children: [
       {
         path: "",
         name: "Trang chủ",
-        component: () => import("@/views/home.vue"),
-      },
-      {
-        path: "/login",
-        name: "Login",
-        component: { default: () => import("@/views/login.vue") },
+        component: () => import("@/views/login.vue"),
       },
       {
         path: "/signup",
         name: "Sign Up",
         component: () => import("@/views/signup.vue"),
-      },
-
-      {
-        path: "/user-info",
-        name: "Topic",
-        component: () => import("@/views/user.topic.vue"),
       },
       {
         path: "/user",
@@ -43,7 +43,11 @@ const routes = [
       {
         path: "/lecturers",
         name: "Danh sách giảng viên",
-        component: () => import("@/views/lecturers.vue"),
+        components: {
+          default: () => import("@/views/lecturers.vue"),
+          Navbar: () => import("@/components/core/Navbar.vue"),
+          Sidebar: () => import("@/components/core/Sidebar.vue"),
+        },
       },
       {
         path: "/lecturers/:id",

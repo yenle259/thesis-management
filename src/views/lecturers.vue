@@ -1,16 +1,10 @@
 <template>
   <div>
-    <div class="px-20 py-8 bg-sky-50">
-      <div class="grid grid-cols-4 ">
-        <div>
-          <UserProfile />
-        </div>
-        <div class="col-span-3">
-          <UserLecturerList />
-        </div>
-      </div>
-    </div>
+    <LecturerList/>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import LecturerList from '@/components/user/LecturerList.vue';
+
+</script>
