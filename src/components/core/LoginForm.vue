@@ -47,11 +47,13 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { BASE_API } from "@/../constant";
 import { ref, watch } from "vue";
+import { BASE_API } from "@/../constant";
 import router from "@/router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const show = ref(false);
 const form = ref();
@@ -116,12 +118,7 @@ const handleSubmit = (e: Event) => {
       user.value = res.data.user;
       token.value = res.data.access_token;
 
-      // const notify = () => {
-      //   toast("Wow so easy !", {
-      //     autoClose: 1000,
-      //   }); // ToastOptions
-      // };
-
+      toast.success("Đăng nhập thành công", {});
       router.push("/user");
     })
     .catch(function (error) {

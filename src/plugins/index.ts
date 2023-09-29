@@ -22,5 +22,8 @@ export function registerPlugins(app: App) {
     .use(pinia)
     .use(Vue3Toastify, {
       autoClose: 2000,
+      transition: "slide",
+      hideProgressBar: true,
+      theme: "colored",
     } as ToastContainerOptions);
 }

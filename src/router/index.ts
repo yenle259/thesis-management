@@ -16,6 +16,17 @@ const routes = [
     ],
   },
   {
+    path: "/unauthorized",
+    component: () => import("@/layouts/default/LoginLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Unauthorized",
+        component: () => import("@/views/error.vue"),
+      },
+    ],
+  },
+  {
     path: "/",
     component: () => import("@/layouts/default/Default.vue"),
     children: [
@@ -28,6 +39,7 @@ const routes = [
         path: "/signup",
         name: "Sign Up",
         component: () => import("@/views/signup.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "/user",
@@ -47,16 +59,19 @@ const routes = [
           Navbar: () => import("@/components/core/Navbar.vue"),
           Sidebar: () => import("@/components/core/Sidebar.vue"),
         },
+        meta: { requiresAuth: true },
       },
       {
         path: "/lecturers/:id",
         name: "Thông tin giảng viên",
         component: () => import("@/views/lecturers.[id].vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "/topic-list",
         name: "Danh sách đề tài",
         component: () => import("@/views/user.topic.vue"),
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -71,14 +86,13 @@ router.beforeEach((to, from) => {
   const auth = useAuthStore();
   const { user } = storeToRefs(auth);
 
-  if (to.meta.requiresAuth && !user) {
+  if (to.meta.requiresAuth && !user.value) {
     return {
-      path: "/login",
+      path: "/unauthorized",
       // save the location we were at to come back later
       query: { redirect: to.fullPath },
     };
   }
-  console.log(user.value);
 });
 
 export default router;
