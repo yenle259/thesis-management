@@ -116,6 +116,12 @@ const handleSubmit = (e: Event) => {
       user.value = res.data.user;
       token.value = res.data.access_token;
 
+      // const notify = () => {
+      //   toast("Wow so easy !", {
+      //     autoClose: 1000,
+      //   }); // ToastOptions
+      // };
+
       router.push("/user");
     })
     .catch(function (error) {

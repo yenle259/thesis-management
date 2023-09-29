@@ -12,6 +12,13 @@
 </template>
 
 <script lang="ts" setup></script>
+<script lang="ts">
+export default {
+  beforeRouteEnter(to, from, next) {
+    next("login");
+  },
+};
+</script>
 <style scoped>
 .home {
   background-image: url("../assets/ctu_bg.png");

@@ -23,7 +23,7 @@ const routes = [
       {
         path: "",
         name: "Trang chủ",
-        component: () => import("@/views/login.vue"),
+        component: () => import("@/views/home.vue"),
       },
       {
         path: "/signup",

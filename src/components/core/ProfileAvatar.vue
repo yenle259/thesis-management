@@ -76,7 +76,7 @@ const handleLogout = () => {
     .then(function (res) {
       //reset value of auth user and redirect user
       auth.reset();
-      router.push("/");
+      router.push("/login");
     })
     .catch(function (error) {
       if (error.response) {
