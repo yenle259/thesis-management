@@ -47,11 +47,11 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { BASE_API } from "../../../constant";
+import { BASE_API } from "@/../constant";
 import { ref, watch } from "vue";
 import router from "@/router";
 import { storeToRefs } from "pinia";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const show = ref(false);
 const form = ref();

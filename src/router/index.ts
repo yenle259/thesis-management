@@ -1,6 +1,5 @@
 // Composables
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -70,7 +69,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const auth = useAuthStore();
-  const { user, token } = storeToRefs(auth);
+  const { user } = storeToRefs(auth);
 
   if (to.meta.requiresAuth && !user) {
     return {

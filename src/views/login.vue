@@ -6,7 +6,7 @@
           <v-card-title class="text-center justify-center py-6">
             <v-row align="center" justify="start">
               <img
-                src="../assets/cit.png"
+                src="@img/cit.png"
                 width="50"
                 class="rounded-full opacity-75"
                 alt="logo"
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 </script>
 
 <script lang="ts">
@@ -46,7 +46,7 @@ export default {
 </script>
 <style scoped>
 .home {
-  background-image: url("../assets/ctu_bg.png");
+  background-image: url("@img/ctu_bg.png");
 }
 
 .logo {

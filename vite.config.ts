@@ -1,16 +1,17 @@
+import path from "node:path";
+
 // Plugins
-import vue from "@vitejs/plugin-vue";
-import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+import vuetify from "vite-plugin-vuetify";
 import createAutoImportContext from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { Vuetify3Resolver } from "unplugin-vue-components/resolvers";
 import createVueRouterContext from "unplugin-vue-router/vite";
 import { VueRouterAutoImports } from "unplugin-vue-router";
+import Vue from "@vitejs/plugin-vue";
 
 // Utilities
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
-
 
 const VueRouter: any = createVueRouterContext({
   dts: "@types/typed-router.d.ts",
@@ -24,7 +25,7 @@ const AutoImport: any = createAutoImportContext({
     /\.md$/, // .md
   ],
   imports: ["vue", "pinia", VueRouterAutoImports],
-  dirs: ["src/apis", "src/utils",  "src/components"],
+  dirs: ["src/apis", "src/utils", "src/components", "src/stores"],
   dts: "@types/auto-imports.d.ts",
   eslintrc: { enabled: true },
   vueTemplate: true,
@@ -40,13 +41,15 @@ export default defineConfig(async ({ command, mode }) => {
   }
   return {
     plugins: [
-      vue({
-        template: { transformAssetUrls },
-      }),
+      // vue({
+      //   template: { transformAssetUrls },
+      // }),
+      Vue(),
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
       vuetify({
         autoImport: true,
       }),
+      VueRouter,
       AutoImport,
       Components({
         dirs: ["src/components", "src/components/**/*"],
@@ -60,6 +63,7 @@ export default defineConfig(async ({ command, mode }) => {
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
+        "@img": path.resolve(__dirname, "./src/assets/images"),
       },
       extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
     },

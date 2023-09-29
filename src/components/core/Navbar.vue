@@ -12,12 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "@/store/useAuthStore";
-import { storeToRefs } from "pinia";
 import ProfileAvatar from "./ProfileAvatar.vue";
-
-const auth = useAuthStore();
-const { user } = storeToRefs(auth);
 </script>
 
 <style scoped>

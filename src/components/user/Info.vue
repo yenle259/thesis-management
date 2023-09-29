@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
 
 const auth = useAuthStore();

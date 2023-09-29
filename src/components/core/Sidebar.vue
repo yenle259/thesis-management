@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import axios from "axios";

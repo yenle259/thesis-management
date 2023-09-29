@@ -4,7 +4,7 @@
       <div class="col-span-3">
         <v-col class="grid gap-y-2">
           <v-avatar>
-            <v-img src="../../assets/cit.png" alt="Logo"></v-img>
+            <v-img src="@img/cit.png" alt="Logo"></v-img>
           </v-avatar>
           <p class="font-sans text-xl italic font-bold text-white">
             Trường Công nghệ Thông tin & Truyền thông - Trường Đại học Cần Thơ

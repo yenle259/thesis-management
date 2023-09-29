@@ -61,7 +61,7 @@
 <script lang="ts" setup>
 import router from "@/router";
 import axios from "axios";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { BASE_API } from "../../constant";
 import { storeToRefs } from "pinia";
 
