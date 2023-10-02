@@ -1,31 +1,70 @@
 <template>
   <div class="px-6 pb-8">
     <v-card variant="flat" class="py-6 px-8">
-      <p class="font-bold text-2xl pb-4 text-blue-700">
-        DANH SÁCH ĐỀ TÀI
-      </p>
-      <div class="py-3" v-for="item in newsList" :key="item" href="#">
-        <a class="hover:text-blue-700" href="#">{{ item }}</a>
+      <p class="font-bold text-2xl pb-4 text-blue-700">DANH SÁCH ĐỀ TÀI</p>
+      <div class="py-3">
+        <v-table :hover="true">
+          <thead>
+            <tr>
+              <th class="text-left">Tên đề tài</th>
+              <th class="text-left">MSCB</th>
+              <th class="text-left">Chủ nhiệm</th>
+              <th class="text-left">Email</th>
+              <th class="text-left">Thực hiện</th>
+            </tr>
+          </thead>
+          <hr />
+          <tbody>
+            <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
+              <td>
+                <a :href="'/topic/' + topic.slug">
+                  {{ topic.name }}
+                </a>
+              </td>
+              <td>{{ topic.pi.userId }}</td>
+              <td>{{ topic.pi.name }}</td>
+              <td>{{ topic.pi.email }}</td>
+              <td>
+                <v-btn
+                  color="info"
+                  variant="tonal"
+                  class="ma-2"
+                  @click="notify"
+                >
+                  Đăng ký
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
       </div>
     </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
+import { BASE_API } from "@/constant";
+import axios from "axios";
 import { ref } from "vue";
+import { TopicDetails } from "@/apis/models/TopicDetails";
 
-const newsList = ref([
-  "1. Thông báo mở lại website kế hoạch học tập",
-  "3. Thông báo xóa lớp học phần HK1, năm học 2023-2024 (Đợt 1)",
-  "2. Thông báo xóa lớp học phần HK1, năm học 2023-2024 (Đợt 2)",
-  "4. Thông báo kế hoạch giảng dạy và đăng ký học phần HK1, 2023-2024",
-  "5. Thông báo đưa, đón SV K48 học thực hành GDQP đợt 2 (đợt cuối) học kỳ 3, năm học 2022-2023",
-  "6. Thông báo xóa lớp học phần HK3, năm học 2022-2023 (Đợt 1)",
-  "7. Thông báo đưa, đón SV K48 học thực hành GDQP đợt 1 học kỳ 3, năm học 2022-2023",
-  "8. Thông báo lịch học GDQP&AN khóa 48 học kỳ 3, năm học 2022-2023",
-  "9. Thông báo lịch học GDQP&AN khóa 48 học kỳ 3, năm học 2022-2023",
-  "10. Thông báo kế hoạch giảng dạy và đăng ký học phần HK3, 2022-2023",
-  "11. Thông báo đưa, đón SV K48 học thực hành GDQP đợt 5 (đợt cuối) học kỳ 2, năm học 2022-2023.",
-  "12. Thông báo đưa, đón SV K48 học thực hành GDQP đợt 4 học kỳ 2, năm học 2022-2023.",
-]);
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+
+const topics = ref<TopicDetails[]>();
+const notify = () => {
+  toast.success("Đăng ký thành công !", {}); // ToastOptions
+};
+
+axios({
+  url: BASE_API + `/topic`,
+  withCredentials: true,
+})
+  .then(function (res) {
+    console.log(res);
+    topics.value = res.data;
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 </script>

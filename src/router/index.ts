@@ -82,7 +82,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const auth = useAuthStore();
   const { user } = storeToRefs(auth);
 

@@ -6,10 +6,10 @@
           ĐĂNG NHẬP
         </p>
         <v-text-field
-          v-model="model.studentId"
+          v-model="model.userId"
           :required="true"
-          :rules="rules.studentId"
-          :error-messages="errorMessage.studentId"
+          :rules="rules.userId"
+          :error-messages="errorMessage.userId"
           class="mb-2"
           clearable
           label="Mã số định danh"
@@ -63,17 +63,17 @@ const authStore = useAuthStore();
 const { user, token } = storeToRefs(authStore);
 
 const errorMessage = ref({
-  studentId: "",
+  userId: "",
   password: "",
 });
 
 const model = ref({
-  studentId: "",
+  userId: "",
   password: "",
 });
 
 const rules = ref({
-  studentId: [
+  userId: [
     (value: any) => {
       if (value?.length == 0) return "Credential ID is required";
       return true;
@@ -89,9 +89,9 @@ const rules = ref({
 });
 
 watch(
-  () => model.value.studentId,
+  () => model.value.userId,
   () => {
-    errorMessage.value.studentId = "";
+    errorMessage.value.userId = "";
   }
 );
 
@@ -110,7 +110,7 @@ const handleSubmit = (e: Event) => {
     url: BASE_API + `/auth/login`,
     withCredentials: true,
     data: {
-      studentId: model.value.studentId,
+      userId: model.value.userId,
       password: model.value.password,
     },
   })
@@ -124,8 +124,8 @@ const handleSubmit = (e: Event) => {
     .catch(function (error) {
       if (error.response) {
         const { errors } = error.response.data;
-        if (errors.studentId) {
-          errorMessage.value.studentId = errors.studentId;
+        if (errors.userId) {
+          errorMessage.value.userId = errors.userId;
         }
         if (errors.password) {
           errorMessage.value.password = errors.password;

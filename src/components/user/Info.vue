@@ -4,17 +4,17 @@
       <p class="font-bold text-2xl pb-4 text-blue-700">THÔNG TIN CÁ NHÂN</p>
       <v-divider></v-divider>
       <div class="py-3 grid grid-cols-4 gap-4">
-        <div class="font-bold">Mã số sinh viên</div>
+        <div class="font-bold">Mã số định danh</div>
         <div class="col-span-3">
-          {{ user?.studentId.toLocaleUpperCase() }}
+          {{ props.user?.userId.toLocaleUpperCase() }}
         </div>
-        <div class="font-bold">Họ tên sinh viên</div>
+        <div class="font-bold">Họ tên</div>
         <div class="col-span-3">
-          {{ user?.name }}
+          {{ props.user?.name }}
         </div>
         <div class="font-bold">Email</div>
         <div class="col-span-3">
-          {{ user?.email }}
+          {{ props.user?.email }}
         </div>
       </div>
     </v-card>
@@ -22,9 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "@/stores/useAuthStore";
-import { storeToRefs } from "pinia";
+import { UserDetails } from "@/apis/models/UserDetails";
 
-const auth = useAuthStore();
-const { user } = storeToRefs(auth)
+const props = defineProps<{ user: UserDetails }>();
 </script>

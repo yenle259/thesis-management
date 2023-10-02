@@ -4,10 +4,10 @@
       <v-form v-model="form">
         <p class="text-center font-bold text-xl pb-4 text-blue-500">ĐĂNG KÝ</p>
         <v-text-field
-          v-model="model.studentId"
+          v-model="model.userId"
           :required="true"
-          :rules="rules.studentId"
-          :error-messages="errorMessage.studentId"
+          :rules="rules.userId"
+          :error-messages="errorMessage.userId"
           class="mb-2"
           clearable
           label="Mã số sinh viên"
@@ -64,20 +64,20 @@ const form = ref();
 const loading = ref(false);
 
 const errorMessage = ref({
-  studentId: "",
+  userId: "",
   name: "",
   password: "",
 });
 
 const model = ref({
-  studentId: "",
+  userId: "",
   name: "",
   email: "",
   password: "",
 });
 
 const rules = ref({
-  studentId: [
+  userId: [
     (value: any) => {
       if (value?.length == 0) return "Student ID is required";
       if (value?.length == 8) return true;
@@ -99,14 +99,14 @@ const rules = ref({
   ],
 });
 
-const handleEmail = (studentId: String, name: String) => {
-  return (name.split(" ")[name.split(" ").length - 1] + studentId).toLocaleLowerCase();
+const handleEmail = (userId: String, name: String) => {
+  return (name.split(" ")[name.split(" ").length - 1] + userId).toLocaleLowerCase();
 };
 
 watch(
-  () => model.value.studentId,
+  () => model.value.userId,
   () => {
-    errorMessage.value.studentId = "";
+    errorMessage.value.userId = "";
   }
 );
 
@@ -119,7 +119,7 @@ watch(
 
 const handleSubmit = (e: Event) => {
   e.preventDefault();
-  model.value.email = handleEmail(model.value.studentId, model.value.name);
+  model.value.email = handleEmail(model.value.userId, model.value.name);
   console.log(model.value.email);
 
   axios({
@@ -127,7 +127,7 @@ const handleSubmit = (e: Event) => {
     url: BASE_API + `/auth/signup`,
     withCredentials: true,
     data: {
-      studentId: model.value.studentId,
+      userId: model.value.userId,
       name: model.value.name,
       email: model.value.email,
       password: model.value.password,
@@ -140,8 +140,8 @@ const handleSubmit = (e: Event) => {
     .catch(function (error) {
       if (error.response) {
         const { errors } = error.response.data;
-        if (errors.studentId) {
-          errorMessage.value.studentId = errors.studentId;
+        if (errors.userId) {
+          errorMessage.value.userId = errors.userId;
         }
         if (errors.password) {
           errorMessage.value.password = errors.password;
