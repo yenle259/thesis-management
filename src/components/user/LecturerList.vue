@@ -12,10 +12,24 @@
               <th class="text-left">MSCB</th>
               <th class="text-left">SĐT</th>
               <th class="text-left">Email</th>
-              <th class="text-left">NLCS</th>
-              <th class="text-left">NL</th>
-              <th class="text-left">Tiểu luận</th>
-              <th class="text-left">Luận văn</th>
+              <th class="text-center">
+                NLCS
+                <v-tooltip activator="parent" location="top"
+                  >Niên luận cơ sở
+                </v-tooltip>
+              </th>
+              <th class="text-center">
+                NL<v-tooltip activator="parent" location="top"
+                  >Niên luận
+                </v-tooltip>
+              </th>
+              <th class="text-center">
+                Luận văn
+                <v-tooltip activator="parent" location="top"
+                  >Luận văn
+                </v-tooltip>
+              </th>
+              <th class="text-left">Thực hiện</th>
             </tr>
           </thead>
           <hr />
@@ -26,17 +40,24 @@
               :key="lecturer.userId"
             >
               <td>
-                <a :href="'/lecturers/' + lecturer.userId">
+                <a
+                  class="hover:text-blue-800"
+                  :href="'/lecturers/' + lecturer.userId"
+                >
                   {{ lecturer.name }}
                 </a>
               </td>
               <td>{{ lecturer.userId }}</td>
               <td>0706758958</td>
               <td>{{ lecturer.email }}</td>
-              <td>1</td>
-              <td>1</td>
-              <td>1</td>
-              <td>2</td>
+              <td class="text-center">1</td>
+              <td class="text-center">1</td>
+              <td class="text-center">2</td>
+              <td>
+                <v-btn color="info" variant="tonal" class="ma-2" size="small">
+                  Đăng ký
+                </v-btn>
+              </td>
             </tr>
           </tbody>
         </v-table>

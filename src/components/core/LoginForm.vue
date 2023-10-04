@@ -75,15 +75,15 @@ const model = ref({
 const rules = ref({
   userId: [
     (value: any) => {
-      if (value?.length == 0) return "Credential ID is required";
+      if (value?.length == 0) return "Nhập mã số định danh";
       return true;
     },
   ],
   password: [
     (value: any) => {
-      if (value?.length == 0) return "Password is required";
+      if (value?.length == 0) return "Nhập mật khẩu";
       if (value?.length >= 8) return true;
-      return "Password must be more than 8 characters.";
+      return "Mật khẩu phải dài hơn 8 kí tự";
     },
   ],
 });

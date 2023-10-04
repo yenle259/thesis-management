@@ -6,7 +6,7 @@
       <Sidebar />
       <Navbar />
     </div>
-    <div class="mt-16 ml-64 bg-sky-50 pt-4">
+    <div class="mt-16 py-8 ml-64 bg-sky-50 pt-4">
       <v-main>
         <router-view />
       </v-main>

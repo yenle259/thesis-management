@@ -78,6 +78,7 @@
     "watchPostEffect": true,
     "watchSyncEffect": true,
     "useUserLogin": true,
-    "useAuthStore": true
+    "useAuthStore": true,
+    "getTopicTypeColor": true
   }
 }

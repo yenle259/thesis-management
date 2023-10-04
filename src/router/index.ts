@@ -64,7 +64,21 @@ const routes = [
       {
         path: "/lecturers/:id",
         name: "Thông tin giảng viên",
-        component: () => import("@/views/lecturers.[id].vue"),
+        components: {
+          default: () => import("@/views/lecturers.[id].vue"),
+          Navbar: () => import("@/components/core/Navbar.vue"),
+          Sidebar: () => import("@/components/core/Sidebar.vue"),
+        },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/topics/:slug",
+        name: "Thông tin đề tài",
+        components: {
+          default: () => import("@/views/topics.[id].vue"),
+          Navbar: () => import("@/components/core/Navbar.vue"),
+          Sidebar: () => import("@/components/core/Sidebar.vue"),
+        },
         meta: { requiresAuth: true },
       },
       {

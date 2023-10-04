@@ -1,16 +1,17 @@
 <template>
-  <div class="h-screen">
+  <div>
     <!-- Lecturer Info on route -->
     <div v-if="lecturer">
-      <UserInfo :user="lecturer" />
+      <UserInfo :title="'THÔNG TIN GIẢNG VIÊN'" :user="lecturer" />
     </div>
     <div>
-      <TopicList />
+      <TopicList :topics="topics ?? []" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { TopicDetails } from "@/apis/models/TopicDetails";
 import { UserDetails } from "@/apis/models/UserDetails";
 import { BASE_API } from "@/constant";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -25,6 +26,7 @@ const auth = useAuthStore();
 const route = useRoute();
 const lecturerId = route.params.id;
 const lecturer = ref<UserDetails>();
+const topics = ref<TopicDetails[]>();
 
 axios({
   url: BASE_API + `/user/lecturers/${lecturerId}`,
@@ -34,8 +36,19 @@ axios({
   },
 })
   .then(function (res) {
-    console.log(res);
     lecturer.value = res.data;
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+axios({
+  url: BASE_API + `/topic/lecturer/${lecturerId}`,
+  withCredentials: true,
+})
+  .then(function (res) {
+    topics.value = res.data;
+    console.log(topics.value?.length);
   })
   .catch(function (error) {
     console.log(error);
