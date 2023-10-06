@@ -79,6 +79,8 @@
     "watchSyncEffect": true,
     "useUserLogin": true,
     "useAuthStore": true,
-    "getTopicTypeColor": true
+    "getTopicTypeColor": true,
+    "getTopicTypeName": true,
+    "getUserRoleName": true
   }
 }

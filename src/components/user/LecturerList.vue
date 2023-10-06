@@ -1,10 +1,27 @@
 <template>
   <div class="px-6 pb-8">
     <v-card variant="flat" class="py-6 px-8">
-      <p class="font-bold text-2xl pb-2 text-blue-700">DANH SÁCH GIẢNG VIÊN</p>
-      <p class="pb-4">Danh sách giảng viên hướng dẫn HKI (2022 - 2023)</p>
+      <div class="flex justify-between">
+        <div>
+          <p class="font-bold text-2xl pb-2 text-blue-700">
+            DANH SÁCH GIẢNG VIÊN
+          </p>
+          <p class="pb-2">Danh sách giảng viên hướng dẫn HKI (2022 - 2023)</p>
+        </div>
+        <div>
+          <v-btn
+            v-if="user?.role === UserRoleEnum.Student"
+            color="info"
+            variant="tonal"
+            class="ma-2"
+            @click="handleOpenRegisterModal"
+          >
+            Đăng ký đề tài
+          </v-btn>
+        </div>
+      </div>
       <v-divider horizontal></v-divider>
-      <div class="py-3">
+      <div class="py-2">
         <v-table :hover="true">
           <thead>
             <tr>
@@ -29,7 +46,9 @@
                   >Luận văn
                 </v-tooltip>
               </th>
-              <th class="text-left">Thực hiện</th>
+              <th class="text-left" v-if="user?.role === UserRoleEnum.Student">
+                Thực hiện
+              </th>
             </tr>
           </thead>
           <hr />
@@ -53,8 +72,14 @@
               <td class="text-center">1</td>
               <td class="text-center">1</td>
               <td class="text-center">2</td>
-              <td>
-                <v-btn color="info" variant="tonal" class="ma-2" size="small">
+              <td v-if="user?.role === UserRoleEnum.Student">
+                <v-btn
+                  color="info"
+                  variant="tonal"
+                  class="ma-2"
+                  size="small"
+                  @click="handleOpenRegisterModal(lecturer)"
+                >
                   Đăng ký
                 </v-btn>
               </td>
@@ -63,6 +88,12 @@
         </v-table>
       </div>
     </v-card>
+    <RegisterModal
+      :isShow="isOpen"
+      :lecturer="lecturerSelected ?? {}"
+      :lecturers="lecturers ?? []"
+      @cancel="isOpen = false"
+    />
   </div>
 </template>
 
@@ -71,33 +102,33 @@ import { UserDetails } from "@/apis/models/UserDetails";
 import axios from "axios";
 import { BASE_API } from "@/constant";
 import { ref } from "vue";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-// const headers = ref([
-//   { title: "Họ và Tên", key: "name" },
-//   { title: "Mã số CB", key: "mscb" },
-//   { title: "Số điện thoại", key: "phone" },
-//   { title: "Email", key: "email " },
-//   { title: "Niên luận cơ sở (CT270)", key: "NLCS" },
-//   { title: "Niên luận - THUD (TN408)", key: "NL" },
-//   { title: "Tiểu luận tốt nghiệp (TN396)", key: "TL" },
-//   { title: "Luận văn tốt nghiệp (TN418)", key: "LV" },
-// ]);
+const { user } = storeToRefs(useAuthStore());
 
 const lecturers = ref<UserDetails[]>();
 
+const lecturerSelected = ref<UserDetails>();
+
 const slug = ref<String[]>();
 
-// slug.value = lecturers.value.map((item) => item.email.split("@")[0]);
+const isOpen = ref<boolean>(false);
 
 axios({
   url: BASE_API + `/user/lecturers`,
   withCredentials: true,
 })
   .then(function (res) {
-    console.log(res.data);
     lecturers.value = res.data;
   })
   .catch(function (error) {
     console.log(error);
   });
+
+const handleOpenRegisterModal = (lecturer?: UserDetails) => {
+  lecturerSelected.value = lecturer;
+  isOpen.value = true;
+};
 </script>

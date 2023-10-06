@@ -12,6 +12,11 @@
           </v-btn>
         </div>
         <div class="flex grow justify-center main-txt text-md"></div>
+        <div class="mx-4">
+          <v-badge :content="2">
+            <v-icon icon="mdi-bell-outline"></v-icon>
+          </v-badge>
+        </div>
         <div class="gap-2">
           <profile-avatar />
         </div>

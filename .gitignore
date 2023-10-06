@@ -25,3 +25,5 @@ pnpm-debug.log*
 # Auto generated
 @types/*
 !@types/vite-env.d.ts
+.eslintrc-auto-import.json
+

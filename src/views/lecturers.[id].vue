@@ -16,7 +16,6 @@ import { UserDetails } from "@/apis/models/UserDetails";
 import { BASE_API } from "@/constant";
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
-import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";

@@ -2,8 +2,7 @@
   <div>
     <UserInfo :title="'Thông tin cá nhân'" :user="user" />
   </div>
-  <div>
-    <!-- <TopicList :topics="topics ?? []" /> -->
+  <div v-if="topics?.length !== 0">
     <UserStudentTopic :topics="topics ?? []" />
   </div>
 </template>

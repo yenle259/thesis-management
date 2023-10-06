@@ -5,7 +5,7 @@
       <div v-for="topic in props.topics" :key="topic.slug">
         <v-card
           width="600px"
-          class="rounded-lg hover:shadow-lg"
+          class="rounded-lg hover:shadow-lg mb-4"
           :href="'/topics/' + topic.slug"
         >
           <v-card-item>
