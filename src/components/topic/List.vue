@@ -20,7 +20,7 @@
           <tbody>
             <tr class="text-sm" v-for="topic in props.topics" :key="topic.slug">
               <td>
-                <a :href="'/topic/' + topic.slug">
+                <a :href="'/topics/' + topic.slug">
                   {{ topic.name }}
                 </a>
               </td>
@@ -48,6 +48,16 @@
             </tr>
           </tbody>
         </v-table>
+        <!-- <v-divider></v-divider>
+        <div class="flex ">
+          <v-pagination
+            density="comfortable"
+            v-model="page"
+            :length="props.totalPages"
+            rounded="circle"
+            :uodate="handleUpdate"
+          ></v-pagination>
+        </div> -->
       </div>
       <div v-if="props.topics.length == 0">
         <p class="py-2 italic text-center">Không có đề tài</p>
@@ -74,20 +84,30 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { ref } from "vue";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+import { watch } from "vue";
 
 const { user } = storeToRefs(useAuthStore());
 
-const props = defineProps<{ topics: TopicDetails[] }>();
+const emit = defineEmits(["refetch"]);
+
+const props = defineProps<{
+  topics: TopicDetails[];
+  // totalPages: number;
+  // currentPage: number;
+}>();
 
 const isOpen = ref(false);
 
-const isRegistered = ref(false);
+const topicIdUpdated = ref<TopicDetails>();
 
 const selectedTopic = ref<TopicDetails>();
 
+const page = ref();
+
 const handleDisabled = (topic: TopicDetails) => {
-  return !!topic.student;
+  return !!topic.student || topicIdUpdated.value?._id === topic._id;
 };
+
 const handleConfirmModal = (topic: TopicDetails) => {
   isOpen.value = !isOpen.value;
   console.log(topic);
@@ -97,6 +117,7 @@ const handleConfirmModal = (topic: TopicDetails) => {
 //key value from emit 'registered'
 const handleRegistered = (topic: TopicDetails) => {
   isOpen.value = false;
-
+  topicIdUpdated.value = topic;
 };
+
 </script>

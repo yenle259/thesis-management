@@ -1,10 +1,10 @@
 <template>
   <div class="px-6 pb-6 h-screen">
     <v-card variant="flat" class="py-6 px-8 h-4/5">
-      <div>
+      <div v-if="topic">
         <div class="mb-4 flex justify-between">
           <v-chip class="text-overline" color="orange">Luận văn</v-chip>
-          <div>
+          <div v-if="isRegisteredStudent">
             <v-btn variant="tonal" color="red" @click="handleCancelModal"
               >Hủy đăng ký</v-btn
             >
@@ -21,24 +21,45 @@
         </p>
         <v-divider></v-divider>
         <div class="my-2">
-          <span class="font-bold">Giảng viên hướng dẫn: </span
-          ><a class="text-blue-800" :href="'/lecturers/' + topic?.pi.userId">{{
-            topic?.pi.name
-          }}</a>
+          <p class="uppercase font-bold mb-2 text-overline text-indigo">
+            Thông tin giảng viên hướng dẫn
+          </p>
+          <div>
+            <span class="font-bold">Giảng viên hướng dẫn: </span
+            ><a
+              class="text-blue-800"
+              :href="'/lecturers/' + topic?.pi.userId"
+              >{{ topic?.pi.name }}</a
+            >
+          </div>
+          <div class="my-2">
+            <span class="font-bold">Phân loại: </span>
+            <v-chip size="small" :color="getTopicTypeColor(topic?.type)">
+              {{ getTopicTypeName(topic?.type) }}
+            </v-chip>
+          </div>
         </div>
-        <p class="my-2">
-          <span class="font-bold">Mô tả đề tài: </span>
-          <span class="text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s
-          </span>
-        </p>
+        <v-divider></v-divider>
+
+        <div class="my-2">
+          <p class="uppercase font-bold mb-2 text-overline text-indigo">
+            Thông tin đề tài
+          </p>
+          <p class="">
+            <span class="font-bold">Mô tả đề tài: </span>
+            <span class="text-sm">
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text
+              ever since the 1500s
+            </span>
+          </p>
+        </div>
       </div>
     </v-card>
     <TopicCancelRegistrationModal
       :isShow="isShowCancelModal"
       :topic="topic || {}"
+      @cancel="handleCancelModal"
     />
   </div>
 </template>
@@ -47,19 +68,37 @@
 import axios from "axios";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { BASE_API } from "@/constant";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { UserDetails } from "@/apis/models/UserDetails";
+
+import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
+import { getTopicTypeName } from "@/utils/getTopicTypeName";
+
+const { user } = storeToRefs(useAuthStore());
+
 const route = useRoute();
+
 const topicSlug = route.params.slug;
-console.log(topicSlug);
 
 const topic = ref<TopicDetails>();
 
 const isShowCancelModal = ref(false);
+
+const isRegisteredStudent = computed(() => {
+  if (topic.value?.student !== null) {
+    return user.value?._id === topic.value?.student;
+  }
+  return false;
+});
+
+console.log(isRegisteredStudent.value);
 
 axios({
   url: BASE_API + `/topic/${topicSlug}`,
@@ -67,6 +106,7 @@ axios({
 })
   .then(function (res) {
     topic.value = res.data[0];
+    console.log(topic.value?.student);
   })
   .catch(function (error) {
     console.log(error);

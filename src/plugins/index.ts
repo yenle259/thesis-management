@@ -10,7 +10,7 @@ import vuetify from "./vuetify";
 import pinia from "../store";
 import router from "../router";
 import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
-
+import _ from "lodash";
 // Types
 import type { App } from "vue";
 
@@ -25,5 +25,6 @@ export function registerPlugins(app: App) {
       transition: "slide",
       hideProgressBar: true,
       theme: "colored",
-    } as ToastContainerOptions);
+    } as ToastContainerOptions)
+    .use(_);
 }

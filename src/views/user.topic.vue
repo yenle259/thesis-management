@@ -10,7 +10,20 @@ import { BASE_API } from "@/constant";
 import axios from "axios";
 import { ref } from "vue";
 
+import { useFetch } from "@vueuse/core";
+
+// const { isFetching, error, data } = useFetch(BASE_API + `/topic`, {
+//   refetch: true,
+// });
+
+// console.log(data);
+
 const topics = ref<TopicDetails[]>();
+
+const totalPages = ref<number>();
+
+const currentPage = ref<number[]>();
+
 axios({
   url: BASE_API + `/topic`,
   withCredentials: true,

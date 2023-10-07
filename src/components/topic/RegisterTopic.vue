@@ -53,6 +53,7 @@ import { computed, ref } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
+import router from "@/router";
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -80,6 +81,7 @@ const handleRegisterTopic = (topicId: string) => {
       console.log(res.data);
       toast.success("Đăng ký đề tài thành công!");
       emit("registered", props.topic);
+      router.push(`/topics/${props.topic.slug}`);
     })
     .catch(function (error) {
       toast.error(error.message);

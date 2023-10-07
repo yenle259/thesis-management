@@ -26,7 +26,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" variant="text" @click="handleCancel"> Thoát </v-btn>
+          <v-btn color="red" variant="text" @click="handleCancel">
+            Thoát
+          </v-btn>
           <v-btn
             color="green-darken-1"
             variant="tonal"
@@ -53,10 +55,11 @@ import { computed } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
+import router from "@/router";
 
 const { user } = storeToRefs(useAuthStore());
 
-const emit = defineEmits(["cancel"]);
+const emit = defineEmits(["cancel", "unregistered"]);
 
 const props = defineProps<{ isShow: boolean; topic: TopicDetails }>();
 
@@ -65,26 +68,21 @@ const dialog = computed(() => {
 });
 
 const handleRegisterTopic = (topicId: string) => {
-  toast.info(topicId + " & " + user.value?._id);
-
+  // toast.info(topicId + " & " + user.value?._id);
   axios({
     method: "put",
-    url: BASE_API + `/topic/register`,
+    url: BASE_API + `/topic/unregister/${props.topic.slug}`,
     withCredentials: true,
-    data: {
-      studentId: user.value?._id,
-      topicId,
-    },
   })
     .then(function (res) {
       console.log(res.data);
       toast.success("Hủy đăng ký đề tài thành công!");
+      emit("unregistered");
+      router.push("/topic-list");
     })
     .catch(function (error) {
       toast.error(error.message);
     });
-
-  emit("cancel");
 };
 
 const handleCancel = () => {

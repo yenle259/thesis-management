@@ -18,11 +18,21 @@
         <v-divider></v-divider>
         <v-list-item nav>
           <div class="text-center py-1">
-            <v-avatar color="indigo-lighten-5" size="50">
+            <v-btn
+              variant="flat"
+              color="indigo-lighten-5"
+              size="50"
+              rounded
+              @click="
+                () => {
+                  router.push('/user');
+                }
+              "
+            >
               <span class="text-h5">{{
                 user?.email.charAt(0).toLocaleUpperCase()
               }}</span>
-            </v-avatar>
+            </v-btn>
             <h3 class="pt-3 font-medium text-lg">
               {{ user?.name }}
             </h3>

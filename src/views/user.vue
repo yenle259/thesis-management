@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserInfo :title="'Thông tin cá nhân'" :user="user" />
+    <UserInfo :title="'Thông tin cá nhân'" :user="user || {}" />
   </div>
   <div v-if="topics?.length !== 0">
     <UserStudentTopic :topics="topics ?? []" />
