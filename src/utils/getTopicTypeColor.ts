@@ -4,8 +4,8 @@ type TopicType = TopicTypeEnum;
 
 export function getTopicTypeColor(topicType: TopicType): string | undefined {
   const topicTypeColor: Record<TopicType, string> = {
-    [TopicTypeEnum.NCKH]: "primary",
     [TopicTypeEnum.LV]: "orange",
+    [TopicTypeEnum.TL]: "primary",
     [TopicTypeEnum.NL]: "cyan",
     [TopicTypeEnum.NLCS]: "green",
   };
