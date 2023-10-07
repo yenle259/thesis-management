@@ -9,7 +9,7 @@
               <th class="text-left">Tên đề tài</th>
               <th class="text-left">Phân loại</th>
               <th class="text-left">MSCB</th>
-              <th class="text-left">Chủ nhiệm</th>
+              <th class="text-left">Giảng viên</th>
               <th class="text-left">Email</th>
               <th class="text-left" v-if="user?.role === UserRoleEnum.Student">
                 Thực hiện
@@ -119,5 +119,4 @@ const handleRegistered = (topic: TopicDetails) => {
   isOpen.value = false;
   topicIdUpdated.value = topic;
 };
-
 </script>

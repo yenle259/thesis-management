@@ -15,7 +15,7 @@
             <span class="font-bold">Tên đề tài: </span>{{ props.topic.name }}
           </p>
           <p class="mb-1">
-            <span class="font-bold">Chủ nhiệm: </span>{{ props.topic.pi.name }}
+            <span class="font-bold">Giảng viên: </span>{{ props.topic.pi.name }}
           </p>
           <p class="mb-1">
             <span class="font-bold">Phân loại: </span>
