@@ -2,18 +2,29 @@
   <div>
     <UserInfo :title="'Thông tin cá nhân'" :user="user || {}" />
   </div>
-  <div v-if="topics?.length !== 0">
-    <UserStudentTopic :topics="topics ?? []" />
+  <div v-if="user?.role === UserRoleEnum.Student">
+    <div v-if="topics?.length !== 0">
+      <UserStudentTopic :topics="topics ?? []" />
+    </div>
+  </div>
+  <div v-if="user?.role === UserRoleEnum.Lecturer">
+    <div v-if="topics?.length !== 0">
+      <UserLecturerTopic
+        :topics="topics ?? []"
+        @updated-status="handleUpdated"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { BASE_API } from "@/constant";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { useAuthStore } from "@/stores/useAuthStore";
-import axios from "axios";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -22,23 +33,25 @@ const { user } = storeToRefs(auth);
 
 const topics = ref<TopicDetails[]>();
 
-axios({
-  method: "post",
-  url: BASE_API + `/topic/student`,
-  withCredentials: true,
-  data: {
-    studentId: user.value?._id,
-  },
-})
-  .then(function (res) {
-    topics.value = res.data;
-    console.log(topics.value);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+const urlByRole =
+  "/topic/" + user.value?.role.toLocaleLowerCase() + `/${user.value?._id}`;
 
-const notify = () => {
-  toast.success("Wow so easy !", {}); // ToastOptions
+const getTopicList = async () => {
+  try {
+    const { data: response } = await API({
+      url: urlByRole,
+      withCredentials: true,
+    });
+    topics.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getTopicList();
+
+const handleUpdated = () => {
+  getTopicList();
 };
 </script>

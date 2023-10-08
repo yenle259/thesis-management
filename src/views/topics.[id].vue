@@ -4,7 +4,7 @@
       <div v-if="topic">
         <div class="mb-4 flex justify-between">
           <v-chip class="text-overline" color="orange">Luận văn</v-chip>
-          <div v-if="isRegisteredStudent">
+          <div >
             <v-btn variant="tonal" color="red" @click="handleCancelModal"
               >Hủy đăng ký</v-btn
             >

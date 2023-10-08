@@ -8,5 +8,8 @@ export interface TopicDetails {
   type: TopicTypeEnum;
   description: string;
   pi: UserDetails;
-  student: UserDetails;
+  numberOfStudent: number;
+  student: UserDetails[];
+  isDisplay: boolean;
+  isPublish: boolean;
 }
