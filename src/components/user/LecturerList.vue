@@ -112,8 +112,6 @@ const lecturers = ref<UserDetails[]>();
 
 const lecturerSelected = ref<UserDetails>();
 
-const slug = ref<String[]>();
-
 const isOpen = ref<boolean>(false);
 
 axios({

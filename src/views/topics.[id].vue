@@ -4,7 +4,7 @@
       <div v-if="topic">
         <div class="mb-4 flex justify-between">
           <v-chip class="text-overline" color="orange">Luận văn</v-chip>
-          <div >
+          <div>
             <v-btn variant="tonal" color="red" @click="handleCancelModal"
               >Hủy đăng ký</v-btn
             >
@@ -48,9 +48,7 @@
           <p class="">
             <span class="font-bold">Mô tả đề tài: </span>
             <span class="text-sm">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s
+              {{ topic.description }}
             </span>
           </p>
         </div>
