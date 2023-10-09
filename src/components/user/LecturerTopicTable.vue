@@ -52,23 +52,38 @@
                   :topic-id="topic._id"
                   @updated="handleUpdated"
                 />
-                <TopicEditInfoButton @is-edit="handleOpenEditForm" />
-                <TopicDeleteButton />
+                <div>
+                  <v-tooltip text="Chỉnh sửa thông tin đề tài" location="top">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        v-bind="props"
+                        size="small"
+                        variant="text"
+                        icon="mdi-pencil"
+                        color="indigo"
+                        @click="handleOpenEditForm(topic)"
+                      ></v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
+                <div>
+                  <v-tooltip text="Xóa đề tài" location="top">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        v-bind="props"
+                        size="small"
+                        variant="text"
+                        icon="mdi-delete-outline"
+                        color="red-accent-1"
+                      ></v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
               </v-row>
             </td>
           </tr>
         </tbody>
       </v-table>
-      <!-- <v-divider></v-divider>
-        <div class="flex ">
-          <v-pagination
-            density="comfortable"
-            v-model="page"
-            :length="props.totalPages"
-            rounded="circle"
-            :uodate="handleUpdate"
-          ></v-pagination>
-        </div> -->
     </div>
     <div v-if="props.topics.length == 0">
       <p class="py-2 italic text-center">Không có đề tài</p>
@@ -81,7 +96,7 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 
-const emit = defineEmits(["updatedStatus", "isEdit"]);
+const emit = defineEmits(["updatedStatus", "edited", "open"]);
 
 const props = defineProps<{ topics: TopicDetails[] }>();
 
@@ -89,7 +104,7 @@ const handleUpdated = () => {
   emit("updatedStatus");
 };
 
-const handleOpenEditForm = (topic: TopicDetails) => {
-  emit("isEdit", topic);
+const handleOpenEditForm = (selectedTopic: TopicDetails) => {
+  emit("open", selectedTopic);
 };
 </script>

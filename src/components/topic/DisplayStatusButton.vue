@@ -5,7 +5,7 @@
         <v-btn
           v-bind="props"
           v-model="model.isDisplay"
-          class="ma-2"
+          size="small"
           variant="text"
           :icon="model.isDisplay ? 'mdi-eye' : 'mdi-eye-off'"
           :color="model.isDisplay ? 'blue-lighten-2' : 'gray'"

@@ -28,15 +28,20 @@
             >
           </div>
           <TopicCreateModal
-            
             :is-show="isShowCreateModal"
             @cancel="handleOpenCreateModal"
             @created="handleCreatedTopic"
           />
           <UserLecturerTopicTable
             :topics="topics ?? []"
-            @edit="handleCreatedTopic"
             @updated-status="handleUpdated"
+            @open="handleEditForm"
+          />
+          <TopicEditInfoModal
+            :isShow="isShow"
+            :edit-topic="editTopic || {}"
+            @cancel="isShow = !isShow"
+            @edited="handleEditedTopic"
           />
         </v-card>
       </div>
@@ -61,6 +66,12 @@ const { user } = storeToRefs(auth);
 
 const topics = ref<TopicDetails[]>();
 
+const editTopic = ref<TopicDetails>();
+
+const isShow = ref(false);
+
+const isShowCreateModal = ref(false);
+
 const urlByRole =
   "/topic/" + user.value?.role.toLocaleLowerCase() + `/${user.value?._id}`;
 
@@ -79,23 +90,30 @@ const getTopicList = async () => {
 
 getTopicList();
 
-const isShowCreateModal = ref(false);
-
 const handleUpdated = () => {
   getTopicList();
 };
 
+//create new topic
 const handleOpenCreateModal = () => {
-  isShowCreateModal.value = !isShowCreateModal.value;
-};
-
-const handleOpenEditTopic = (topic: TopicDetails) => {
   isShowCreateModal.value = !isShowCreateModal.value;
 };
 
 const handleCreatedTopic = () => {
   toast.success("Thêm mới đề tài thành công");
   isShowCreateModal.value = !isShowCreateModal.value;
+  getTopicList();
+};
+
+//handle edit topic
+const handleEditForm = (selectedTopic: TopicDetails) => {
+  editTopic.value = selectedTopic;
+  isShow.value = !isShow.value;
+};
+
+const handleEditedTopic = () => {
+  toast.success("Cập nhật đề tài thành công");
+  isShow.value = !isShow.value;
   getTopicList();
 };
 </script>

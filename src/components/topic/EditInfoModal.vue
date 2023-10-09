@@ -1,14 +1,17 @@
 <template>
-  <div>
+  <div :v-if="props.editTopic">
     <v-dialog v-model="dialog" persistent width="700px">
       <v-card class="pt-4 pb-2 px-2">
         <v-form v-model="form">
           <v-card-title class="text-h5 text-indigo">
-            <span class="uppercase mb-1"> Thêm mới đề tài </span>
-            <p class="font-light text-sm text-black text-caption">
-              Hãy điền thông tin vào các trường bên dưới để thực hiện thêm mới
-              đề tài
-            </p>
+            <div>
+              <p class="uppercase mb-1">
+                <span>Cập nhật đề tài </span>
+              </p>
+              <p class="font-light text-sm text-black text-caption">
+                Chỉnh sửa các thông tin đề tài bên dưới
+              </p>
+            </div>
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
@@ -60,15 +63,13 @@
               variant="outlined"
               hint="Mô tả đề tài với các nội dung liên quan (công nghệ, phạm vi...)"
             ></v-textarea>
-            <v-switch
+            <!-- <v-switch
               v-model="model.isDisplay"
-              true-value="true"
-              false-value="false"
               hide-details
               inset
               color="primary"
               label="Hiển thị đề tài"
-            ></v-switch>
+            ></v-switch> -->
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -79,9 +80,9 @@
               :disabled="!form"
               color="blue"
               variant="tonal"
-              :onclick="handleCreateTopic"
+              :onclick="handleEditTopic"
             >
-              Tạo đề tài
+              <span> Cập nhật đề tài</span>
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -94,28 +95,26 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-import { useAuthStore } from "@/stores/useAuthStore";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
-import { storeToRefs } from "pinia";
+import { watch } from "vue";
 import { reactive } from "vue";
 import { computed } from "vue";
 import { ref } from "vue";
 
-const emit = defineEmits(["cancel", "created"]);
+const form = ref();
+
+const emit = defineEmits(["cancel", "edited"]);
 
 const props = defineProps<{
   isShow: boolean;
+  editTopic: TopicDetails;
 }>();
 
-const { user } = storeToRefs(useAuthStore());
-
-const form = ref();
-
 const model = reactive({
-  name: null,
-  type: null,
-  numberOfStudent: null,
-  description: null,
+  name: "",
+  type: "",
+  numberOfStudent: 1,
+  description: "",
   isDisplay: false,
   error: "",
 });
@@ -123,14 +122,14 @@ const model = reactive({
 const rules = ref({
   name: [
     (value: any) => {
-      if (value?.length == 0 || model.name === null)
+      if (value?.length === 0 || model.name === null)
         return "Tên đề tài không được rỗng";
       return true;
     },
   ],
   topicType: [
     () => {
-      if (model.type === null) return "Hãy chọn phân loại đề tài";
+      if (model.type === null) return "Phân loại đề tài không được rỗng";
       return true;
     },
   ],
@@ -141,8 +140,6 @@ const rules = ref({
     },
   ],
 });
-
-const topic = ref<TopicDetails[]>();
 
 const topicTypeOptions = computed(() => {
   return Object.values(TopicTypeEnum).map((item) => ({
@@ -155,31 +152,54 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
-const handleCancel = () => {
-  model.type = null;
-  model.name = null;
-  emit("cancel");
+watch(
+  () => props.editTopic,
+  () => {
+    const { name, type, numberOfStudent, description } = props.editTopic;
+    setModelData(name, type, numberOfStudent, description);
+  }
+);
+
+const setModelData = (
+  name: string,
+  type: TopicTypeEnum,
+  numberOfStudent: number,
+  description: string
+) => {
+  model.name = name;
+  model.type = type;
+  model.numberOfStudent = numberOfStudent;
+  model.description = description;
 };
 
-const handleCreateTopic = (e: Event) => {
-  console.log(model);
+const handleCancel = () => {
+  emit("cancel");
+  const { name, type, numberOfStudent, description } = props.editTopic;
+  setModelData(name, type, numberOfStudent, description);
+};
+
+const handleEditTopic = async (e: Event) => {
   e.preventDefault();
 
+  const { name, type, description, numberOfStudent } = model;
   try {
-    API.post(`/topic`, {
-      name: model.name,
-      pi: user.value?._id,
-      type: model.type,
-      isDisplay: model.isDisplay,
-      description: model.description,
-      numberOfStudent: model.numberOfStudent,
-    });
-    model.name = null;
-    model.type = null;
-    model.numberOfStudent = null;
-    model.description = null;
-    model.isDisplay = false;
-    emit("created");
+    const { data: response } = await API.put(
+      `/topic/update/${props.editTopic._id}`,
+      {
+        name,
+        type,
+        description,
+        numberOfStudent,
+      }
+    );
+
+    //set data for form by response data
+    model.name = response.name;
+    model.type = response.type;
+    model.numberOfStudent = response.numberOfStudent;
+    model.description = response.description;
+
+    emit("edited");
   } catch (error) {
     console.log(error);
   }
