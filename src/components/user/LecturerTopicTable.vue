@@ -1,21 +1,25 @@
 <template>
-  <div >
+  <div>
     <div class="py-3">
       <v-table>
         <thead>
           <tr>
             <th class="text-left">Tên đề tài</th>
             <th class="text-left">Phân loại</th>
-            <th class="text-center">Số SV</th>
-            <th class="text-left">Giảng viên</th>
-            <th class="text-left">Email</th>
+            <th class="text-center" width="200px">
+              Số sinh viên
+              <br />
+              <span class="text-caption">(Số lượng SV đã đăng ký/Tổng SV)</span>
+            </th>
+            <th class="text-center">Sinh viên đăng ký</th>
+
             <th class="text-left">Thực hiện</th>
           </tr>
         </thead>
         <hr />
         <tbody>
           <tr class="text-sm" v-for="topic in props.topics" :key="topic.slug">
-            <td>
+            <td width="420px">
               <a :href="'/topics/' + topic.slug">
                 {{ topic.name }}
               </a>
@@ -25,15 +29,32 @@
                 {{ getTopicTypeName(topic.type) }}
               </v-chip>
             </td>
-            <td class="text-center">{{ topic.numberOfStudent }}</td>
-            <td>{{ topic.pi.name }}</td>
-            <td>{{ topic.pi.email }}</td>
-            <td>
-              <TopicDisplayStatusButton
-                :is-display="topic.isDisplay"
-                :topic-id="topic._id"
-                @updated="handleUpdated"
-              />
+            <td class="text-center">
+              <span v-if="topic.student">
+                {{ topic.student.length + "/" + topic.numberOfStudent }}
+              </span>
+              <span v-else>{{ "0/" + topic.numberOfStudent }}</span>
+            </td>
+            <td class="text-center">
+              <v-col>
+                <v-chip
+                  v-for="student in topic.student"
+                  :key="student._id"
+                  size="small"
+                  >{{ student.name }}</v-chip
+                >
+              </v-col>
+            </td>
+            <td class="text-center">
+              <v-row>
+                <TopicDisplayStatusButton
+                  :is-display="topic.isDisplay"
+                  :topic-id="topic._id"
+                  @updated="handleUpdated"
+                />
+                <TopicEditInfoButton @is-edit="handleOpenEditForm" />
+                <TopicDeleteButton />
+              </v-row>
             </td>
           </tr>
         </tbody>
@@ -60,11 +81,15 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 
-const emit = defineEmits(["updatedStatus"]);
+const emit = defineEmits(["updatedStatus", "isEdit"]);
 
 const props = defineProps<{ topics: TopicDetails[] }>();
 
 const handleUpdated = () => {
   emit("updatedStatus");
+};
+
+const handleOpenEditForm = (topic: TopicDetails) => {
+  emit("isEdit", topic);
 };
 </script>

@@ -24,16 +24,18 @@
               append-icon="mdi-plus"
               @click="handleOpenCreateModal"
               color="info"
-              >Thêm đề tài</v-btn
+              >Tạo đề tài</v-btn
             >
           </div>
           <TopicCreateModal
+            
             :is-show="isShowCreateModal"
             @cancel="handleOpenCreateModal"
             @created="handleCreatedTopic"
           />
           <UserLecturerTopicTable
             :topics="topics ?? []"
+            @edit="handleCreatedTopic"
             @updated-status="handleUpdated"
           />
         </v-card>
@@ -84,6 +86,10 @@ const handleUpdated = () => {
 };
 
 const handleOpenCreateModal = () => {
+  isShowCreateModal.value = !isShowCreateModal.value;
+};
+
+const handleOpenEditTopic = (topic: TopicDetails) => {
   isShowCreateModal.value = !isShowCreateModal.value;
 };
 

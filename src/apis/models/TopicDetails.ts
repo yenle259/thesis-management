@@ -11,5 +11,4 @@ export interface TopicDetails {
   numberOfStudent: number;
   student: UserDetails[];
   isDisplay: boolean;
-  isPublish: boolean;
 }

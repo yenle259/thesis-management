@@ -2,7 +2,9 @@
   <div class="px-6 mb-8">
     <v-card variant="flat" class="py-6 px-8">
       <div class="flex justify-between">
-        <p class="font-bold text-2xl pb-4 text-blue-700">DANH SÁCH ĐỀ TÀI</p>
+        <p class="font-bold text-2xl pb-4 text-blue-700">
+          DANH SÁCH ĐỀ TÀI ({{ topics.length }})
+        </p>
         <v-btn
           v-if="user?.role === UserRoleEnum.Admin"
           color="info"
