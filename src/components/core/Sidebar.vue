@@ -58,6 +58,12 @@
             href="/topic-list"
             >Danh sách đề tài</v-list-item
           >
+          <v-list-item
+            v-if="isAdmin"
+            prepend-icon="mdi-format-list-bulleted"
+            href="/semester"
+            >Học kì niên khóa</v-list-item
+          >
         </v-list>
 
         <template v-slot:append>
@@ -87,12 +93,16 @@ import { ref } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { BASE_API } from "../../constant";
+import { reactive } from "vue";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 const auth = useAuthStore();
 const { user } = storeToRefs(auth);
 
 const drawer = ref(true);
 const rail = ref(false);
+
+const isAdmin = ref(user.value?.role === UserRoleEnum.Admin);
 
 const handleLogout = () => {
   axios({

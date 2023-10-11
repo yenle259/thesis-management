@@ -75,6 +75,7 @@
                         variant="text"
                         icon="mdi-delete-outline"
                         color="red-accent-1"
+                        @click="handleOpenConfirmModal(topic)"
                       ></v-btn>
                     </template>
                   </v-tooltip>
@@ -96,7 +97,7 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 
-const emit = defineEmits(["updatedStatus", "edited", "open"]);
+const emit = defineEmits(["updatedStatus", "open", "delete"]);
 
 const props = defineProps<{ topics: TopicDetails[] }>();
 
@@ -106,5 +107,9 @@ const handleUpdated = () => {
 
 const handleOpenEditForm = (selectedTopic: TopicDetails) => {
   emit("open", selectedTopic);
+};
+
+const handleOpenConfirmModal = (selectedTopic: TopicDetails) => {
+  emit("delete", selectedTopic);
 };
 </script>

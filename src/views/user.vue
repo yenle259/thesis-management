@@ -36,12 +36,19 @@
             :topics="topics ?? []"
             @updated-status="handleUpdated"
             @open="handleEditForm"
+            @delete="handleDeleteModal"
           />
           <TopicEditInfoModal
             :isShow="isShow"
             :edit-topic="editTopic || {}"
             @cancel="isShow = !isShow"
             @edited="handleEditedTopic"
+          />
+          <TopicDeleteModal
+            :isShow="isShowDeleteModal"
+            :delete-topic="deleteTopic || {}"
+            @cancel="isShowDeleteModal = !isShowDeleteModal"
+            @deleted="handleDeletedTopic"
           />
         </v-card>
       </div>
@@ -68,9 +75,13 @@ const topics = ref<TopicDetails[]>();
 
 const editTopic = ref<TopicDetails>();
 
+const deleteTopic = ref<TopicDetails>();
+
 const isShow = ref(false);
 
 const isShowCreateModal = ref(false);
+
+const isShowDeleteModal = ref(false);
 
 const urlByRole =
   "/topic/" + user.value?.role.toLocaleLowerCase() + `/${user.value?._id}`;
@@ -114,6 +125,19 @@ const handleEditForm = (selectedTopic: TopicDetails) => {
 const handleEditedTopic = () => {
   toast.success("Cập nhật đề tài thành công");
   isShow.value = !isShow.value;
+  getTopicList();
+};
+
+//handle delete topic
+const handleDeleteModal = (selectedTopic: TopicDetails) => {
+  console.log(selectedTopic);
+  deleteTopic.value = selectedTopic;
+  isShowDeleteModal.value = !isShowDeleteModal.value;
+};
+
+const handleDeletedTopic = () => {
+  toast.success("Xóa đề tài thành công");
+  isShowDeleteModal.value = !isShowDeleteModal.value;
   getTopicList();
 };
 </script>

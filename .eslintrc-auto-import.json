@@ -81,6 +81,8 @@
     "useAuthStore": true,
     "getTopicTypeColor": true,
     "getTopicTypeName": true,
-    "getUserRoleName": true
+    "getUserRoleName": true,
+    "getSchoolYearSemester": true,
+    "semesterData": true
   }
 }

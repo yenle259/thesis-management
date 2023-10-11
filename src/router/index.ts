@@ -87,6 +87,12 @@ const routes = [
         component: () => import("@/views/user.topic.vue"),
         meta: { requiresAuth: true },
       },
+      {
+        path: "/semester",
+        name: "Quản lí học kì niên khóa",
+        component: () => import("@/views/manage.semester.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ];
