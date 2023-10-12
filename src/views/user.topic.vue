@@ -6,33 +6,42 @@
 
 <script lang="ts" setup>
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { BASE_API } from "@/constant";
-import axios from "axios";
+import API from "@/apis/helpers/axiosBaseConfig";
+
 import { ref } from "vue";
-
-import { useFetch } from "@vueuse/core";
-
-// const { isFetching, error, data } = useFetch(BASE_API + `/topic`, {
-//   refetch: true,
-// });
-
-// console.log(data);
+import { useAuthStore } from "@/stores/useAuthStore";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 const topics = ref<TopicDetails[]>();
 
-const totalPages = ref<number>();
+const publishDate = ref<Date>();
 
-const currentPage = ref<number[]>();
+// const totalPages = ref<number>();
 
-axios({
-  url: BASE_API + `/topic`,
-  withCredentials: true,
-})
-  .then(function (res) {
-    console.log(res);
-    topics.value = res.data;
-  })
-  .catch(function (error) {
+// const currentPage = ref<number[]>();
+
+const getTopicList = async () => {
+  try {
+    const { data: response } = await API.get(`/topic`);
+    topics.value = response;
+    return response;
+  } catch (error) {
     console.log(error);
-  });
+  }
+};
+
+getTopicList();
+
+const getPublishDate = async () => {
+  try {
+    const { data: response } = await API.get(`/publish`);
+    publishDate.value = response.publishDate;
+    // response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getPublishDate();
 </script>

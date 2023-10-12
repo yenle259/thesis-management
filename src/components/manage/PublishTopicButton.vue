@@ -1,22 +1,20 @@
 <template>
-  <!-- <v-switch
-    v-model="model.isPublish"
-    true-value="true"
-    false-value="false"
-    hide-details
-    color="indigo"
-    inset
-    label="Công bố đề tài"
-  ></v-switch> -->
-  <v-btn
-    v-model="model.isPublish"
-    variant="tonal"
-    color="blue"
-    @click="isShow = !isShow"
-  >
-    Công bố đề tài
-  </v-btn>
-  <v-dialog v-model="isShow" persistent width="520px" closeable>
+  <v-menu>
+    <template v-slot:activator="{ props }">
+      <v-btn icon="mdi-dots-vertical" v-bind="props" variant="tonal"></v-btn>
+    </template>
+    <v-list>
+      <v-list-item @click="model.publishModal = !model.publishModal">
+        <v-list-item-title>Công bố danh sách đề tài</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="model.setTimeModal = true">
+        <v-list-item-title>Đặt thời gian công bố đề tài</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-menu>
+
+  <!-- dialog to publish topic -->
+  <v-dialog v-model="model.publishModal" persistent width="520px" closeable>
     <v-card class="pt-4 pb-2 px-2">
       <v-card-title class="text-h5 text-indigo">
         <span class="mb-1"> Công bố đề tài</span>
@@ -24,57 +22,93 @@
       <v-divider></v-divider>
       <v-card-text>
         <p>Xác nhận công bố danh sách đề tài ở thời điểm hiện tại?</p>
-        <p class="text-caption">(Hoặc chọn hẹn thời gian để công bố sau)</p>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="red" variant="text" @click="handleCancel()"> Hủy </v-btn>
-        <v-btn color="orange" variant="text" @click="model.dialog = true">
-          Hẹn thời gian
-        </v-btn>
-        <v-btn color="green-darken-1" variant="tonal" @click="handleSubmit()">
-          Xác nhaanj
+        <v-btn
+          color="green-darken-1"
+          variant="tonal"
+          @click="handleSubmit(Date.now())"
+        >
+          Xác nhận
         </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="model.dialog" persistent width="290px">
-    <v-date-picker show-adjacent-months>
-      <v-spacer></v-spacer>
-      <v-btn variant="text" color="primary" @click="handleCancel()">
-        Cancel
-      </v-btn>
-      <v-btn variant="text" color="primary" @click="handleSetDate()">
-        OK
-      </v-btn>
-    </v-date-picker>
+
+  <!-- dialog to setup publish date -->
+  <v-dialog v-model="model.setTimeModal" persistent width="500px">
+    <v-card class="pt-4 pb-2 px-2">
+      <v-form v-model="model.form">
+        <v-card-title class="text-h5 text-indigo">
+          <span class="mb-1"> Đặt thời gian</span>
+          <p class="font-light text-sm text-black text-caption">
+            Đặt thời gian để công bố danh sách đề tài
+          </p>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-text-field
+            :rules="rules.publishDate"
+            :min="Date.now()"
+            type="datetime-local"
+            v-model="model.scheduleTime"
+            label="Thời gian công bố"
+            variant="outlined"
+          ></v-text-field>
+        </v-card-text>
+        <v-spacer> </v-spacer>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red" variant="text" @click="handleCancel()">
+            Hủy
+          </v-btn>
+          <v-btn
+            :disabled="!model.form"
+            color="green-darken-1"
+            variant="tonal"
+            @click="handleSetPublishDate(model.scheduleTime)"
+          >
+            Xác nhận
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
+import { parseISO } from "date-fns";
 import API from "@/apis/helpers/axiosBaseConfig";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
-import { VDatePicker } from "vuetify/labs/VDatePicker";
+import { getFormatDate } from "@/utils/getFormatDate";
 
-import { ref } from "vue";
-import { reactive, watch } from "vue";
+import { reactive, watch, ref } from "vue";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 const publish = usePublishTopicList();
 
-const date = ref();
-
 const model = reactive({
+  form: false,
   isPublish: false,
-  dialog: false,
+  publishModal: false,
+  setTimeModal: false,
+  scheduleTime: "",
 });
 
-const isShow = ref<boolean>(false);
-
-const publishDate = ref<Date>();
+const rules = ref({
+  publishDate: [
+    (value: any) => {
+      const recentDate = new Date(Date.now());
+      if (parseISO(value) >= recentDate) return true;
+      return "Thời gian công bố phải sau thời điểm hiện tại";
+    },
+  ],
+});
 
 watch(
   () => model.isPublish,
@@ -84,21 +118,21 @@ watch(
 );
 
 const handleCancel = () => {
-  console.log("cancel");
-  isShow.value = !isShow.value;
-  model.dialog = false;
+  model.publishModal = false;
+  model.setTimeModal = false;
 };
 
-const handleSubmit = async () => {
-  const recentDate = new Date(Date.now());
-  console.log(recentDate);
+const handleSubmit = async (scheduleTime: any) => {
+  const date = new Date(scheduleTime);
 
   try {
     const { data: response } = await API.put(`/publish/set`, {
-      publishDate: recentDate,
+      publishDate: date,
       id: "6526f1c4ac0072dcd9517532",
     });
+
     toast.success("Công bố danh sách đề tài thành công");
+
     handleCancel();
     return response;
   } catch (error) {
@@ -106,7 +140,24 @@ const handleSubmit = async () => {
   }
 };
 
-const handleSetDate = async () => {
-  console.log(date);
+//scheduleTime
+const handleSetPublishDate = async (scheduleTime: any) => {
+  const date = new Date(scheduleTime);
+
+  try {
+    const { data: response } = await API.put(`/publish/set`, {
+      publishDate: date,
+      id: "6526f1c4ac0072dcd9517532",
+    });
+
+    toast.success(
+      "Hẹn thời gian công bố danh sách đề tài: " +
+        getFormatDate(parseISO(scheduleTime))
+    );
+    handleCancel();
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
