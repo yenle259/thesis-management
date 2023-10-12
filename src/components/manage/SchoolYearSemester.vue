@@ -93,15 +93,12 @@ const schoolYearOptions = computed(() => {
   }));
 });
 
-//test function generateDate
-
 const generatedSemesters = semesterData();
 
 const handleCancel = () => {
   isShow.value = !isShow.value;
 };
 
-console.log(generatedSemesters);
 const handleSubmit = async () => {
   // await generateData;
   try {

@@ -5,16 +5,11 @@
         <p class="font-bold text-2xl pb-4 text-blue-700">
           DANH SÁCH ĐỀ TÀI ({{ topics.length }})
         </p>
-        <v-btn
-          v-if="user?.role === UserRoleEnum.Admin"
-          color="info"
-          variant="tonal"
-          class="ma-2"
-        >
-          Công bố đề tài
-        </v-btn>
+        <div v-if="user?.role === UserRoleEnum.Admin">
+          <ManagePublishTopicButton />
+        </div>
       </div>
-      <div class="py-3">
+      <div class="py-3" v-if="isPublish">
         <v-table :hover="true">
           <thead>
             <tr>
@@ -96,11 +91,11 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { ref } from "vue";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
-import { watch } from "vue";
+import { usePublishTopicList } from "@/stores/usePublishTopicList";
+
+const { isPublish } = storeToRefs(usePublishTopicList());
 
 const { user } = storeToRefs(useAuthStore());
-
-const emit = defineEmits(["refetch"]);
 
 const props = defineProps<{
   topics: TopicDetails[];
