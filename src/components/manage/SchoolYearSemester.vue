@@ -112,12 +112,13 @@ const handleSubmit = async () => {
     toast.success("Thiết lập học kì niên khóa thành công");
     return response;
   } catch (error: any) {
-    const {
-      sysId,
-      schoolYear: { beginAt, endAt },
-      semester,
-    } = error.response.data.errors;
-    toast.error(sysId);
+    // const {
+    //   sysId,
+    //   schoolYear: { beginAt, endAt },
+    //   semester,
+    // } = error.response.data.errors;
+    // toast.error(sysId);
+    console.log(error);
   }
 };
 </script>

@@ -1,14 +1,20 @@
 <template>
-  <div class="h-screen">
-    <TopicList :topics="topics ?? []" />
+  <div v-if="publishDate">
+    <AnnounceModal
+      :publishDate="publishDate || {}"
+      @is-published="handlePublish"
+    >
+      <template v-slot:title> Thông báo </template>
+      <template v-slot:content>
+        Chưa đến thời điểm công bố danh sách đề tài. Danh sách đề tài sẽ công bố
+        vào thời gian:
+        {{ getFormatDate(new Date(publishDate.publishDate)) }}
+      </template>
+    </AnnounceModal>
   </div>
-
-  <AnnounceModal :isShow="isShow">
-    <template v-slot:title> Thông báo </template>
-    <template v-slot:content>
-      Chưa đến thời điểm công bố danh sách đề tài. <br />Hãy quay lại sau
-    </template>
-  </AnnounceModal>
+  <div class="h-screen">
+    <TopicList :topics="topics ?? []" @is-publish="isShow" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -16,20 +22,21 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { PublishDate } from "@/apis/models/PublishDate";
 import API from "@/apis/helpers/axiosBaseConfig";
 
-import { parseISO } from "date-fns";
-
 import { ref } from "vue";
 
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
-import { reactive } from "vue";
-import { watch } from "vue";
+import { getFormatDate } from "@/utils/getFormatDate";
 import { storeToRefs } from "pinia";
+import { usePublishTopicList } from "@/stores/usePublishTopicList";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+
+const { user } = storeToRefs(useAuthStore());
 
 const topics = ref<TopicDetails[]>();
 
 const isShow = ref(false);
 
-const isPublish = ref(false);
+const { change } = usePublishTopicList();
 
 const publishDate = ref<PublishDate>();
 
@@ -47,8 +54,6 @@ const getTopicList = async () => {
   }
 };
 
-getTopicList();
-
 const getPublishDate = async () => {
   try {
     const { data: response } = await API.get(`/publish`);
@@ -61,33 +66,15 @@ const getPublishDate = async () => {
 
 getPublishDate();
 
-// const handlePublish = () => {
-//   const recentDate = new Date(Date.now());
-//   if (publishDate.value?.publishDate) {
-//     console.log("co");
-//     if (publishDate.value?.publishDate <= recentDate) {
-//       isPublish.value = true;
-//     }
-//     console.log("cg");
-//     console.log(publishDate.value?.publishDate <= recentDate);
-//   }
-// };
-
-// handlePublish();
-
-watch(
-  () => publishDate.value?.publishDate,
-  (value) => {
-    const recentDate = new Date(Date.now());
-    if (value) {
-      if (new Date(value) <= recentDate) {
-        isPublish.value = true;
-        isShow.value = false;
-      }
-    } else {
-      isPublish.value = false;
-      isShow.value = true;
+const handlePublish = (isPublish: boolean) => {
+  change(isPublish);
+  if (isPublish) {
+    getTopicList();
+    isShow.value = isPublish;
+  } else {
+    if (user.value?.role === UserRoleEnum.Admin) {
+      getTopicList();
     }
   }
-);
+};
 </script>

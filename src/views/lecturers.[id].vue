@@ -4,8 +4,21 @@
     <div v-if="lecturer">
       <UserInfo :title="'THÔNG TIN GIẢNG VIÊN'" :user="lecturer" />
     </div>
-    <div>
+    <!-- <div>
       <TopicList :topics="topics ?? []" />
+    </div> -->
+    <div>
+      <div class="px-6 pb-6">
+        <v-card variant="flat" class="py-6 px-8">
+          <div class="flex justify-between">
+            <p class="font-bold text-2xl pb-4 text-blue-700">
+              DANH SÁCH ĐỀ TÀI
+            </p>
+          </div>
+
+          <UserLecturerTopicTable :topics="topics ?? []" />
+        </v-card>
+      </div>
     </div>
   </div>
 </template>

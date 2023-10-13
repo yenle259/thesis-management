@@ -4,14 +4,16 @@
       <div v-if="topic">
         <div class="mb-4 flex justify-between">
           <v-chip class="text-overline" color="orange">Luận văn</v-chip>
-          <div>
-            <v-btn variant="tonal" color="red" @click="handleCancelModal"
-              >Hủy đăng ký</v-btn
-            >
-            <v-btn class="mx-2" variant="tonal" color="warning"
-              >Xin điểm I</v-btn
-            >
-            <v-btn variant="flat" color="blue">Xác nhận báo cáo</v-btn>
+          <div v-if="topic.student.length !== 0">
+            <div v-if="handleRegisteredStudent(topic.student)">
+              <v-btn variant="tonal" color="red" @click="handleCancelModal"
+                >Hủy đăng ký</v-btn
+              >
+              <v-btn class="mx-2" variant="tonal" color="warning"
+                >Xin điểm I</v-btn
+              >
+              <v-btn variant="flat" color="blue">Xác nhận báo cáo</v-btn>
+            </div>
           </div>
         </div>
         <v-divider></v-divider>
@@ -74,10 +76,10 @@ import "vue3-toastify/dist/index.css";
 
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { UserDetails } from "@/apis/models/UserDetails";
 
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
+import { UserDetails } from "@/apis/models/UserDetails";
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -87,16 +89,22 @@ const topicSlug = route.params.slug;
 
 const topic = ref<TopicDetails>();
 
+const students = ref<UserDetails[]>();
+
 const isShowCancelModal = ref(false);
 
-const isRegisteredStudent = computed(() => {
-  if (topic.value?.student !== null) {
-    return user.value?._id === topic.value?.student;
-  }
+const handleRegisteredStudent = (students: UserDetails[]) => {
+  students.map((item) => {
+    console.log(item._id);
+    console.log(user.value?._id);
+    if (item._id === user.value?._id) {
+      return true;
+    }
+  });
   return false;
-});
+};
 
-console.log(isRegisteredStudent.value);
+console.log(topic.value?.student[0]);
 
 axios({
   url: BASE_API + `/topic/${topicSlug}`,
@@ -104,7 +112,7 @@ axios({
 })
   .then(function (res) {
     topic.value = res.data[0];
-    console.log(topic.value?.student);
+    students.value = topic.value?.student;
   })
   .catch(function (error) {
     console.log(error);

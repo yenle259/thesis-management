@@ -9,7 +9,7 @@
           <ManagePublishTopicButton />
         </div>
       </div>
-      <div class="py-3" v-if="isPublish">
+      <div class="py-3">
         <v-table :hover="true">
           <thead>
             <tr>
@@ -112,7 +112,7 @@ const selectedTopic = ref<TopicDetails>();
 const page = ref();
 
 const handleDisabled = (topic: TopicDetails) => {
-  return !!topic.student || topicIdUpdated.value?._id === topic._id;
+  return topic.student?.length !== 0 || topicIdUpdated.value?._id === topic._id;
 };
 
 const handleConfirmModal = (topic: TopicDetails) => {
@@ -126,4 +126,6 @@ const handleRegistered = (topic: TopicDetails) => {
   isOpen.value = false;
   topicIdUpdated.value = topic;
 };
+
+console.log(isPublish.value);
 </script>

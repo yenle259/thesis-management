@@ -9,14 +9,14 @@
             <th class="text-center">HK - Năm học</th>
             <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
               <template v-slot:activator="{ props }">
-                <th class="text-center" width="100px" v-bind="props">
-                  Số SV
-                </th>
+                <th class="text-center" width="100px" v-bind="props">Số SV</th>
               </template></v-tooltip
             >
             <th class="text-center">Sinh viên đăng ký</th>
 
-            <th class="text-left">Thực hiện</th>
+            <th class="text-left" v-if="user?._id === route.params.id">
+              Thực hiện
+            </th>
           </tr>
         </thead>
         <hr />
@@ -54,7 +54,7 @@
                 >
               </v-col>
             </td>
-            <td class="text-center">
+            <td class="text-center" v-if="user?._id === route.params.id">
               <v-row>
                 <TopicDisplayStatusButton
                   :is-display="topic.isDisplay"
@@ -103,9 +103,16 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
+import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["updatedStatus", "open", "delete"]);
 

@@ -8,8 +8,8 @@ export const usePublishTopicList = defineStore(
     const isPublish = ref<boolean>();
     const publishDate = ref<PublishDate>();
 
-    function change() {
-      isPublish.value = !isPublish.value;
+    function change(value: boolean) {
+      isPublish.value = value;
     }
 
     return { isPublish, publishDate, change };

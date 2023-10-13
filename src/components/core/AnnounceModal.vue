@@ -20,11 +20,30 @@
 </template>
 
 <script setup lang="ts">
+import { PublishDate } from "@/apis/models/PublishDate";
 import { reactive } from "vue";
 
-const props = defineProps<{ isShow: boolean }>();
+const emit = defineEmits(["isPublished"]);
+
+const props = defineProps<{ publishDate: PublishDate }>();
 
 const model = reactive({
-  isShow: props.isShow,
+  isShow: false,
+  publishDate: props.publishDate,
 });
+
+const handlePublish = () => {
+  const recentDate = new Date(Date.now());
+
+  if (props.publishDate) {
+    if (new Date(props.publishDate.publishDate) <= recentDate) {
+      emit("isPublished", true);
+    } else {
+      model.isShow = true;
+      emit("isPublished", false);
+    }
+  }
+};
+
+handlePublish();
 </script>
