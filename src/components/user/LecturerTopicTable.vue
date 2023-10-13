@@ -6,11 +6,14 @@
           <tr>
             <th class="text-left">Tên đề tài</th>
             <th class="text-left">Phân loại</th>
-            <th class="text-center" width="200px">
-              Số sinh viên
-              <br />
-              <span class="text-caption">(Số lượng SV đã đăng ký/Tổng SV)</span>
-            </th>
+            <th class="text-center">HK - Năm học</th>
+            <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
+              <template v-slot:activator="{ props }">
+                <th class="text-center" width="100px" v-bind="props">
+                  Số SV
+                </th>
+              </template></v-tooltip
+            >
             <th class="text-center">Sinh viên đăng ký</th>
 
             <th class="text-left">Thực hiện</th>
@@ -19,7 +22,7 @@
         <hr />
         <tbody>
           <tr class="text-sm" v-for="topic in props.topics" :key="topic.slug">
-            <td width="420px">
+            <td width="400px">
               <a :href="'/topics/' + topic.slug">
                 {{ topic.name }}
               </a>
@@ -28,6 +31,12 @@
               <v-chip :color="getTopicTypeColor(topic.type)" size="small">
                 {{ getTopicTypeName(topic.type) }}
               </v-chip>
+            </td>
+            <td width="150px" class="text-center">
+              <div v-if="topic.semester">
+                {{ getSchoolYearSemester(topic.semester, true) }}
+              </div>
+              <div v-else>#</div>
             </td>
             <td class="text-center">
               <span v-if="topic.student">
@@ -94,6 +103,7 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 

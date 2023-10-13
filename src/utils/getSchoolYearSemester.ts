@@ -1,6 +1,9 @@
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 
-export function getSchoolYearSemester(sys: SchoolYearSemester) {
+export function getSchoolYearSemester(
+  sys: SchoolYearSemester,
+  shorter?: boolean
+) {
   const { semester, schoolYear } = sys;
   const { beginAt, endAt } = schoolYear;
   const beginAtYear = new Date(beginAt).getFullYear();
@@ -8,11 +11,20 @@ export function getSchoolYearSemester(sys: SchoolYearSemester) {
   let semesterStr = "";
 
   if (semester === 1) {
-    semesterStr = "I";
+    semesterStr = "1";
   } else if (semester === 2) {
-    semesterStr = "II";
+    semesterStr = "2";
   } else {
-    semesterStr = "Hè";
+    semesterStr = shorter === true ? "3" : "Hè";
   }
-  return "Học kì " + semesterStr + " (" + beginAtYear + " - " + endAtYear + ")";
+
+  return (
+    (shorter ? "HK" : "Học kì ") +
+    semesterStr +
+    " (" +
+    beginAtYear +
+    " - " +
+    endAtYear +
+    ")"
+  );
 }

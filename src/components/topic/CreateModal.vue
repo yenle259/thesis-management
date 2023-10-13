@@ -60,15 +60,35 @@
               variant="outlined"
               hint="Mô tả đề tài với các nội dung liên quan (công nghệ, phạm vi...)"
             ></v-textarea>
-            <v-switch
-              v-model="model.isDisplay"
-              true-value="true"
-              false-value="false"
-              hide-details
-              inset
-              color="primary"
-              label="Hiển thị đề tài"
-            ></v-switch>
+            <div class="flex flex-row">
+              <div class="w-3/5 me-2">
+                <v-autocomplete
+                  v-model="model.semesterId"
+                  :rules="rules.semesterId"
+                  :items="semesterOptions"
+                  hint="Chọn Học kì - Niên khóa của đề tài"
+                  label="Học kì - Năm học"
+                  placeholder="Học kì - Năm học"
+                  class="mb-2"
+                  width="300"
+                  chips
+                  clearable
+                  variant="outlined"
+                ></v-autocomplete>
+              </div>
+              <div class="w-2/5 me-2">
+                <v-switch
+                  v-model="model.isDisplay"
+                  true-value="true"
+                  false-value="false"
+                  hide-details
+                  inset
+                  color="primary"
+                  label="Hiển thị đề tài"
+                  class="mx-auto"
+                ></v-switch>
+              </div>
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -92,9 +112,11 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
+import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { storeToRefs } from "pinia";
 import { reactive } from "vue";
@@ -111,12 +133,15 @@ const { user } = storeToRefs(useAuthStore());
 
 const form = ref();
 
+const semesters = ref<SchoolYearSemester[]>();
+
 const model = reactive({
   name: null,
   type: null,
   numberOfStudent: null,
   description: null,
   isDisplay: false,
+  semesterId: null,
   error: "",
 });
 
@@ -134,6 +159,12 @@ const rules = ref({
       return true;
     },
   ],
+  semesterId: [
+    () => {
+      if (model.semesterId === null) return "Hãy chọn Học kì - Niên khóa";
+      return true;
+    },
+  ],
   numberOfStudent: [
     (value: any) => {
       if (value <= 0) return "Số sinh viên ít nhất là 1";
@@ -142,12 +173,17 @@ const rules = ref({
   ],
 });
 
-const topic = ref<TopicDetails[]>();
-
 const topicTypeOptions = computed(() => {
   return Object.values(TopicTypeEnum).map((item) => ({
     title: getTopicTypeName(item),
     value: item,
+  }));
+});
+
+const semesterOptions = computed(() => {
+  return semesters.value?.map((item) => ({
+    title: getSchoolYearSemester(item),
+    value: item._id,
   }));
 });
 
@@ -161,6 +197,18 @@ const handleCancel = () => {
   emit("cancel");
 };
 
+const getData = async () => {
+  try {
+    const { data: response } = await API.get(`/sys`);
+    semesters.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getData();
+
 const handleCreateTopic = (e: Event) => {
   console.log(model);
   e.preventDefault();
@@ -173,12 +221,15 @@ const handleCreateTopic = (e: Event) => {
       isDisplay: model.isDisplay,
       description: model.description,
       numberOfStudent: model.numberOfStudent,
+      semester: model.semesterId,
     });
     model.name = null;
     model.type = null;
     model.numberOfStudent = null;
     model.description = null;
     model.isDisplay = false;
+    model.semesterId = null;
+
     emit("created");
   } catch (error) {
     console.log(error);

@@ -63,13 +63,21 @@
               variant="outlined"
               hint="Mô tả đề tài với các nội dung liên quan (công nghệ, phạm vi...)"
             ></v-textarea>
-            <!-- <v-switch
-              v-model="model.isDisplay"
-              hide-details
-              inset
-              color="primary"
-              label="Hiển thị đề tài"
-            ></v-switch> -->
+            <div class="w-3/5 me-2">
+              <v-autocomplete
+                v-model="model.semesterId"
+                :rules="rules.semester"
+                :items="sysOptions"
+                hint="Chọn Học kì - Niên khóa của đề tài"
+                label="Học kì - Năm học"
+                placeholder="Học kì - Năm học"
+                class="mb-2"
+                width="300"
+                chips
+                clearable
+                variant="outlined"
+              ></v-autocomplete>
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -101,7 +109,13 @@ import { reactive } from "vue";
 import { computed } from "vue";
 import { ref } from "vue";
 
+import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
+import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
+
+// const { data: semesters, isFinished } = useAxios("/sys");
+
 const form = ref();
+const semesters = ref<SchoolYearSemester[]>();
 
 const emit = defineEmits(["cancel", "edited"]);
 
@@ -116,6 +130,7 @@ const model = reactive({
   numberOfStudent: 1,
   description: "",
   isDisplay: false,
+  semesterId: "",
   error: "",
 });
 
@@ -130,6 +145,12 @@ const rules = ref({
   topicType: [
     () => {
       if (model.type === null) return "Phân loại đề tài không được rỗng";
+      return true;
+    },
+  ],
+  semester: [
+    () => {
+      if (model.semesterId === null) return "Học kì - Năm học không được rỗng";
       return true;
     },
   ],
@@ -148,6 +169,13 @@ const topicTypeOptions = computed(() => {
   }));
 });
 
+const sysOptions = computed(() => {
+  return semesters.value?.map((item: any) => ({
+    title: getSchoolYearSemester(item),
+    value: item._id,
+  }));
+});
+
 const dialog = computed(() => {
   return props.isShow;
 });
@@ -155,8 +183,13 @@ const dialog = computed(() => {
 watch(
   () => props.editTopic,
   () => {
-    const { name, type, numberOfStudent, description } = props.editTopic;
-    setModelData(name, type, numberOfStudent, description);
+    const { name, type, numberOfStudent, description, semester } =
+      props.editTopic;
+    if (semester !== undefined) {
+      setModelData(name, type, numberOfStudent, description, semester._id);
+    } else {
+      setModelData(name, type, numberOfStudent, description);
+    }
   }
 );
 
@@ -164,24 +197,46 @@ const setModelData = (
   name: string,
   type: TopicTypeEnum,
   numberOfStudent: number,
-  description: string
+  description: string,
+  semesterId?: string
 ) => {
   model.name = name;
   model.type = type;
   model.numberOfStudent = numberOfStudent;
   model.description = description;
+  if (semesterId) {
+    model.semesterId = semesterId;
+  }
 };
 
 const handleCancel = () => {
   emit("cancel");
-  const { name, type, numberOfStudent, description } = props.editTopic;
-  setModelData(name, type, numberOfStudent, description);
+  const {
+    name,
+    type,
+    numberOfStudent,
+    description,
+    semester: { _id: semesterId },
+  } = props.editTopic;
+  setModelData(name, type, numberOfStudent, description, semesterId);
 };
+
+const getData = async () => {
+  try {
+    const { data: response } = await API.get(`/sys`);
+    semesters.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getData();
 
 const handleEditTopic = async (e: Event) => {
   e.preventDefault();
 
-  const { name, type, description, numberOfStudent } = model;
+  const { name, type, description, numberOfStudent, semesterId } = model;
   try {
     const { data: response } = await API.put(
       `/topic/update/${props.editTopic._id}`,
@@ -190,6 +245,7 @@ const handleEditTopic = async (e: Event) => {
         type,
         description,
         numberOfStudent,
+        semester: semesterId,
       }
     );
 
@@ -198,6 +254,7 @@ const handleEditTopic = async (e: Event) => {
     model.type = response.type;
     model.numberOfStudent = response.numberOfStudent;
     model.description = response.description;
+    model.semesterId = response.semester;
 
     emit("edited");
   } catch (error) {
