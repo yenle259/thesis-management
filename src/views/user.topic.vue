@@ -13,7 +13,11 @@
     </AnnounceModal>
   </div>
   <div class="h-screen">
-    <TopicList :topics="topics ?? []" @is-publish="isShow" />
+    <TopicList :topics="topics ?? []" @is-publish="isShow">
+      <template v-slot:tabmenu>
+        </template
+      >
+    </TopicList>
   </div>
 </template>
 
@@ -22,13 +26,17 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { PublishDate } from "@/apis/models/PublishDate";
 import API from "@/apis/helpers/axiosBaseConfig";
 
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 import { getFormatDate } from "@/utils/getFormatDate";
 import { storeToRefs } from "pinia";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+
+const model = reactive({
+  type: "LV",
+});
 
 const { user } = storeToRefs(useAuthStore());
 

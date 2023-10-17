@@ -9,6 +9,25 @@
           <ManagePublishTopicButton />
         </div>
       </div>
+      <div class="py-2">
+        <div>
+          <v-tabs
+            v-model="model.type"
+            bg-color="transparent"
+            color="basil"
+            grow
+          >
+            <v-tab
+              v-for="type in topicTypeOptions"
+              :key="type.value"
+              :value="type.value"
+              color="blue"
+            >
+              {{ type.label }}
+            </v-tab>
+          </v-tabs>
+        </div>
+      </div>
       <div class="py-3">
         <v-table :hover="true">
           <thead>
@@ -28,9 +47,8 @@
               </th>
             </tr>
           </thead>
-          <hr />
           <tbody>
-            <tr class="text-sm" v-for="topic in props.topics" :key="topic.slug">
+            <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
               <td>
                 <a :href="'/topics/' + topic.slug">
                   {{ topic.name }}
@@ -49,18 +67,6 @@
               </td>
               <td>{{ topic.pi.userId }}</td>
               <td>
-                <!-- <v-tooltip
-                  :text="'MSCB: ' + topic.pi.userId + ''+'Email: ' + topic.pi.email
-                  "
-                  location="right"
-                >
-                  <template v-slot:activator="{ props }">
-                    <v-chip size="small" v-bind="props">
-                      {{ topic.pi.name }}
-                    </v-chip>
-                  </template></v-tooltip
-                > -->
-
                 <v-chip size="small">
                   {{ topic.pi.name }}
                 </v-chip>
@@ -93,7 +99,7 @@
           ></v-pagination>
         </div> -->
       </div>
-      <div v-if="props.topics.length == 0">
+      <div v-if="topics.length == 0">
         <p class="py-2 italic text-center">Không có đề tài</p>
       </div>
     </v-card>
@@ -107,18 +113,21 @@
 </template>
 
 <script setup lang="ts">
-import { TopicDetails } from "@/apis/models/TopicDetails";
+import { storeToRefs } from "pinia";
+import { ref, reactive, computed } from "vue";
 
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
+import { TopicDetails } from "@/apis/models/TopicDetails";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+
+import { useAuthStore } from "@/stores/useAuthStore";
+import { usePublishTopicList } from "@/stores/usePublishTopicList";
 
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { ref } from "vue";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
-import { usePublishTopicList } from "@/stores/usePublishTopicList";
+import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
+
+// import { toast } from "vue3-toastify";
+// import "vue3-toastify/dist/index.css";
 
 const { isPublish } = storeToRefs(usePublishTopicList());
 
@@ -130,6 +139,10 @@ const props = defineProps<{
   // currentPage: number;
 }>();
 
+const model = reactive({
+  type: "LV",
+});
+
 const isOpen = ref(false);
 
 const topicIdUpdated = ref<TopicDetails>();
@@ -137,6 +150,10 @@ const topicIdUpdated = ref<TopicDetails>();
 const selectedTopic = ref<TopicDetails>();
 
 const page = ref();
+
+const topics = computed(() => {
+  return props.topics.filter(({ type }) => type === model.type);
+});
 
 const handleDisabled = (topic: TopicDetails) => {
   return topic.student?.length !== 0 || topicIdUpdated.value?._id === topic._id;
