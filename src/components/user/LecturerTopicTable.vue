@@ -1,6 +1,32 @@
 <template>
   <div>
     <div class="py-3">
+      <v-divider> </v-divider>
+      <div class="px-2 pt-2 flex justify-end gap-x-2">
+        <div class="w-52">
+          <v-select
+            v-model="model.topicType"
+            :items="topicTypeOptions"
+            variant="outlined"
+            density="compact"
+            label="Phân loại đề tài"
+            clearable
+            chips
+          ></v-select>
+        </div>
+        <div class="w-60">
+          <v-autocomplete
+            v-model="model.filterSemester"
+            :items="sysOptions"
+            variant="outlined"
+            density="compact"
+            label="HK - Năm học"
+            clearable
+            chips
+          ></v-autocomplete>
+        </div>
+      </div>
+      <v-divider> </v-divider>
       <v-table>
         <thead>
           <tr>
@@ -17,9 +43,8 @@
             <th class="text-left">Thực hiện</th>
           </tr>
         </thead>
-        <hr />
-        <tbody>
-          <tr class="text-sm" v-for="topic in props.topics" :key="topic.slug">
+        <tbody v-if="filterTopics">
+          <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
             <td width="400px">
               <a :href="'/topics/' + topic.slug">
                 {{ topic.name }}
@@ -93,28 +118,91 @@
         </tbody>
       </v-table>
     </div>
-    <div v-if="props.topics.length == 0">
+    <div v-if="filterTopics.length == 0">
       <p class="py-2 italic text-center">Không có đề tài</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
+import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { storeToRefs } from "pinia";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
+import { watch } from "vue";
+import { reactive } from "vue";
+import { computed } from "vue";
+import { ref } from "vue";
 
 const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["updatedStatus", "open", "delete"]);
 
 const props = defineProps<{ topics: TopicDetails[] }>();
+
+const model = reactive({
+  //recent semester
+  filterSemester: "6526d24c7547ab02d497a7a4",
+  topicType: null,
+});
+
+const semesters = ref<SchoolYearSemester[]>();
+
+// get data for semester options
+const getData = async () => {
+  try {
+    const { data: response } = await API.get(`/sys`);
+    semesters.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getData();
+
+const topicTypeOptions = computed(() => {
+  return Object.values(TopicTypeEnum).map((item) => ({
+    title: getTopicTypeName(item),
+    value: item,
+  }));
+});
+
+const sysOptions = computed(() => {
+  return semesters.value?.map((item: any) => ({
+    title: getSchoolYearSemester(item, true),
+    value: item._id,
+  }));
+});
+
+const filterTopics = computed(() => {
+  if (model.filterSemester && model.topicType) {
+    return props.topics.filter(
+      (topic) =>
+        topic.semester._id === model.filterSemester &&
+        topic.type === model.topicType
+    );
+  } else if (model.filterSemester) {
+    return props.topics.filter(
+      (topic) => topic.semester._id === model.filterSemester
+    );
+  } else if (model.topicType) {
+    return props.topics.filter((topic) => topic.type === model.topicType);
+  }
+  return props.topics;
+});
+
+watch(
+  () => model.topicType,
+  (value) => {
+    console.log(value);
+  }
+);
 
 const handleUpdated = () => {
   emit("updatedStatus");

@@ -115,6 +115,7 @@ import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 // const { data: semesters, isFinished } = useAxios("/sys");
 
 const form = ref();
+
 const semesters = ref<SchoolYearSemester[]>();
 
 const emit = defineEmits(["cancel", "edited"]);

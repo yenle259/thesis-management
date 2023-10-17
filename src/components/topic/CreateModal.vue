@@ -113,8 +113,8 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
-import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+import { RECENT_SEMESTER_ID } from "@/constant";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
@@ -138,10 +138,10 @@ const semesters = ref<SchoolYearSemester[]>();
 const model = reactive({
   name: null,
   type: null,
-  numberOfStudent: null,
+  numberOfStudent: 1,
   description: null,
   isDisplay: false,
-  semesterId: null,
+  semesterId: "6526d24c7547ab02d497a7a4",
   error: "",
 });
 
@@ -225,10 +225,10 @@ const handleCreateTopic = (e: Event) => {
     });
     model.name = null;
     model.type = null;
-    model.numberOfStudent = null;
+    model.numberOfStudent = 1;
     model.description = null;
     model.isDisplay = false;
-    model.semesterId = null;
+    model.semesterId = RECENT_SEMESTER_ID;
 
     emit("created");
   } catch (error) {

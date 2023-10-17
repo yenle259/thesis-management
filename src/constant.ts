@@ -4,3 +4,5 @@ export const DATE_FORMAT_STRING = "HH:mm dd/MM/yyyy";
 
 export const DATE_FORMAT_STRING_TIME2RD = "yyyy-MM-dd HH:mm";
 
+export const RECENT_SEMESTER_ID = "6526d24c7547ab02d497a7a4";
+
