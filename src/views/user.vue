@@ -19,13 +19,15 @@
             <p class="font-bold text-2xl pb-4 text-blue-700">
               DANH SÁCH ĐỀ TÀI
             </p>
-            <v-btn
-              variant="tonal"
-              append-icon="mdi-plus"
-              @click="handleOpenCreateModal"
-              color="info"
-              >Tạo đề tài</v-btn
-            >
+            <div class="flex flex-row">
+              <v-btn
+                variant="tonal"
+                append-icon="mdi-plus"
+                @click="handleOpenCreateModal"
+                color="info"
+                >Tạo đề tài</v-btn
+              >
+            </div>
           </div>
           <TopicCreateModal
             :is-show="isShowCreateModal"

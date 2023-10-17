@@ -11,7 +11,7 @@ type SemesterData = {
 
 export function semesterData() {
   const semesters = ref<SemesterData[]>([]);
-  const recentYear = new Date();
+  const recentYear = new Date('2024');
   const recentYearNumber = recentYear.getFullYear();
   const beginYear = new Date("2018");
   const beginYearNumber = beginYear.getFullYear();

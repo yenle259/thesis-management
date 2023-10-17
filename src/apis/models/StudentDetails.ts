@@ -1,10 +1,6 @@
-import type { UserRoleEnum } from "./UserRoleEnum";
+import { UserDetails } from "./UserDetails";
 
 export interface StudentDetails {
-  studentId: string;
-  email: string;
-  name: string;
-  role: UserRoleEnum;
-  course: Number;
-  major: String;
+  userInfo: UserDetails;
+  registerModule: string;
 }

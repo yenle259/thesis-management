@@ -84,6 +84,8 @@
     "getUserRoleName": true,
     "getSchoolYearSemester": true,
     "semesterData": true,
-    "usePublishTopicList": true
+    "usePublishTopicList": true,
+    "getFormatDate": true,
+    "useSemester": true
   }
 }

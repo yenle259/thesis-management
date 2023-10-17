@@ -46,9 +46,9 @@
                   >Luận văn
                 </v-tooltip>
               </th>
-              <th class="text-left" v-if="user?.role === UserRoleEnum.Student">
+              <!-- <th class="text-left" v-if="user?.role === UserRoleEnum.Student">
                 Thực hiện
-              </th>
+              </th> -->
             </tr>
           </thead>
           <hr />
@@ -72,7 +72,7 @@
               <td class="text-center">1</td>
               <td class="text-center">1</td>
               <td class="text-center">2</td>
-              <td v-if="user?.role === UserRoleEnum.Student">
+              <!-- <td v-if="user?.role === UserRoleEnum.Student">
                 <v-btn
                   color="info"
                   variant="tonal"
@@ -82,7 +82,7 @@
                 >
                   Đăng ký
                 </v-btn>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </v-table>

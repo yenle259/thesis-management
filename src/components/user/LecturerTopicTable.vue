@@ -14,9 +14,7 @@
             >
             <th class="text-center">Sinh viên đăng ký</th>
 
-            <th class="text-left" v-if="user?._id === route.params.id">
-              Thực hiện
-            </th>
+            <th class="text-left">Thực hiện</th>
           </tr>
         </thead>
         <hr />
@@ -54,7 +52,7 @@
                 >
               </v-col>
             </td>
-            <td class="text-center" v-if="user?._id === route.params.id">
+            <td class="text-center" v-if="user?._id === topic.pi._id">
               <v-row>
                 <TopicDisplayStatusButton
                   :is-display="topic.isDisplay"

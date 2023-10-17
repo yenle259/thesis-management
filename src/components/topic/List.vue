@@ -15,6 +15,11 @@
             <tr>
               <th class="text-left">Tên đề tài</th>
               <th class="text-left">Phân loại</th>
+              <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
+                <template v-slot:activator="{ props }">
+                  <th class="text-center" width="80px" v-bind="props">Số SV</th>
+                </template></v-tooltip
+              >
               <th class="text-left">MSCB</th>
               <th class="text-left">Giảng viên</th>
               <th class="text-left">Email</th>
@@ -36,8 +41,30 @@
                   {{ getTopicTypeName(topic.type) }}
                 </v-chip>
               </td>
+              <td class="text-center">
+                <span v-if="topic.student">
+                  {{ topic.student.length + "/" + topic.numberOfStudent }}
+                </span>
+                <span v-else>{{ "0/" + topic.numberOfStudent }}</span>
+              </td>
               <td>{{ topic.pi.userId }}</td>
-              <td>{{ topic.pi.name }}</td>
+              <td>
+                <!-- <v-tooltip
+                  :text="'MSCB: ' + topic.pi.userId + ''+'Email: ' + topic.pi.email
+                  "
+                  location="right"
+                >
+                  <template v-slot:activator="{ props }">
+                    <v-chip size="small" v-bind="props">
+                      {{ topic.pi.name }}
+                    </v-chip>
+                  </template></v-tooltip
+                > -->
+
+                <v-chip size="small">
+                  {{ topic.pi.name }}
+                </v-chip>
+              </td>
               <td>{{ topic.pi.email }}</td>
               <td v-if="user?.role === UserRoleEnum.Student">
                 <v-btn
@@ -70,7 +97,7 @@
         <p class="py-2 italic text-center">Không có đề tài</p>
       </div>
     </v-card>
-    <TopicRegisterTopic
+    <TopicRegisterModal
       :isShow="isOpen"
       :topic="selectedTopic || {}"
       @cancel="isOpen = false"

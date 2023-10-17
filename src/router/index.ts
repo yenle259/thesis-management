@@ -82,6 +82,16 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/user/topics/:slug",
+        name: "Đề tài của bạn",
+        components: {
+          default: () => import("@/views/student.topic.vue"),
+          Navbar: () => import("@/components/core/Navbar.vue"),
+          Sidebar: () => import("@/components/core/Sidebar.vue"),
+        },
+        meta: { requiresAuth: true },
+      },
+      {
         path: "/topic-list",
         name: "Danh sách đề tài",
         component: () => import("@/views/user.topic.vue"),

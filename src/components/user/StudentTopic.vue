@@ -6,7 +6,7 @@
         <v-card
           width="600px"
           class="rounded-lg hover:shadow-lg mb-4"
-          :href="'/topics/' + topic.slug"
+          :href="'/user/topics/' + topic.slug"
         >
           <v-card-item>
             <div>

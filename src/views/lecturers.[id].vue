@@ -4,10 +4,10 @@
     <div v-if="lecturer">
       <UserInfo :title="'THÔNG TIN GIẢNG VIÊN'" :user="lecturer" />
     </div>
-    <!-- <div>
-      <TopicList :topics="topics ?? []" />
-    </div> -->
     <div>
+      <TopicList :topics="topics ?? []" />
+    </div>
+    <!-- <div>
       <div class="px-6 pb-6">
         <v-card variant="flat" class="py-6 px-8">
           <div class="flex justify-between">
@@ -19,7 +19,7 @@
           <UserLecturerTopicTable :topics="topics ?? []" />
         </v-card>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -55,7 +55,7 @@ axios({
   });
 
 axios({
-  url: BASE_API + `/topic/lecturer/${lecturerId}`,
+  url: BASE_API + `/topic/lecturerUserId/${route.params.id}`,
   withCredentials: true,
 })
   .then(function (res) {
@@ -65,10 +65,4 @@ axios({
   .catch(function (error) {
     console.log(error);
   });
-
-const notify = () => {
-  if (lecturer.value) {
-    toast.success(lecturer.value.name);
-  }
-};
 </script>

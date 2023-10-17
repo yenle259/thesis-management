@@ -3,13 +3,19 @@
     <v-card variant="flat" class="py-6 px-8 h-4/5">
       <div v-if="topic">
         <div class="mb-4 flex justify-between">
-          <v-chip class="text-overline" :color="getTopicTypeColor(topic?.type)">
-            {{ getTopicTypeName(topic?.type) }}</v-chip
-          >
+          <v-chip :color="getTopicTypeColor(topic?.type)" class="text-overline">
+            {{ getTopicTypeName(topic?.type) }}
+          </v-chip>
           <div>
-            <!-- <div>
-              <v-btn variant="tonal" color="blue">Đăng ký</v-btn>
-            </div> -->
+            <div>
+              <v-btn variant="tonal" color="red" @click="handleCancelModal"
+                >Hủy đăng ký</v-btn
+              >
+              <v-btn class="mx-2" variant="tonal" color="warning"
+                >Xin điểm I</v-btn
+              >
+              <v-btn variant="flat" color="blue">Xác nhận báo cáo</v-btn>
+            </div>
           </div>
         </div>
         <v-divider></v-divider>
@@ -77,6 +83,8 @@ import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { UserDetails } from "@/apis/models/UserDetails";
 
+const { user } = storeToRefs(useAuthStore());
+
 const route = useRoute();
 
 const topicSlug = route.params.slug;
@@ -86,6 +94,12 @@ const topic = ref<TopicDetails>();
 const students = ref<UserDetails[]>();
 
 const isShowCancelModal = ref(false);
+
+const handleRegisteredStudent = (students: UserDetails[]) => {
+  console.log(students.find((item) => item._id === user.value?._id));
+  return students.find((item) => item._id === user.value?._id);
+  // return false;
+};
 
 console.log(topic.value?.student[0]);
 

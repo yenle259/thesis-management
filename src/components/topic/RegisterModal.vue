@@ -52,6 +52,7 @@ import { computed, ref } from "vue";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import router from "@/router";
 
@@ -65,8 +66,9 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
+
+
 const handleRegisterTopic = (topicId: string) => {
-  // toast.info(topicId + " & " + user.value?._id);
 
   axios({
     method: "post",
@@ -84,7 +86,12 @@ const handleRegisterTopic = (topicId: string) => {
       router.push(`/topics/${props.topic.slug}`);
     })
     .catch(function (error) {
-      toast.error(error.message);
+      if (error.response) {
+        const { errors } = error.response.data;
+        if (errors.publishDate) {
+          toast.error(errors.publishDate);
+        }
+      }
     });
 };
 
