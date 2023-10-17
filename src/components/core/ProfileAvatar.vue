@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-center ">
+    <div class="text-center">
       <v-menu :close-on-content-click="false" location="end">
         <template v-slot:activator="{ props }">
           <v-btn
@@ -62,9 +62,11 @@
 import router from "@/router";
 import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useStudentStore } from "@/stores/useStudentStore";
 import { BASE_API } from "../../constant";
 import { storeToRefs } from "pinia";
 
+const student = useStudentStore();
 const auth = useAuthStore();
 const { user } = storeToRefs(auth);
 
@@ -76,6 +78,7 @@ const handleLogout = () => {
     .then(function (res) {
       //reset value of auth user and redirect user
       auth.reset();
+      student.reset();
       router.push("/login");
     })
     .catch(function (error) {

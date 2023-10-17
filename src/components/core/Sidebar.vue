@@ -88,14 +88,15 @@
 
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useStudentStore } from "@/stores/useStudentStore";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { BASE_API } from "../../constant";
-import { reactive } from "vue";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
+const student = useStudentStore();
 const auth = useAuthStore();
 const { user } = storeToRefs(auth);
 
@@ -112,6 +113,7 @@ const handleLogout = () => {
     .then(function (res) {
       //reset value of auth user and redirect user
       auth.reset();
+      student.reset();
       router.push("/login");
     })
     .catch(function (error) {

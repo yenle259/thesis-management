@@ -52,8 +52,12 @@ import { BASE_API } from "@/../constant";
 import router from "@/router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useStudentStore } from "@/stores/useStudentStore";
+
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import API from "@/apis/helpers/axiosBaseConfig";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 const show = ref(false);
 const form = ref();
@@ -61,6 +65,9 @@ const loading = ref(false);
 
 const authStore = useAuthStore();
 const { user, token } = storeToRefs(authStore);
+
+const studentStore = useStudentStore();
+const { studentInfo, registerModule } = storeToRefs(studentStore);
 
 const errorMessage = ref({
   userId: "",
@@ -102,6 +109,18 @@ watch(
   }
 );
 
+const handleStudentUser = async (_id: string) => {
+  try {
+    const { data: response } = await API.get(`/student/${_id}`);
+    studentInfo.value = response.userInfo;
+    registerModule.value = response.registerModule;
+
+    return response;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
 const handleSubmit = (e: Event) => {
   e.preventDefault();
 
@@ -117,6 +136,10 @@ const handleSubmit = (e: Event) => {
     .then(function (res) {
       user.value = res.data.user;
       token.value = res.data.access_token;
+
+      if (res.data.user.role === UserRoleEnum.Student) {
+        handleStudentUser(res.data.user._id);
+      }
 
       toast.success("Đăng nhập thành công", {});
       router.push("/user");

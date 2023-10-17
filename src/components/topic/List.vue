@@ -42,14 +42,14 @@
               <th class="text-left">MSCB</th>
               <th class="text-left">Giảng viên</th>
               <th class="text-left">Email</th>
-              <th class="text-left" v-if="user?.role === UserRoleEnum.Student">
+              <th class="text-left" v-if="model.type === registerModule">
                 Thực hiện
               </th>
             </tr>
           </thead>
           <tbody>
             <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
-              <td>
+              <td class="w-96">
                 <a :href="'/topics/' + topic.slug">
                   {{ topic.name }}
                 </a>
@@ -72,7 +72,7 @@
                 </v-chip>
               </td>
               <td>{{ topic.pi.email }}</td>
-              <td v-if="user?.role === UserRoleEnum.Student">
+              <td v-if="topic.type === registerModule">
                 <v-btn
                   :key="topic._id"
                   color="info"
@@ -125,6 +125,7 @@ import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
+import { useStudentStore } from "@/stores/useStudentStore";
 
 // import { toast } from "vue3-toastify";
 // import "vue3-toastify/dist/index.css";
@@ -132,6 +133,8 @@ import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 const { isPublish } = storeToRefs(usePublishTopicList());
 
 const { user } = storeToRefs(useAuthStore());
+
+const { registerModule } = storeToRefs(useStudentStore());
 
 const props = defineProps<{
   topics: TopicDetails[];
