@@ -22,11 +22,11 @@
         <div class="w-full font-bevn">
           <v-card class="px-8 py-10 rounded-lg text-center" variant="flat">
             <v-icon
-              size="120"
+              size="130"
               color="red"
               icon="mdi-alert-circle-outline"
             ></v-icon>
-            <h1 class="pt-4 text-2xl font-semibold">KHÔNG XÁC THỰC</h1>
+            <h1 class="pt-5 pb-2 text-2xl font-semibold">KHÔNG XÁC THỰC</h1>
             <p class="p-4">
               Không thể truy cập vào trang vì thông tin người dùng chưa được xác
               thực. Hãy đăng nhập vào hệ thống để tiếp tục.
@@ -50,6 +50,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useTitle } from "@vueuse/core";
+
+useTitle("QLĐT - Không xác thực");
 </script>
 
 <style scoped>

@@ -31,8 +31,13 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+
+import { useTitle } from "@vueuse/core";
+
+useTitle("QLĐT - Thông tin giảng viên");
 
 const auth = useAuthStore();
 const route = useRoute();

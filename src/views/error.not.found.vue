@@ -21,10 +21,11 @@
       <div class="h-5/6 w-2/5 m-auto flex items-center">
         <div class="w-full font-bevn">
           <v-card class="px-8 py-10 rounded-lg text-center" variant="flat">
-            <v-icon size="120" color="red">404</v-icon>
+            <p class="pt-5 pb-2 text-8xl text-red drop-shadow-2xl">404</p>
             <h1 class="pt-4 text-2xl font-semibold">KHÔNG TÌM THẤY TRANG</h1>
             <p class="p-4">
-             Không thể truy cập trang vì không tìm thấy trang. Quay trở lại trang chính
+              Không thể truy cập trang vì không tìm thấy trang.
+              <br />Nhấn vào nút bên dưới để quay lại trang chủ.
             </p>
             <v-btn
               class="my-1"

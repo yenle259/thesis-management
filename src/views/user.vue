@@ -74,6 +74,10 @@ import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+import { useTitle } from "@vueuse/core";
+
+const title = useTitle('QLĐT - Thông tin cá nhân');
+
 const auth = useAuthStore();
 
 const { user } = storeToRefs(auth);

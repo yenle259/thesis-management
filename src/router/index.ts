@@ -26,7 +26,7 @@ const routes = [
         component: () => import("@/views/error.vue"),
       },
       {
-        path: "/404",
+        path: "/notfound",
         name: "Page Not Found",
         component: () => import("@/views/error.not.found.vue"),
       },
@@ -107,7 +107,10 @@ const routes = [
         path: "/semester",
         name: "Quản lí học kì niên khóa",
         component: () => import("@/views/manage.semester.vue"),
-        meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Admin, UserRoleEnum.Lecturer] },
+        meta: {
+          requiresAuth: true,
+          allowRoles: [UserRoleEnum.Admin, UserRoleEnum.Lecturer],
+        },
       },
       {
         path: "/manage/student",
@@ -123,6 +126,17 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/:notfound",
+    component: () => import("@/layouts/default/LoginLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Page Not Found",
+        component: () => import("@/views/error.not.found.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
@@ -130,31 +144,23 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to) => {
-//   const auth = useAuthStore();
-//   const { user } = storeToRefs(auth);
-
-//   if (to.meta.requiresAuth && !user.value) {
-//     return {
-//       path: "/unauthorized",
-//       // save the location we were at to come back later
-//       query: { redirect: to.fullPath },
-//     };
-//   }
-// });
-
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
+  const { user } = storeToRefs(auth);
 
   const allowRoles = to.meta.allowRoles as UserRoleEnum[] | undefined;
   const hasCorrectRole =
     auth.user?.role && allowRoles?.includes(auth.user?.role);
 
-  if (!allowRoles || hasCorrectRole) {
-    next();
-  } else {
-    // auth.$reset();
+  if (to.meta.requiresAuth && !user.value) {
     next("/unauthorized");
+  } else {
+    //allow entering if allowRoles is undefined or has correct role
+    if (!allowRoles || hasCorrectRole) {
+      next();
+    } else {
+      next("/unauthorized");
+    }
   }
 });
 export default router;

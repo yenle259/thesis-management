@@ -77,6 +77,10 @@ import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { UserDetails } from "@/apis/models/UserDetails";
 
+import { useTitle } from "@vueuse/core";
+
+const title = useTitle('QLĐT - Thông tin đề tài');
+
 const route = useRoute();
 
 const topicSlug = route.params.slug;

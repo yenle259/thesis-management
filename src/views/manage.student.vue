@@ -4,4 +4,9 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useTitle } from "@vueuse/core";
+
+useTitle('QLĐT - Quản lý sinh viên');
+
+</script>

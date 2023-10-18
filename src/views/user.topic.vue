@@ -34,6 +34,10 @@ import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
+import { useTitle } from "@vueuse/core";
+
+const title = useTitle('QLĐT - Danh sách đề tài');
+
 const model = reactive({
   type: "LV",
 });

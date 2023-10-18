@@ -8,6 +8,7 @@ import { Vuetify3Resolver } from "unplugin-vue-components/resolvers";
 import createVueRouterContext from "unplugin-vue-router/vite";
 import { VueRouterAutoImports } from "unplugin-vue-router";
 import Vue from "@vitejs/plugin-vue";
+// import VueRouter from "unplugin-vue-router/vite";
 
 // Utilities
 import { defineConfig } from "vite";
@@ -25,7 +26,7 @@ const AutoImport: any = createAutoImportContext({
     /\.md$/, // .md
   ],
   imports: ["vue", "pinia", VueRouterAutoImports],
-  dirs: ["src/apis", "src/utils", "src/components", "src/stores"],
+  dirs: ["src/apis", "src/utils", "src/components", "src/stores", "src/pages"],
   dts: "@types/auto-imports.d.ts",
   eslintrc: { enabled: true },
   vueTemplate: true,
@@ -44,12 +45,12 @@ export default defineConfig(async ({ command, mode }) => {
       // vue({
       //   template: { transformAssetUrls },
       // }),
-      Vue(),
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
+      VueRouter,
+      Vue(),
       vuetify({
         autoImport: true,
       }),
-      VueRouter,
       AutoImport,
       Components({
         dirs: ["src/components", "src/components/**/*"],

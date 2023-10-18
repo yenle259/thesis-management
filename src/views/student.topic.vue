@@ -83,6 +83,10 @@ import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { UserDetails } from "@/apis/models/UserDetails";
 
+import { useTitle } from "@vueuse/core";
+
+const title = useTitle("QLĐT - Đề tài đăng ký");
+
 const { user } = storeToRefs(useAuthStore());
 
 const route = useRoute();

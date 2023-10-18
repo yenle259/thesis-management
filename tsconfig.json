@@ -18,12 +18,16 @@
     "noEmit": true,
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
+      ],
+      "@img/*": [
+        "./src/assets/images/*"
       ]
     },
-    "types": [
-      "vue3-toastify/global"
-    ]
+    "typeRoots": [
+      "node_modules/@types",
+      "@types"
+    ],
   },
   "include": [
     "src/**/*.ts",
