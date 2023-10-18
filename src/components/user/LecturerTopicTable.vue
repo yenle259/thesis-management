@@ -3,6 +3,9 @@
     <div class="py-3">
       <v-divider> </v-divider>
       <div class="px-2 pt-2 flex justify-end gap-x-2">
+        <div class="flex flex-row content-center p-2">
+          <p class="text-overline">Lọc đề tài</p>
+        </div>
         <div class="w-52">
           <v-select
             v-model="model.topicType"

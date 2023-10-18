@@ -16,9 +16,14 @@
       <div class="px-6 pb-6">
         <v-card variant="flat" class="py-6 px-8">
           <div class="flex justify-between">
-            <p class="font-bold text-2xl pb-4 text-blue-700">
-              DANH SÁCH ĐỀ TÀI
-            </p>
+            <div>
+              <span class="font-bold text-2xl pb-4 text-blue-700">
+                DANH SÁCH ĐỀ TÀI
+              </span>
+              <p class="font-light text-sm text-black text-caption">
+                Danh sách đề tài Học kì I (Năm học 2023 - 2024)
+              </p>
+            </div>
             <div class="flex flex-row">
               <v-btn
                 variant="tonal"

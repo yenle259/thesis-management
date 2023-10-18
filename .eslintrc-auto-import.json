@@ -86,6 +86,7 @@
     "semesterData": true,
     "usePublishTopicList": true,
     "getFormatDate": true,
-    "useSemester": true
+    "useSemester": true,
+    "useStudentStore": true
   }
 }

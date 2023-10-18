@@ -16,12 +16,15 @@
           </a>
         </div>
         <v-divider></v-divider>
-        <v-list-item nav>
-          <div class="text-center py-1">
+        <v-list-item :key="user?._id" class="py-2">
+          <p class="">{{ user?.name }}</p>
+          <p class="text-caption">{{ user?.email }}</p>
+          <template v-slot:prepend>
             <v-btn
+              class="me-2"
               variant="flat"
-              color="indigo-lighten-5"
-              size="50"
+              color="teal"
+              size="40"
               rounded
               @click="
                 () => {
@@ -30,24 +33,19 @@
               "
             >
               <span class="text-h5">{{
-                user?.email.charAt(0).toLocaleUpperCase()
+                user?.name.charAt(0).toLocaleUpperCase()
               }}</span>
             </v-btn>
-            <h3 class="pt-3 font-medium text-lg">
-              {{ user?.name }}
-            </h3>
-            <p class="text-caption mt-1">
-              {{ user?.email }}
-            </p>
-          </div>
+          </template>
         </v-list-item>
 
         <v-divider></v-divider>
 
         <v-list nav density="compact">
           <v-list-item prepend-icon="mdi-account" href="/user"
-            >Thông tin người dùng</v-list-item
+            >Thông tin cá nhân</v-list-item
           >
+          <v-list-subheader color="white">THÔNG TIN CHUNG</v-list-subheader>
           <v-list-item
             prepend-icon="mdi-account-multiple-outline"
             href="/lecturers"
@@ -58,12 +56,28 @@
             href="/topic-list"
             >Danh sách đề tài</v-list-item
           >
-          <v-list-item
-            v-if="isAdmin"
-            prepend-icon="mdi-format-list-bulleted"
-            href="/semester"
-            >Học kì niên khóa</v-list-item
-          >
+          <!-- admin route list -->
+          <div v-if="isAdmin">
+            <v-list-subheader color="white">QUẢN LÍ</v-list-subheader>
+            <v-list-group
+              v-for="route in adminRoutes"
+              :prepend-icon="route.icon"
+              :key="route.label"
+              :value="route.label"
+            >
+              <template v-slot:activator="{ props }">
+                <v-list-item v-bind="props" :title="route.label"></v-list-item>
+              </template>
+
+              <v-list-item
+                v-for="item in route.subItem"
+                :key="item.url"
+                :title="item.label"
+                :href="item.url"
+                :value="item.label"
+              ></v-list-item>
+            </v-list-group>
+          </div>
         </v-list>
 
         <template v-slot:append>
@@ -104,6 +118,36 @@ const drawer = ref(true);
 const rail = ref(false);
 
 const isAdmin = ref(user.value?.role === UserRoleEnum.Admin);
+
+const adminRoutes = ref([
+  {
+    icon: "mdi-account-multiple-outline",
+    label: "Người dùng",
+    subItem: [
+      {
+        icon: "mdi-account-school-outline",
+        label: "Sinh viên",
+        url: "/manage/students",
+      },
+      {
+        icon: "mdi-calendar-range",
+        label: "Giảng viên",
+        url: "/manage/lecturers",
+      },
+    ],
+  },
+  {
+    icon: "mdi-format-list-text",
+    label: "Đề tài",
+    subItem: [
+      {
+        icon: "mdi-calendar-range",
+        label: "Học kì - Niên khóa",
+        url: "/semester",
+      },
+    ],
+  },
+]);
 
 const handleLogout = () => {
   axios({
