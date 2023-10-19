@@ -18,12 +18,12 @@
             grow
           >
             <v-tab
-              v-for="type in topicTypeOptions"
-              :key="type.value"
-              :value="type.value"
+              v-for="{ value, label } in topicTypeOptions"
+              :key="value"
+              :value="value"
               color="blue"
             >
-              {{ type.label }}
+              {{ label }}
             </v-tab>
           </v-tabs>
         </div>
@@ -42,9 +42,7 @@
               <th class="text-left">MSCB</th>
               <th class="text-left">Giảng viên</th>
               <th class="text-left">Email</th>
-              <th class="text-left" v-if="model.type === registerModule">
-                Thực hiện
-              </th>
+              <th class="text-left" v-if="props.isPublish">Thực hiện</th>
             </tr>
           </thead>
           <tbody>
@@ -72,7 +70,7 @@
                 </v-chip>
               </td>
               <td>{{ topic.pi.email }}</td>
-              <td v-if="topic.type === registerModule">
+              <td v-if="props.isPublish">
                 <v-btn
                   :key="topic._id"
                   color="info"
@@ -109,14 +107,14 @@ import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 import { useStudentStore } from "@/stores/useStudentStore";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { usePublishTopicList } from "@/stores/usePublishTopicList";
 
 import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
+import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
 // import { toast } from "vue3-toastify";
 // import "vue3-toastify/dist/index.css";
 
-const { isPublish } = storeToRefs(usePublishTopicList());
+// const { isPublish } = storeToRefs(usePublishTopicList());
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -124,8 +122,7 @@ const { registerModule } = storeToRefs(useStudentStore());
 
 const props = defineProps<{
   topics: TopicDetails[];
-  // totalPages: number;
-  // currentPage: number;
+  isPublish?: boolean;
 }>();
 
 const model = reactive({
@@ -160,5 +157,4 @@ const handleRegistered = (topic: TopicDetails) => {
   topicIdUpdated.value = topic;
 };
 
-console.log(isPublish.value);
 </script>

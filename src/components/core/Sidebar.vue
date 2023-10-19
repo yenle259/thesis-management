@@ -43,7 +43,7 @@
 
         <v-list nav density="compact">
           <v-list-item prepend-icon="mdi-account" href="/user"
-            >Thông tin cá nhân</v-list-item
+            >Đề tài của tôi</v-list-item
           >
           <v-list-subheader color="white">THÔNG TIN CHUNG</v-list-subheader>
           <v-list-item

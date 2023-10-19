@@ -1,7 +1,7 @@
 <template>
   <div class="px-6 pb-6">
     <v-card variant="flat" class="py-6 px-8">
-      <p class="font-bold text-2xl pb-4 text-blue-700">ĐỀ TÀI CỦA BẠN</p>
+      <p class="font-bold text-2xl pb-4 text-blue-700">Đề tài</p>
       <div v-for="topic in props.topics" :key="topic.slug">
         <v-card
           width="600px"

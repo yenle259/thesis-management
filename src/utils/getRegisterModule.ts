@@ -12,5 +12,7 @@ export function getTopicTypeByName(name: string): TopicTypeEnum | undefined {
 }
 
 export function getRegisterModule(registerModule: string) {
+  // const string = ref(registerModule);
+  // const array = ref(string.value.split("-"));
   return registerModule.split("-").map((item) => getTopicTypeByName(item));
 }

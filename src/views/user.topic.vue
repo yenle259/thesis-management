@@ -6,16 +6,14 @@
     >
       <template v-slot:title> Thông báo </template>
       <template v-slot:content>
-        Chưa đến thời điểm công bố danh sách đề tài. Danh sách đề tài sẽ công bố
+        Chưa đến thời điểm đăng ký đề tài. Danh sách đề tài sẽ được mở đăng ký
         vào thời gian:
         {{ getFormatDate(new Date(publishDate.publishDate)) }}
       </template>
     </AnnounceModal>
   </div>
   <div class="h-screen">
-    <TopicList :topics="topics ?? []" @is-publish="isShow">
-      <template v-slot:tabmenu> </template>
-    </TopicList>
+    <TopicList :topics="topics ?? []" :is-publish="isShow"> </TopicList>
   </div>
 </template>
 
@@ -56,6 +54,8 @@ const getTopicList = async () => {
   }
 };
 
+getTopicList();
+
 const getPublishDate = async () => {
   try {
     const { data: response } = await API.get(`/publish`);
@@ -71,12 +71,7 @@ getPublishDate();
 const handlePublish = (isPublish: boolean) => {
   change(isPublish);
   if (isPublish) {
-    getTopicList();
     isShow.value = isPublish;
-  } else {
-    if (user.value?.role === UserRoleEnum.Admin) {
-      getTopicList();
-    }
   }
 };
 </script>

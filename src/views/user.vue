@@ -1,10 +1,13 @@
 <template>
-  <div>
+  <!-- <div>
     <UserInfo :title="'Thông tin cá nhân'" :user="user || {}" />
-  </div>
+  </div> -->
 
   <!-- Topic Table of Student -->
   <div v-if="user?.role === UserRoleEnum.Student">
+    <div>
+      <StudentRegisterModule />
+    </div>
     <div v-if="topics?.length !== 0">
       <UserStudentTopic :topics="topics ?? []" />
     </div>
@@ -72,7 +75,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-useTitle('QLĐT - Thông tin cá nhân');
+useTitle("QLĐT - Thông tin cá nhân");
 
 const auth = useAuthStore();
 
