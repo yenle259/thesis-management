@@ -88,6 +88,9 @@
     "watchEffect": true,
     "watchPostEffect": true,
     "watchSyncEffect": true,
-    "useTitle": true
+    "useTitle": true,
+    "getRegisterModule": true,
+    "getTopicTypeByName": true,
+    "axios": true
   }
 }

@@ -68,15 +68,11 @@ import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { storeToRefs } from "pinia";
-import { ref } from "vue";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-import { useTitle } from "@vueuse/core";
-
-const title = useTitle('QLĐT - Thông tin cá nhân');
+useTitle('QLĐT - Thông tin cá nhân');
 
 const auth = useAuthStore();
 

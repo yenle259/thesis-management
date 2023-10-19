@@ -103,13 +103,6 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
-import { watch } from "vue";
-import { reactive } from "vue";
-import { computed } from "vue";
-import { ref } from "vue";
-
-import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 
 // const { data: semesters, isFinished } = useAxios("/sys");

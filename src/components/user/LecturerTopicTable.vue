@@ -132,15 +132,8 @@ import API from "@/apis/helpers/axiosBaseConfig";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+
 import { useAuthStore } from "@/stores/useAuthStore";
-import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
-import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
-import { storeToRefs } from "pinia";
-import { watch } from "vue";
-import { reactive } from "vue";
-import { computed } from "vue";
-import { ref } from "vue";
 
 const { user } = storeToRefs(useAuthStore());
 

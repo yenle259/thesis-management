@@ -17,7 +17,7 @@
             color="basil"
             grow
           >
-          <v-tab
+            <v-tab
               v-for="type in topicTypeOptions"
               :key="type.value"
               :value="type.value"
@@ -104,19 +104,14 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { ref, reactive, computed } from "vue";
-
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
+import { useStudentStore } from "@/stores/useStudentStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 
-import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
-import { useStudentStore } from "@/stores/useStudentStore";
 
 // import { toast } from "vue3-toastify";
 // import "vue3-toastify/dist/index.css";

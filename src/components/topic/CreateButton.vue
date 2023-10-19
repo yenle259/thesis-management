@@ -17,9 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
-
-const emit = defineEmits(["open", "updated"]);
 
 const props = defineProps<{ isDisplay: boolean; topicId: string }>();
 

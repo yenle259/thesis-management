@@ -14,33 +14,23 @@
   </div>
   <div class="h-screen">
     <TopicList :topics="topics ?? []" @is-publish="isShow">
-      <template v-slot:tabmenu>
-        </template
-      >
+      <template v-slot:tabmenu> </template>
     </TopicList>
   </div>
 </template>
 
 <script lang="ts" setup>
+import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { PublishDate } from "@/apis/models/PublishDate";
-import API from "@/apis/helpers/axiosBaseConfig";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
-import { ref, reactive } from "vue";
-
-import { getFormatDate } from "@/utils/getFormatDate";
-import { storeToRefs } from "pinia";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 import { useTitle } from "@vueuse/core";
 
-const title = useTitle('QLĐT - Danh sách đề tài');
-
-const model = reactive({
-  type: "LV",
-});
+useTitle("QLĐT - Danh sách đề tài");
 
 const { user } = storeToRefs(useAuthStore());
 

@@ -32,6 +32,12 @@ const AutoImport: any = createAutoImportContext({
     {
       "@vueuse/core": ["useTitle"],
     },
+    {
+      axios: [
+        // default imports
+        ["default", "axios"], // import { default as axios } from 'axios',
+      ],
+    },
   ],
   dirs: ["src/apis", "src/utils", "src/components", "src/stores", "src/pages"],
   dts: "@types/auto-imports.d.ts",
@@ -53,8 +59,8 @@ export default defineConfig(async ({ command, mode }) => {
       //   template: { transformAssetUrls },
       // }),
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-      VueRouter,
       Vue(),
+      VueRouter,
       vuetify({
         autoImport: true,
       }),

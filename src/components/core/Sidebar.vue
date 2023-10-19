@@ -103,10 +103,10 @@
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useStudentStore } from "@/stores/useStudentStore";
-import axios from "axios";
-import router from "@/router";
-import { BASE_API } from "../../constant";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+
+import router from "@/router";
+import { BASE_API } from "@/constant";
 
 const student = useStudentStore();
 const auth = useAuthStore();

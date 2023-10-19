@@ -67,8 +67,6 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 import { UserDetails } from "@/apis/models/UserDetails";
 import { BASE_API } from "@/constant";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
-import axios from "axios";
 
 const form = ref();
 

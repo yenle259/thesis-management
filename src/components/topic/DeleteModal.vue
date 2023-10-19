@@ -41,21 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { TopicDetails } from "@/apis/models/TopicDetails";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { storeToRefs } from "pinia";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
+import API from "@/apis/helpers/axiosBaseConfig";
 
-import { computed } from "vue";
+import { TopicDetails } from "@/apis/models/TopicDetails";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-
-import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import router from "@/router";
-import API from "@/apis/helpers/axiosBaseConfig";
-
-const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["cancel", "deleted"]);
 

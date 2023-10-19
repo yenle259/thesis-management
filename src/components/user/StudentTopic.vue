@@ -34,8 +34,6 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
 
 const props = defineProps<{ topics: TopicDetails[] }>();
 </script>

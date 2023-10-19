@@ -1,5 +1,3 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
 import { StudentDetails } from "@/apis/models/StudentDetails";
 
 export const useStudentStore = defineStore(

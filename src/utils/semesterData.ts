@@ -1,5 +1,3 @@
-import { ref } from "vue";
-
 type SemesterData = {
   sysId: string;
   semester: number;

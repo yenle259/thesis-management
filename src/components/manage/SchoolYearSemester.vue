@@ -52,14 +52,9 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
-import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
-import { semesterData } from "@/utils/semesterData";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-
-import { computed, reactive, ref } from "vue";
-import { isEmpty } from "lodash";
 
 const model = reactive({
   schoolYear: null,

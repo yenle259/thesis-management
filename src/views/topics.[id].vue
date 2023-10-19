@@ -64,22 +64,14 @@
 import axios from "axios";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { BASE_API } from "@/constant";
-import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "@/stores/useAuthStore";
-
-import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import { UserDetails } from "@/apis/models/UserDetails";
 
-import { useTitle } from "@vueuse/core";
-
-const title = useTitle('QLĐT - Thông tin đề tài');
+useTitle("QLĐT - Thông tin đề tài");
 
 const route = useRoute();
 

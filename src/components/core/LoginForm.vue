@@ -46,8 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
-import { BASE_API } from "@/../constant";
+import { BASE_API } from "@/constant";
 import router from "@/router";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useStudentStore } from "@/stores/useStudentStore";

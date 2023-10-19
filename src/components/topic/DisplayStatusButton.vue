@@ -18,7 +18,6 @@
 
 <script lang="ts" setup>
 import API from "@/apis/helpers/axiosBaseConfig";
-import { reactive } from "vue";
 
 const emit = defineEmits(["cancel", "updated"]);
 

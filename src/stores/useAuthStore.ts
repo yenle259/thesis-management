@@ -1,6 +1,4 @@
-import { ref } from "vue";
 import type { UserDetails } from "@/apis/models/UserDetails";
-import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore(
   "auth",

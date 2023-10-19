@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import { StudentDetails } from "@/apis/models/StudentDetails";
-import { getRegisterModule } from "@/utils/getRegisterModule";
 
 const props = defineProps<{ students: StudentDetails[] }>();
 </script>

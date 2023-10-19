@@ -99,11 +99,8 @@
 
 <script setup lang="ts">
 import { UserDetails } from "@/apis/models/UserDetails";
-import axios from "axios";
 import { BASE_API } from "@/constant";
-import { ref } from "vue";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
-import { storeToRefs } from "pinia";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 const { user } = storeToRefs(useAuthStore());

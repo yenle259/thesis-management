@@ -45,19 +45,11 @@
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { BASE_API } from "@/constant";
-import { useAuthStore } from "@/stores/useAuthStore";
-import axios from "axios";
-import { storeToRefs } from "pinia";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
 
-import { computed } from "vue";
+import router from "@/router";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { getTopicTypeColor } from "@/utils/getTopicTypeColor";
-import router from "@/router";
-
-const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["cancel", "unregistered"]);
 

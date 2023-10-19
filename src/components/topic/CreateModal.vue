@@ -114,14 +114,9 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-import { RECENT_SEMESTER_ID } from "@/constant";
+
 import { useAuthStore } from "@/stores/useAuthStore";
-import { getSchoolYearSemester } from "@/utils/getSchoolYearSemester";
-import { getTopicTypeName } from "@/utils/getTopicTypeName";
-import { storeToRefs } from "pinia";
-import { reactive } from "vue";
-import { computed } from "vue";
-import { ref } from "vue";
+import { RECENT_SEMESTER_ID } from "@/constant";
 
 const emit = defineEmits(["cancel", "created"]);
 

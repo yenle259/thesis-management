@@ -30,7 +30,6 @@
 
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useTitle } from "@vueuse/core";
 
 useTitle("QLĐT - Đăng nhập");
 </script>

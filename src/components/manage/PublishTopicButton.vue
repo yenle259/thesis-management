@@ -80,12 +80,9 @@
 </template>
 
 <script setup lang="ts">
-import { parseISO } from "date-fns";
 import API from "@/apis/helpers/axiosBaseConfig";
+import { parseISO } from "date-fns";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
-import { getFormatDate } from "@/utils/getFormatDate";
-
-import { reactive, watch, ref } from "vue";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
