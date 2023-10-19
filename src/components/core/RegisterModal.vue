@@ -69,10 +69,6 @@ import { UserDetails } from "@/apis/models/UserDetails";
 import { BASE_API } from "@/constant";
 import { getTopicTypeName } from "@/utils/getTopicTypeName";
 import axios from "axios";
-import { watch } from "vue";
-import { reactive } from "vue";
-import { computed } from "vue";
-import { ref } from "vue";
 
 const form = ref();
 

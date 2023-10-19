@@ -21,7 +21,6 @@
 
 <script setup lang="ts">
 import { PublishDate } from "@/apis/models/PublishDate";
-import { reactive } from "vue";
 
 const emit = defineEmits(["isPublished"]);
 

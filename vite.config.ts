@@ -25,7 +25,14 @@ const AutoImport: any = createAutoImportContext({
     /\.vue\?vue/, // .vue
     /\.md$/, // .md
   ],
-  imports: ["vue", "pinia", VueRouterAutoImports],
+  imports: [
+    "vue",
+    "pinia",
+    VueRouterAutoImports,
+    {
+      "@vueuse/core": ["useTitle"],
+    },
+  ],
   dirs: ["src/apis", "src/utils", "src/components", "src/stores", "src/pages"],
   dts: "@types/auto-imports.d.ts",
   eslintrc: { enabled: true },

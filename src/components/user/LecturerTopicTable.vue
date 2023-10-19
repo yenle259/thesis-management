@@ -49,7 +49,7 @@
         <tbody v-if="filterTopics">
           <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
             <td width="400px">
-              <a :href="'/topics/' + topic.slug">
+              <a :href="'/topic/' + topic.slug">
                 {{ topic.name }}
               </a>
             </td>

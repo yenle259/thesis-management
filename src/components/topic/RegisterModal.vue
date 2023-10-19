@@ -83,7 +83,7 @@ const handleRegisterTopic = (topicId: string) => {
       console.log(res.data);
       toast.success("Đăng ký đề tài thành công!");
       emit("registered", props.topic);
-      router.push(`/topics/${props.topic.slug}`);
+      router.push(`/topic/${props.topic.slug}`);
     })
     .catch(function (error) {
       if (error.response) {

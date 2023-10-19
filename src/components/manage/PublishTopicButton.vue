@@ -113,7 +113,7 @@ const rules = ref({
 watch(
   () => model.isPublish,
   () => {
-    publish.change();
+    publish.change(model.isPublish);
   }
 );
 

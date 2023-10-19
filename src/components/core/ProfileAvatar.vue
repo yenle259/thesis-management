@@ -64,7 +64,6 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useStudentStore } from "@/stores/useStudentStore";
 import { BASE_API } from "../../constant";
-import { storeToRefs } from "pinia";
 
 const student = useStudentStore();
 const auth = useAuthStore();

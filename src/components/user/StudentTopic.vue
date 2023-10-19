@@ -6,7 +6,7 @@
         <v-card
           width="600px"
           class="rounded-lg hover:shadow-lg mb-4"
-          :href="'/user/topics/' + topic.slug"
+          :href="'/user/topic/' + topic.slug"
         >
           <v-card-item>
             <div>
@@ -26,9 +26,6 @@
               </div>
             </div>
           </v-card-item>
-          <!-- <v-card-actions>
-            <v-btn variant="tonal"> Button </v-btn>
-          </v-card-actions> -->
         </v-card>
       </div>
     </v-card>

@@ -17,7 +17,7 @@
             color="basil"
             grow
           >
-            <v-tab
+          <v-tab
               v-for="type in topicTypeOptions"
               :key="type.value"
               :value="type.value"
@@ -50,7 +50,7 @@
           <tbody>
             <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
               <td class="w-96">
-                <a :href="'/topics/' + topic.slug">
+                <a :href="'/topic/' + topic.slug">
                   {{ topic.name }}
                 </a>
               </td>
@@ -88,16 +88,7 @@
             </tr>
           </tbody>
         </v-table>
-        <!-- <v-divider></v-divider>
-        <div class="flex ">
-          <v-pagination
-            density="comfortable"
-            v-model="page"
-            :length="props.totalPages"
-            rounded="circle"
-            :uodate="handleUpdate"
-          ></v-pagination>
-        </div> -->
+        <v-divider></v-divider>
       </div>
       <div v-if="topics.length == 0">
         <p class="py-2 italic text-center">Không có đề tài</p>

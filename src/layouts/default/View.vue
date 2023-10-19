@@ -1,8 +1,6 @@
 <template>
   <div>
     <div class="fixed z-50">
-      <!-- <router-view name="Sidebar" />
-      <router-view name="Navbar" /> -->
       <Sidebar />
       <Navbar />
     </div>

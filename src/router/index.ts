@@ -50,51 +50,31 @@ const routes = [
       {
         path: "/user",
         name: "User Profile",
-        components: {
-          default: () => import("@/views/user.vue"),
-          Navbar: () => import("@/components/core/Navbar.vue"),
-          Sidebar: () => import("@/components/core/Sidebar.vue"),
-        },
+        component: () => import("@/views/user.vue"),
         meta: { requiresAuth: true },
       },
       {
         path: "/lecturers",
         name: "Danh sách giảng viên",
-        components: {
-          default: () => import("@/views/lecturers.vue"),
-          Navbar: () => import("@/components/core/Navbar.vue"),
-          Sidebar: () => import("@/components/core/Sidebar.vue"),
-        },
+        component: () => import("@/views/lecturers.vue"),
         meta: { requiresAuth: true },
       },
       {
         path: "/lecturers/:id",
         name: "Thông tin giảng viên",
-        components: {
-          default: () => import("@/views/lecturers.[id].vue"),
-          Navbar: () => import("@/components/core/Navbar.vue"),
-          Sidebar: () => import("@/components/core/Sidebar.vue"),
-        },
+        component: () => import("@/views/lecturers.[id].vue"),
         meta: { requiresAuth: true },
       },
       {
-        path: "/topics/:slug",
+        path: "/topic/:slug",
         name: "Thông tin đề tài",
-        components: {
-          default: () => import("@/views/topics.[id].vue"),
-          Navbar: () => import("@/components/core/Navbar.vue"),
-          Sidebar: () => import("@/components/core/Sidebar.vue"),
-        },
+        component: () => import("@/views/topics.[id].vue"),
         meta: { requiresAuth: true },
       },
       {
-        path: "/user/topics/:slug",
-        name: "Đề tài của bạn",
-        components: {
-          default: () => import("@/views/student.topic.vue"),
-          Navbar: () => import("@/components/core/Navbar.vue"),
-          Sidebar: () => import("@/components/core/Sidebar.vue"),
-        },
+        path: "/user/topic/:slug",
+        name: "Đề tài đăng ký",
+        component: () => import("@/views/student.topic.vue"),
         meta: { requiresAuth: true },
       },
       {
@@ -116,7 +96,10 @@ const routes = [
         path: "/manage/student",
         name: "Quản lí Sinh viên",
         component: () => import("@/views/manage.student.vue"),
-        meta: { requiresAuth: true },
+        meta: {
+          requiresAuth: true,
+          allowRoles: [UserRoleEnum.Admin],
+        },
       },
       {
         path: "/manage/lecturer",

@@ -103,8 +103,6 @@
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useStudentStore } from "@/stores/useStudentStore";
-import { storeToRefs } from "pinia";
-import { ref } from "vue";
 import axios from "axios";
 import router from "@/router";
 import { BASE_API } from "../../constant";
@@ -127,12 +125,12 @@ const adminRoutes = ref([
       {
         icon: "mdi-account-school-outline",
         label: "Sinh viên",
-        url: "/manage/students",
+        url: "/manage/student",
       },
       {
         icon: "mdi-calendar-range",
         label: "Giảng viên",
-        url: "/manage/lecturers",
+        url: "/manage/lecturer",
       },
     ],
   },

@@ -56,7 +56,6 @@
 <script setup lang="ts">
 import axios from "axios";
 import { BASE_API } from "../../../constant";
-import { ref, watch } from "vue";
 import router from "@/router";
 
 const show = ref(false);

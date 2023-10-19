@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 
 const newsList = ref([
   "1. Thông báo mở lại website kế hoạch học tập",

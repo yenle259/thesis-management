@@ -26,10 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import ProfileAvatar from "./ProfileAvatar.vue";
 
-const router = useRoute();
 </script>
 
 <style scoped>
