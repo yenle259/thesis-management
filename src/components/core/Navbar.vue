@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-indigo px-5 text-white fixed top-0 w-full shadow-md h-16">
+  <div class="bg-indigo first-letter px-5 text-white fixed top-0 w-full shadow-md h-16" rounded>
     <v-card-title class="text-center justify-center py-5">
       <v-row align="center" justify="start">
-        <div class="px-60">
+        <div class="pl-60">
           <v-btn
             size="45"
             icon="mdi-chevron-left"
@@ -12,9 +12,9 @@
           </v-btn>
         </div>
         <div class="flex grow justify-center main-txt text-md"></div>
-        <div class="mx-4">
-          <v-badge :content="2">
-            <v-icon icon="mdi-bell-outline"></v-icon>
+        <div class="mx-2">
+          <v-badge :content="2" color="red">
+            <v-btn variant="text" size="small" icon="mdi-bell-outline"></v-btn>
           </v-badge>
         </div>
         <div class="gap-2">

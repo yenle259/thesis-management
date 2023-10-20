@@ -48,7 +48,7 @@
                   label="Số lượng sinh viên"
                   hint="Số sinh viên mặc định là 1"
                   variant="outlined"
-                  class="mb-2"
+                  class="mb-2 ml-2"
                 ></v-text-field>
               </div>
             </div>
@@ -59,6 +59,7 @@
               label="Mô tả đề tài"
               variant="outlined"
               hint="Mô tả đề tài với các nội dung liên quan (công nghệ, phạm vi...)"
+              class="mb-2"
             ></v-textarea>
             <div class="flex flex-row">
               <div class="w-3/5 me-2">
@@ -85,7 +86,7 @@
                   inset
                   color="primary"
                   label="Hiển thị đề tài"
-                  class="mx-auto"
+                  class="mx-auto ml-2"
                 ></v-switch>
               </div>
             </div>

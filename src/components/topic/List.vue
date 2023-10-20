@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="py-3">
-        <v-table :hover="true">
+        <v-table>
           <thead>
             <tr>
               <th class="text-left">Tên đề tài</th>
@@ -47,10 +47,11 @@
           </thead>
           <tbody>
             <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
-              <td class="w-96">
-                <a :href="'/topic/' + topic.slug">
-                  {{ topic.name }}
-                </a>
+              <td
+                class="w-96 hover:text-blue"
+                @click="() => router.push('/topic/' + topic.slug)"
+              >
+                {{ topic.name }}
               </td>
               <td>
                 <v-chip :color="getTopicTypeColor(topic.type)" size="small">
@@ -115,6 +116,8 @@ import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 // import "vue3-toastify/dist/index.css";
 
 // const { isPublish } = storeToRefs(usePublishTopicList());
+
+const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());
 

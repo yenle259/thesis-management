@@ -1,7 +1,7 @@
 <template>
-  <!-- <div>
+  <div v-if="user?.role === UserRoleEnum.Admin">
     <UserInfo :title="'Thông tin cá nhân'" :user="user || {}" />
-  </div> -->
+  </div>
 
   <!-- Topic Table of Student -->
   <div v-if="user?.role === UserRoleEnum.Student">
@@ -21,7 +21,7 @@
           <div class="flex justify-between">
             <div>
               <span class="font-bold text-2xl pb-4 text-blue-700">
-                DANH SÁCH ĐỀ TÀI
+                Đề tài của tôi
               </span>
               <p class="font-light text-sm text-black text-caption">
                 Danh sách đề tài Học kì I (Năm học 2023 - 2024)

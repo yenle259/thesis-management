@@ -1,56 +1,63 @@
 <template>
   <div>
-    <div class="text-center">
-      <v-menu :close-on-content-click="false" location="end">
+    <div>
+      <v-menu :close-on-content-click="false" location="bottom">
         <template v-slot:activator="{ props }">
-          <v-btn
-            color="teal"
-            size="45"
-            v-bind="props"
-            icon="mdi-account"
-            variant="flat"
-            ><span class="text-h5">{{
-              user?.email.charAt(0).toLocaleUpperCase()
+          <v-btn color="teal" size="40" v-bind="props" rounded variant="flat"
+            ><span class="text-h6">{{
+              user?.name.charAt(0).toLocaleUpperCase()
             }}</span>
           </v-btn>
         </template>
 
-        <v-card
-          min-width="250"
-          variant="flat"
-          class="mx-auto py-1 rounded-lg"
-          rounded=""
-        >
-          <div class="mx-auto text-center">
-            <v-list>
-              <v-list-item>
-                <v-avatar color="teal" size="40">
-                  <span class="text-h5">{{
-                    user?.email.charAt(0).toLocaleUpperCase()
-                  }}</span>
-                </v-avatar>
+        <v-card min-width="230" variant="flat" class="rounded-lg mt-4">
+          <div class="mx-auto">
+            <v-list density="compact">
+              <v-list-item :key="user?._id" class="py-1" v-if="user">
+                <p>{{ user.name }}</p>
+                <p class="text-caption">
+                  {{ getUserRoleName(user.role) }}
+                </p>
+                <template v-slot:prepend>
+                  <v-btn
+                    class="me-2"
+                    variant="flat"
+                    color="teal"
+                    size="40"
+                    rounded
+                    @click="
+                      () => {
+                        router.push('/user');
+                      }
+                    "
+                  >
+                    <span class="text-h5">{{
+                      user?.name.charAt(0).toLocaleUpperCase()
+                    }}</span>
+                  </v-btn>
+                </template>
               </v-list-item>
-              <h3 class="pt-1 font-medium text-blue-700 text-lg">
-                {{ user?.name }}
-              </h3>
-              <p class="text-caption">
-                {{ user?.email }}
-              </p>
+              <hr class="mt-1" />
+              <div class="p-2">
+                <v-list-item
+                  active-color="blue"
+                  class="rounded-lg"
+                  v-for="({ label, icon, url }, index) in profileRoutes"
+                  :key="index"
+                  :prepend-icon="icon"
+                  :title="label"
+                  :href="url"
+                ></v-list-item>
+                <v-divider></v-divider>
+                <v-list-item
+                  title="Đăng xuất"
+                  prepend-icon="mdi-logout"
+                  class="rounded-lg"
+                  @click="handleLogout"
+                >
+                </v-list-item>
+              </div>
             </v-list>
-
-            <v-divider></v-divider>
-            <v-card-actions class="mx-1">
-              <v-spacer></v-spacer>
-              <v-btn
-                prepend-icon="mdi-logout"
-                color="red"
-                rounded="lg"
-                variant="tonal"
-                @click="handleLogout"
-              >
-                Logout
-              </v-btn>
-            </v-card-actions>
           </div>
         </v-card>
       </v-menu>
@@ -65,8 +72,23 @@ import { useStudentStore } from "@/stores/useStudentStore";
 import { BASE_API } from "@/constant";
 
 const student = useStudentStore();
+
 const auth = useAuthStore();
+
 const { user } = storeToRefs(auth);
+
+const profileRoutes = ref([
+  {
+    icon: "mdi-account-circle-outline",
+    label: "Hồ sơ",
+    url: "/",
+  },
+  {
+    icon: "mdi-cog-outline",
+    label: "Cài đặt",
+    url: "/manage/lecturer",
+  },
+]);
 
 const handleLogout = () => {
   axios({

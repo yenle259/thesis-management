@@ -16,7 +16,8 @@
           </a>
         </div>
         <v-divider></v-divider>
-        <v-list-item :key="user?._id" class="py-2">
+        <!-- user account and email -->
+        <!-- <v-list-item :key="user?._id" class="py-2">
           <p class="">{{ user?.name }}</p>
           <p class="text-caption">{{ user?.email }}</p>
           <template v-slot:prepend>
@@ -37,48 +38,60 @@
               }}</span>
             </v-btn>
           </template>
-        </v-list-item>
+        </v-list-item> -->
 
         <v-divider></v-divider>
 
         <v-list nav density="compact">
-          <v-list-item prepend-icon="mdi-account" href="/user"
-            >Đề tài của tôi</v-list-item
-          >
-          <v-list-subheader color="white">THÔNG TIN CHUNG</v-list-subheader>
-          <v-list-item
-            value="lecturers"
-            prepend-icon="mdi-account-multiple-outline"
-            href="/lecturers"
-            >Danh sách giảng viên</v-list-item
-          >
-          <v-list-item
-            value="topics"
-            prepend-icon="mdi-format-list-bulleted"
-            href="/topic-list"
-            >Danh sách đề tài</v-list-item
-          >
+          <!-- public route for student and lecturer -->
+
+          <div v-if="!isAdmin">
+            <div
+              v-for="({ subheader, list }, index) in publicRoutes"
+              :key="index"
+            >
+              <v-list-subheader v-if="subheader" color="white"
+                ><span class="uppercase">
+                  {{ subheader }}
+                </span>
+              </v-list-subheader>
+              <div class="px-1">
+                <v-list-item
+                  v-for="{ url, label, icon } in list"
+                  :key="url"
+                  :title="label"
+                  :value="label"
+                  :prepend-icon="icon"
+                  @click="router.push(url)"
+                  active-class="rounded-lg bg-white text-indigo"
+                ></v-list-item>
+              </div>
+            </div>
+          </div>
+
           <!-- admin route list -->
           <div v-if="isAdmin">
-            <v-list-subheader color="white">QUẢN LÍ</v-list-subheader>
-            <v-list-group
-              v-for="route in adminRoutes"
-              :prepend-icon="route.icon"
-              :key="route.label"
-              :value="route.label"
+            <div
+              v-for="({ subheader, list }, index) in adminRoutes"
+              :key="index"
             >
-              <template v-slot:activator="{ props }">
-                <v-list-item v-bind="props" :title="route.label"></v-list-item>
-              </template>
-
-              <v-list-item
-                v-for="item in route.subItem"
-                :key="item.url"
-                :title="item.label"
-                :href="item.url"
-                :value="item.label"
-              ></v-list-item>
-            </v-list-group>
+              <v-list-subheader color="white"
+                ><span class="uppercase">
+                  {{ subheader }}
+                </span>
+              </v-list-subheader>
+              <div class="px-1">
+                <v-list-item
+                  v-for="{ url, label, icon } in list"
+                  :key="url"
+                  :title="label"
+                  :value="label"
+                  :prepend-icon="icon"
+                  @click="router.push(url)"
+                  active-class="rounded-lg bg-white text-indigo"
+                ></v-list-item>
+              </div>
+            </div>
           </div>
         </v-list>
 
@@ -110,40 +123,68 @@ import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import router from "@/router";
 import { BASE_API } from "@/constant";
 
-const student = useStudentStore();
 const auth = useAuthStore();
+
 const { user } = storeToRefs(auth);
 
+const student = useStudentStore();
+
 const drawer = ref(true);
+
 const rail = ref(false);
 
 const isAdmin = ref(user.value?.role === UserRoleEnum.Admin);
 
-const adminRoutes = ref([
+const publicRoutes = ref([
   {
-    icon: "mdi-account-multiple-outline",
-    label: "Người dùng",
-    subItem: [
+    list: [
       {
-        icon: "mdi-account-school-outline",
-        label: "Sinh viên",
-        url: "/manage/student",
-      },
-      {
-        icon: "mdi-calendar-range",
-        label: "Giảng viên",
-        url: "/manage/lecturer",
+        icon: "mdi-account",
+        label: "Đề tài của tôi",
+        url: "/user",
       },
     ],
   },
   {
-    icon: "mdi-format-list-text",
-    label: "Đề tài",
-    subItem: [
+    subheader: "Thông tin chung",
+    list: [
+      {
+        icon: "mdi-account-school",
+        label: "Danh sách giảng viên",
+        url: "/lecturers",
+      },
+      {
+        icon: "mdi-format-list-bulleted",
+        label: "Danh sách đề tài",
+        url: "/topic-list",
+      },
+    ],
+  },
+]);
+
+const adminRoutes = ref([
+  {
+    subheader: "Quản lí",
+    list: [
       {
         icon: "mdi-calendar-range",
         label: "Học kì - Niên khóa",
         url: "/semester",
+      },
+      {
+        icon: "mdi-format-list-bulleted",
+        label: "Đề tài",
+        url: "/topic-list",
+      },
+      {
+        icon: "mdi-account",
+        label: "Sinh viên",
+        url: "/manage/student",
+      },
+      {
+        icon: "mdi-account-school",
+        label: "Giảng viên",
+        url: "/manage/lecturer",
       },
     ],
   },
