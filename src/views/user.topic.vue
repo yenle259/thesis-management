@@ -1,5 +1,20 @@
 <template>
   <div v-if="publishDate">
+    <v-alert
+      v-if="!isShow"
+      class="mx-6 my-1 py-2"
+      closable
+      close-label="Close Alert"
+      variant="tonal"
+      type="warning"
+      prominent
+    >
+      Chưa đến thời điểm đăng ký đề tài. Danh sách đề tài sẽ được
+      <span class="font-bold">mở đăng ký</span> vào thời gian:
+      <span class="font-bold">{{
+        getFormatDate(new Date(publishDate.publishDate))
+      }}</span>
+    </v-alert>
     <AnnounceModal
       :publishDate="publishDate || {}"
       @is-published="handlePublish"
@@ -13,7 +28,12 @@
     </AnnounceModal>
   </div>
   <div class="h-screen">
-    <TopicList :topics="topics ?? []" :is-publish="isShow"> </TopicList>
+    <TopicList
+      :topics="topics ?? []"
+      :is-publish="isShow"
+      :register-module="registerModule"
+    >
+    </TopicList>
   </div>
 </template>
 
@@ -26,11 +46,11 @@ import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { useTitle } from "@vueuse/core";
-
 useTitle("QLĐT - Danh sách đề tài");
 
 const { user } = storeToRefs(useAuthStore());
+
+const { registerModule } = storeToRefs(useStudentStore());
 
 const topics = ref<TopicDetails[]>();
 
@@ -74,4 +94,5 @@ const handlePublish = (isPublish: boolean) => {
     isShow.value = isPublish;
   }
 };
+
 </script>

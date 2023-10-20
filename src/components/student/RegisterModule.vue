@@ -5,7 +5,6 @@
   >
     <template v-slot:content>
       <div v-if="registerModule" class="grid grid-cols-3">
-        <p>{{ registerModule }}</p>
         <div
           v-for="(item, index) in getRegisterModule(registerModule)"
           :key="index"

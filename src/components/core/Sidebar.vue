@@ -47,11 +47,13 @@
           >
           <v-list-subheader color="white">THÔNG TIN CHUNG</v-list-subheader>
           <v-list-item
+            value="lecturers"
             prepend-icon="mdi-account-multiple-outline"
             href="/lecturers"
             >Danh sách giảng viên</v-list-item
           >
           <v-list-item
+            value="topics"
             prepend-icon="mdi-format-list-bulleted"
             href="/topic-list"
             >Danh sách đề tài</v-list-item

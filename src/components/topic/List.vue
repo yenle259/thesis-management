@@ -42,7 +42,7 @@
               <th class="text-left">MSCB</th>
               <th class="text-left">Giảng viên</th>
               <th class="text-left">Email</th>
-              <th class="text-left" v-if="props.isPublish">Thực hiện</th>
+              <th class="text-left" v-if="isRegister">Thực hiện</th>
             </tr>
           </thead>
           <tbody>
@@ -70,7 +70,7 @@
                 </v-chip>
               </td>
               <td>{{ topic.pi.email }}</td>
-              <td v-if="props.isPublish">
+              <td v-if="isRegister">
                 <v-btn
                   :key="topic._id"
                   color="info"
@@ -118,15 +118,14 @@ import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
 const { user } = storeToRefs(useAuthStore());
 
-const { registerModule } = storeToRefs(useStudentStore());
-
 const props = defineProps<{
   topics: TopicDetails[];
   isPublish?: boolean;
+  registerModule?: string;
 }>();
 
 const model = reactive({
-  type: "LV",
+  type: TopicTypeEnum.LV,
 });
 
 const isOpen = ref(false);
@@ -136,6 +135,15 @@ const topicIdUpdated = ref<TopicDetails>();
 const selectedTopic = ref<TopicDetails>();
 
 const page = ref();
+
+const isRegister = computed(() => {
+  console.log(props.isPublish);
+  if (props.isPublish && props.registerModule) {
+    return props.registerModule.split("-").includes(model.type);
+  } else {
+    return false;
+  }
+});
 
 const topics = computed(() => {
   return props.topics.filter(({ type }) => type === model.type);
@@ -156,5 +164,4 @@ const handleRegistered = (topic: TopicDetails) => {
   isOpen.value = false;
   topicIdUpdated.value = topic;
 };
-
 </script>
