@@ -1,6 +1,6 @@
 <template>
-  <div class="px-6 pb-6">
-    <v-card variant="flat" class="py-6 px-8">
+  <div class="px-4 pb-6">
+    <div variant="flat" class="py-4 px-4">
       <div class="flex justify-between">
         <div>
           <span class="font-bold text-2xl pb-4 text-blue-700">
@@ -18,7 +18,7 @@
         <v-divider> </v-divider>
         <slot name="content"></slot>
       </div>
-    </v-card>
+    </div>
   </div>
 </template>
 

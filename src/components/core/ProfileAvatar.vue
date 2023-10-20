@@ -10,7 +10,7 @@
           </v-btn>
         </template>
 
-        <v-card min-width="230" variant="flat" class="rounded-lg mt-4">
+        <v-card min-width="230" variant="flat" class="rounded-lg mt-4 ml-32">
           <div class="mx-auto">
             <v-list density="compact">
               <v-list-item :key="user?._id" class="py-1" v-if="user">

@@ -9,15 +9,15 @@
       <StudentRegisterModule />
     </div>
     <div v-if="topics?.length !== 0">
-      <UserStudentTopic :topics="topics ?? []" />
+      <StudentTopic :topics="topics ?? []" />
     </div>
   </div>
 
   <!-- Topic Table of Lecturer -->
   <div v-if="user?.role === UserRoleEnum.Lecturer">
     <div>
-      <div class="px-6 pb-6">
-        <v-card variant="flat" class="py-6 px-8">
+      <div class="px-4 pb-6">
+        <div variant="flat" class="py-6 px-4">
           <div class="flex justify-between">
             <div>
               <span class="font-bold text-2xl pb-4 text-blue-700">
@@ -29,10 +29,11 @@
             </div>
             <div class="flex flex-row">
               <v-btn
-                variant="tonal"
+                variant="flat"
                 append-icon="mdi-plus"
                 @click="handleOpenCreateModal"
-                color="info"
+                color="indigo"
+                class="rounded-lg"
                 >Tạo đề tài</v-btn
               >
             </div>
@@ -60,7 +61,7 @@
             @cancel="isShowDeleteModal = !isShowDeleteModal"
             @deleted="handleDeletedTopic"
           />
-        </v-card>
+        </div>
       </div>
     </div>
   </div>

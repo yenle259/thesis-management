@@ -9,7 +9,7 @@
           v-for="(item, index) in getRegisterModule(registerModule)"
           :key="index"
         >
-          <v-card width="320px" class="rounded-lg">
+          <v-card width="320px" class="bg-white rounded-lg c-shadow">
             <v-card-item>
               <div>
                 <p class="text-overline">#{{ index + 1 }}</p>

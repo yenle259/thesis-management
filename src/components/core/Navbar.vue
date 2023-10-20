@@ -1,37 +1,40 @@
 <template>
-  <div class="bg-indigo first-letter px-5 text-white fixed top-0 w-full shadow-md h-16" rounded>
-    <v-card-title class="text-center justify-center py-5">
-      <v-row align="center" justify="start">
-        <div class="pl-60">
-          <v-btn
-            size="45"
-            icon="mdi-chevron-left"
-            variant="tonal"
-            @click="$router.push('/user')"
-          >
-          </v-btn>
+  <div class="bg-sky-50 w-full fixed top-0 px-6 pt-3">
+    <div class="pl-3 pe-4 pt-2 pb-1 bg-white ml-64 rounded-lg c-shadow">
+      <div class="flex flex-row justify-between">
+        <div>
+          <v-tooltip text="Trở lại" location="right">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                class="pb-1"
+                v-bind="props"
+                size="45"
+                icon="mdi-chevron-left"
+                variant="text"
+                @click="$router.go(-1)"
+              >
+              </v-btn>
+            </template>
+          </v-tooltip>
         </div>
-        <div class="flex grow justify-center main-txt text-md"></div>
-        <div class="mx-2">
+        <div class="flex flex-row gap-x-2">
           <v-badge :content="2" color="red">
             <v-btn variant="text" size="small" icon="mdi-bell-outline"></v-btn>
           </v-badge>
-        </div>
-        <div class="gap-2">
           <profile-avatar />
         </div>
-      </v-row>
-    </v-card-title>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import ProfileAvatar from "./ProfileAvatar.vue";
-
 </script>
 
 <style scoped>
 .bg-basil {
   background-color: #fffbe6 !important;
 }
+
 </style>

@@ -2,7 +2,7 @@
   <div>
     <div class="py-3">
       <v-divider> </v-divider>
-      <div class="px-2 pt-2 flex justify-end gap-x-2">
+      <div class="pt-2 flex justify-end gap-x-2">
         <div class="flex flex-row content-center p-2">
           <p class="text-overline">Lọc đề tài</p>
         </div>
@@ -10,11 +10,12 @@
           <v-select
             v-model="model.topicType"
             :items="topicTypeOptions"
-            variant="outlined"
-            density="compact"
-            label="Phân loại đề tài"
             clearable
             chips
+            label="Phân loại đề tài"
+            variant="outlined"
+            density="compact"
+            class="rounded-lg"
           ></v-select>
         </div>
         <div class="w-60">
@@ -30,99 +31,106 @@
         </div>
       </div>
       <v-divider> </v-divider>
-      <v-table>
-        <thead>
-          <tr>
-            <th class="text-left">Tên đề tài</th>
-            <th class="text-left">Phân loại</th>
-            <th class="text-center">HK - Năm học</th>
-            <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
-              <template v-slot:activator="{ props }">
-                <th class="text-center" width="100px" v-bind="props">Số SV</th>
-              </template></v-tooltip
-            >
-            <th class="text-center">Sinh viên đăng ký</th>
-
-            <th class="text-left">Thực hiện</th>
-          </tr>
-        </thead>
-        <tbody v-if="filterTopics">
-          <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
-            <td width="400px">
-              <a :href="'/topic/' + topic.slug">
-                {{ topic.name }}
-              </a>
-            </td>
-            <td>
-              <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-                {{ getTopicTypeName(topic.type) }}
-              </v-chip>
-            </td>
-            <td width="150px" class="text-center">
-              <div v-if="topic.semester">
-                {{ getSchoolYearSemester(topic.semester, true) }}
-              </div>
-              <div v-else>#</div>
-            </td>
-            <td class="text-center">
-              <span v-if="topic.student">
-                {{ topic.student.length + "/" + topic.numberOfStudent }}
-              </span>
-              <span v-else>{{ "0/" + topic.numberOfStudent }}</span>
-            </td>
-            <td class="text-center">
-              <v-col>
-                <v-chip
-                  v-for="student in topic.student"
-                  :key="student._id"
-                  size="small"
-                  >{{ student.name }}</v-chip
+      <v-card class="overflow-hidden rounded-lg">
+        <v-table>
+          <thead>
+            <tr>
+              <th class="text-left">Tên đề tài</th>
+              <!-- <th class="text-left">Phân loại</th> -->
+              <th class="text-left">
+                <v-btn size="small" variant="text" append-icon="mdi-chevron-down"
+                  >Phân loại</v-btn
                 >
-              </v-col>
-            </td>
-            <td class="text-center" v-if="user?._id === topic.pi._id">
-              <v-row>
-                <TopicDisplayStatusButton
-                  :is-display="topic.isDisplay"
-                  :topic-id="topic._id"
-                  @updated="handleUpdated"
-                />
-                <div>
-                  <v-tooltip text="Chỉnh sửa thông tin đề tài" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        size="small"
-                        variant="text"
-                        icon="mdi-pencil"
-                        color="indigo"
-                        @click="handleOpenEditForm(topic)"
-                      ></v-btn>
-                    </template>
-                  </v-tooltip>
+              </th>
+              <th class="text-center">HK - Năm học</th>
+              <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
+                <template v-slot:activator="{ props }">
+                  <th class="text-center" width="100px" v-bind="props">
+                    Số SV
+                  </th>
+                </template></v-tooltip
+              >
+              <th class="text-center">Sinh viên đăng ký</th>
+
+              <th class="text-left">Thực hiện</th>
+            </tr>
+          </thead>
+          <tbody v-if="filterTopics">
+            <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
+              <td width="400px" @click="router.push('/topic/' + topic.slug)">
+                {{ topic.name }}
+              </td>
+              <td>
+                <v-chip :color="getTopicTypeColor(topic.type)" size="small">
+                  {{ getTopicTypeName(topic.type) }}
+                </v-chip>
+              </td>
+              <td width="150px" class="text-center">
+                <div v-if="topic.semester">
+                  {{ getSchoolYearSemester(topic.semester, true) }}
                 </div>
-                <div>
-                  <v-tooltip text="Xóa đề tài" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        size="small"
-                        variant="text"
-                        icon="mdi-delete-outline"
-                        color="red-accent-1"
-                        @click="handleOpenConfirmModal(topic)"
-                      ></v-btn>
-                    </template>
-                  </v-tooltip>
-                </div>
-              </v-row>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-    </div>
-    <div v-if="filterTopics.length == 0">
-      <p class="py-2 italic text-center">Không có đề tài</p>
+                <div v-else>#</div>
+              </td>
+              <td class="text-center">
+                <span v-if="topic.student">
+                  {{ topic.student.length + "/" + topic.numberOfStudent }}
+                </span>
+                <span v-else>{{ "0/" + topic.numberOfStudent }}</span>
+              </td>
+              <td class="text-center">
+                <v-col>
+                  <v-chip
+                    v-for="student in topic.student"
+                    :key="student._id"
+                    size="small"
+                    >{{ student.name }}</v-chip
+                  >
+                </v-col>
+              </td>
+              <td class="text-center" v-if="user?._id === topic.pi._id">
+                <v-row>
+                  <TopicDisplayStatusButton
+                    :is-display="topic.isDisplay"
+                    :topic-id="topic._id"
+                    @updated="handleUpdated"
+                  />
+                  <div>
+                    <v-tooltip text="Chỉnh sửa thông tin đề tài" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn
+                          v-bind="props"
+                          size="small"
+                          variant="text"
+                          icon="mdi-pencil"
+                          color="indigo"
+                          @click="handleOpenEditForm(topic)"
+                        ></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </div>
+                  <div>
+                    <v-tooltip text="Xóa đề tài" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn
+                          v-bind="props"
+                          size="small"
+                          variant="text"
+                          icon="mdi-delete-outline"
+                          color="red-accent-1"
+                          @click="handleOpenConfirmModal(topic)"
+                        ></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </div>
+                </v-row>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+        <div v-if="filterTopics.length == 0">
+          <p class="py-3 italic text-center">Không có đề tài</p>
+        </div>
+      </v-card>
     </div>
   </div>
 </template>
@@ -134,6 +142,8 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+
+const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());
 
