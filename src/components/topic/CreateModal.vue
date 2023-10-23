@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="dialog" persistent width="700px">
-      <v-card class="pt-4 pb-2 px-2">
+      <v-card class="pt-4 pb-2 px-2 rounded-lg">
         <v-form v-model="form">
           <v-card-title class="text-h5 text-indigo">
             <span class="uppercase mb-1"> Thêm mới đề tài </span>

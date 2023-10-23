@@ -1,5 +1,5 @@
 <template>
-  <div v-if="props.students">
+  <v-card v-if="props.students" class="rounded-lg">
     <v-table :hover="true">
       <thead>
         <tr>
@@ -42,7 +42,7 @@
         </tr>
       </tbody>
     </v-table>
-  </div>
+  </v-card>
 </template>
 
 <script setup lang="ts">

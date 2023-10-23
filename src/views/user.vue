@@ -20,7 +20,7 @@
         <div variant="flat" class="py-6 px-4">
           <div class="flex justify-between">
             <div>
-              <span class="font-bold text-2xl pb-4 text-blue-700">
+              <span class="font-bold text-2xl pb-2 text-blue-700">
                 Đề tài của tôi
               </span>
               <p class="font-light text-sm text-black text-caption">

@@ -5,6 +5,7 @@
         <div>
           <span class="font-bold text-2xl pb-4 text-blue-700">
             {{ props.title }}
+            <slot name="header"></slot>
           </span>
           <p class="font-light text-sm text-black text-caption">
             {{ props.subTitle }}
@@ -23,5 +24,5 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ title: String; subTitle?: string }>();
+const props = defineProps<{ title?: String; subTitle?: string }>();
 </script>

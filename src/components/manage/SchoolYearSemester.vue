@@ -1,33 +1,30 @@
 <template>
-  <div class="px-6 mb-8">
-    <v-card variant="flat" class="py-6 px-8">
-      <div class="flex justify-between">
-        <p class="font-bold text-2xl pb-4 text-blue-700">
-          DANH SÁCH HỌC KÌ NIÊN KHÓA
-        </p>
-        <v-btn
-          color="info"
-          variant="tonal"
-          class="ma-2"
-          @click="isShow = !isShow"
-        >
-          Thiết lập học kì niên khóa
-        </v-btn>
+  <CustomCard :title="'Học kì - Niên khóa'">
+    <template v-slot:action
+      ><v-btn
+        color="info"
+        variant="tonal"
+        class="ma-2"
+        @click="isShow = !isShow"
+      >
+        Thiết lập học kì niên khóa
+      </v-btn>
+    </template>
+    <template v-slot:content>
+      <div class="py-2 w-2/5" v-if="semesters">
+        <v-autocomplete
+          variant="solo"
+          v-model="model.schoolYear"
+          :items="schoolYearOptions"
+          label="Niên khóa"
+          class="mb-2"
+          chips
+          clearable
+        ></v-autocomplete>
       </div>
-      <div class="py-3">
-        <div class="py-2 w-2/5" v-if="semesters">
-          <v-autocomplete
-            v-model="model.schoolYear"
-            :items="schoolYearOptions"
-            label="Niên khóa"
-            class="mb-2"
-            chips
-            clearable
-          ></v-autocomplete>
-        </div>
-      </div>
-    </v-card>
-  </div>
+    </template>
+  </CustomCard>
+
   <v-dialog v-model="isShow" persistent width="550px">
     <v-card class="pt-4 pb-2 px-2">
       <v-card-title class="text-h5 text-indigo">

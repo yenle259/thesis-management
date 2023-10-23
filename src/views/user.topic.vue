@@ -29,7 +29,8 @@
   </div>
   <div class="h-screen">
     <TopicList
-      :topics="topics ?? []"
+      :title="'Danh sách đề tài'"
+      :topics="currentSemesterTopics ?? []"
       :is-publish="isShow"
       :register-module="registerModule"
     >
@@ -49,6 +50,10 @@ import { useAuthStore } from "@/stores/useAuthStore";
 useTitle("QLĐT - Danh sách đề tài");
 
 const { user } = storeToRefs(useAuthStore());
+
+const model = reactive({
+  currentSemester: "s1b2023", //hk1-2023
+});
 
 const { registerModule } = storeToRefs(useStudentStore());
 
@@ -76,6 +81,12 @@ const getTopicList = async () => {
 
 getTopicList();
 
+const currentSemesterTopics = computed(() => {
+  return topics.value?.filter(
+    ({ semester }) => semester.sysId === model.currentSemester
+  );
+});
+
 const getPublishDate = async () => {
   try {
     const { data: response } = await API.get(`/publish`);
@@ -94,5 +105,4 @@ const handlePublish = (isPublish: boolean) => {
     isShow.value = isPublish;
   }
 };
-
 </script>

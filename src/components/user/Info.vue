@@ -1,32 +1,22 @@
 <template>
-  <div class="px-6 pb-6">
-    <v-card variant="flat" class="py-6 px-8">
-      <p class="font-bold text-2xl pb-4 text-blue-700 capitalize">
-        {{ props.title }}
-      </p>
-      <v-divider></v-divider>
-      <div class="py-3 grid grid-cols-4 gap-4">
-        <div class="font-bold">Mã số định danh</div>
-        <div class="col-span-3">
-          <p class="capitalize">
-            {{ props.user?.userId }}
-          </p>
+  <CustomCard :title="'Thông tin giảng viên'">
+    <template v-slot:content>
+      <v-card class="rounded-lg px-2" max-width="400px">
+        <div class="p-4 gap-4">
+          <div class="text-caption mb-1 text-md">
+            <span class="font-bold">Mã số định danh: </span
+            >{{ props.user.userId }}
+          </div>
+          <div class="text-caption mb-1 text-md">
+            <span class="font-bold">Họ tên: </span>{{ props.user.name }}
+          </div>
+          <div class="text-caption text-md">
+            <span class="font-bold">Email: </span>{{ props.user.email }}
+          </div>
         </div>
-        <div class="font-bold">Họ tên</div>
-        <div class="col-span-3">
-          {{ props.user?.name }}
-        </div>
-        <div class="font-bold">Email</div>
-        <div class="col-span-3">
-          {{ props.user?.email }}
-        </div>
-        <div class="font-bold">SĐT</div>
-        <div class="col-span-3">
-          {{ props.user?.phone }}
-        </div>
-      </div>
-    </v-card>
-  </div>
+      </v-card>
+    </template>
+  </CustomCard>
 </template>
 
 <script setup lang="ts">

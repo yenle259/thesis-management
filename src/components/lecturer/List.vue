@@ -1,28 +1,22 @@
 <template>
-  <div class="px-6 pb-8">
-    <v-card variant="flat" class="py-6 px-8">
-      <div class="flex justify-between">
-        <div>
-          <p class="font-bold text-2xl pb-2 text-blue-700">
-            DANH SÁCH GIẢNG VIÊN
-          </p>
-          <p class="pb-2">Danh sách giảng viên hướng dẫn HKI (2022 - 2023)</p>
-        </div>
-        <div>
-          <v-btn
-            v-if="user?.role === UserRoleEnum.Student"
-            color="info"
-            variant="tonal"
-            class="ma-2"
-            @click="handleOpenRegisterModal"
-          >
-            Đăng ký đề tài
-          </v-btn>
-        </div>
-      </div>
-      <v-divider horizontal></v-divider>
-      <div class="py-2">
-        <v-table :hover="true">
+  <CustomCard
+    :title="'Danh sách giảng viên'"
+    :subTitle="'Danh sách giảng viên hướng dẫn HKI (2023 - 2024)'"
+  >
+    <template v-slot:action>
+      <v-btn
+        v-if="user?.role === UserRoleEnum.Student"
+        color="info"
+        variant="tonal"
+        class="ma-2"
+        @click="handleOpenRegisterModal"
+      >
+        Đăng ký đề tài
+      </v-btn>
+    </template>
+    <template v-slot:content>
+      <v-card class="rounded-lg">
+        <v-table>
           <thead>
             <tr>
               <th class="text-left">Họ tên</th>
@@ -51,20 +45,15 @@
               </th> -->
             </tr>
           </thead>
-          <hr />
           <tbody>
             <tr
-              class="text-sm"
               v-for="lecturer in lecturers"
               :key="lecturer.userId"
+              class="hover:text-blue-800 cursor-pointer text-sm"
+              @click="router.push('/lecturers/' + lecturer.userId)"
             >
               <td>
-                <a
-                  class="hover:text-blue-800"
-                  :href="'/lecturers/' + lecturer.userId"
-                >
-                  {{ lecturer.name }}
-                </a>
+                {{ lecturer.name }}
               </td>
               <td>{{ lecturer.userId }}</td>
               <td>0706758958</td>
@@ -86,22 +75,18 @@
             </tr>
           </tbody>
         </v-table>
-      </div>
-    </v-card>
-    <RegisterModal
-      :isShow="isOpen"
-      :lecturer="lecturerSelected ?? {}"
-      :lecturers="lecturers ?? []"
-      @cancel="isOpen = false"
-    />
-  </div>
+      </v-card></template
+    >
+  </CustomCard>
 </template>
 
 <script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
 import { UserDetails } from "@/apis/models/UserDetails";
-import { BASE_API } from "@/constant";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { useAuthStore } from "@/stores/useAuthStore";
+
+const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -111,16 +96,16 @@ const lecturerSelected = ref<UserDetails>();
 
 const isOpen = ref<boolean>(false);
 
-axios({
-  url: BASE_API + `/user/lecturers`,
-  withCredentials: true,
-})
-  .then(function (res) {
-    lecturers.value = res.data;
-  })
-  .catch(function (error) {
+const getLecturers = async () => {
+  try {
+    const { data: response } = await API.get("/user/lecturers");
+    lecturers.value = response;
+  } catch (error) {
     console.log(error);
-  });
+  }
+};
+
+getLecturers();
 
 const handleOpenRegisterModal = (lecturer?: UserDetails) => {
   lecturerSelected.value = lecturer;

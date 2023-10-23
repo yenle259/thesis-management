@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div class="py-3">
-      <v-divider> </v-divider>
-      <div class="pt-2 flex justify-end gap-x-2">
+    <div class="py-2">
+      <div class="flex justify-end gap-x-2">
         <div class="flex flex-row content-center p-2">
           <p class="text-overline">Lọc đề tài</p>
         </div>
@@ -35,12 +34,34 @@
         <v-table>
           <thead>
             <tr>
-              <th class="text-left">Tên đề tài</th>
-              <!-- <th class="text-left">Phân loại</th> -->
+              <th class="text-left" width="400px">Tên đề tài</th>
               <th class="text-left">
-                <v-btn size="small" variant="text" append-icon="mdi-chevron-down"
+                <v-btn
+                  id="type-menu"
+                  size="small"
+                  variant="text"
+                  append-icon="mdi-menu-down"
                   >Phân loại</v-btn
                 >
+                <v-menu activator="#type-menu">
+                  <v-list density="compact" class="rounded-lg">
+                    <div class="mx-1">
+                      <v-list-item
+                        v-for="(
+                          { label, value }, index
+                        ) in topicTypeOptionsCustom"
+                        :key="index"
+                        :value="value"
+                        class="rounded-lg"
+                        @click="model.topicType = value"
+                      >
+                        <span class="text-caption">
+                          {{ label }}
+                        </span>
+                      </v-list-item>
+                    </div>
+                  </v-list>
+                </v-menu>
               </th>
               <th class="text-center">HK - Năm học</th>
               <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
@@ -51,13 +72,16 @@
                 </template></v-tooltip
               >
               <th class="text-center">Sinh viên đăng ký</th>
-
               <th class="text-left">Thực hiện</th>
             </tr>
           </thead>
           <tbody v-if="filterTopics">
             <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
-              <td width="400px" @click="router.push('/topic/' + topic.slug)">
+              <td
+                width="400px"
+                @click="router.push('/topic/' + topic.slug)"
+                class="hover:text-blue-800 cursor-pointer"
+              >
                 {{ topic.name }}
               </td>
               <td>
@@ -77,15 +101,12 @@
                 </span>
                 <span v-else>{{ "0/" + topic.numberOfStudent }}</span>
               </td>
-              <td class="text-center">
-                <v-col>
-                  <v-chip
-                    v-for="student in topic.student"
-                    :key="student._id"
-                    size="small"
-                    >{{ student.name }}</v-chip
-                  >
-                </v-col>
+              <td class="text-center truncate" width="160px">
+                <div class="flex flex-col gap-y-1 py-1">
+                  <div v-for="student in topic.student" :key="student._id">
+                    <v-chip size="small">{{ student.name }}</v-chip>
+                  </div>
+                </div>
               </td>
               <td class="text-center" v-if="user?._id === topic.pi._id">
                 <v-row>
@@ -143,6 +164,8 @@ import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
+import { topicTypeOptionsCustom } from "@/components/form/data/topicTypeOptionsCustom";
+
 const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());
@@ -154,7 +177,7 @@ const props = defineProps<{ topics: TopicDetails[] }>();
 const model = reactive({
   //recent semester
   filterSemester: "6526d24c7547ab02d497a7a4",
-  topicType: null,
+  topicType: "",
 });
 
 const semesters = ref<SchoolYearSemester[]>();

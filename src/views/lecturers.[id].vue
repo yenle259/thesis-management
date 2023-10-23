@@ -1,11 +1,21 @@
 <template>
   <div>
     <!-- Lecturer Info on route -->
-    <div v-if="lecturer">
-      <UserInfo :title="'THÔNG TIN GIẢNG VIÊN'" :user="lecturer" />
+    <div class="px-8 pt-6" v-if="lecturer">
+      <v-card width="300px" rounded="lg">
+        <v-card-text>
+          <p
+            class="mb-2 uppercase text-h6 text-indigo tracking-wide font-weight-medium"
+          >
+            GIẢNG VIÊN
+          </p>
+          <hr />
+          <CustomLecturerItem :lecturer="lecturer || {}" class="mt-2"/>
+        </v-card-text>
+      </v-card>
     </div>
     <div>
-      <TopicList :topics="topics ?? []" />
+      <TopicList :topics="topics ?? []" :title="'Danh sách đề tài của GV'" />
     </div>
   </div>
 </template>

@@ -1,77 +1,117 @@
 <template>
-  <div class="px-6 pb-6 h-screen">
-    <v-card variant="flat" class="py-6 px-8 h-4/5">
-      <div v-if="topic">
-        <div class="mb-4 flex justify-between">
-          <v-chip class="text-overline" :color="getTopicTypeColor(topic?.type)">
-            {{ getTopicTypeName(topic?.type) }}</v-chip
-          >
-          <div>
-            <!-- <div>
-              <v-btn variant="tonal" color="blue">Đăng ký</v-btn>
-            </div> -->
-          </div>
-        </div>
-        <v-divider></v-divider>
-        <p class="my-2 font-bold uppercase text-blue-700 text-xl tracking-wide">
-          <span class="font-bold pb-2 text-overline text-black">Đề tài: </span>
-          {{ topic?.name }}
-        </p>
-        <v-divider></v-divider>
-        <div class="my-2">
-          <p class="uppercase font-bold mb-2 text-overline text-indigo">
-            Thông tin giảng viên hướng dẫn
-          </p>
-          <div>
-            <span class="font-bold">Giảng viên hướng dẫn: </span
-            ><a
-              class="text-blue-800"
-              :href="'/lecturers/' + topic?.pi.userId"
-              >{{ topic?.pi.name }}</a
+  <CustomCard v-if="topic">
+    <template v-slot:header>
+      <v-divider></v-divider>
+      <p class="my-2 font-bold uppercase text-indigo text-lg tracking-wide">
+        <span class="font-weight-medium pb-2 text-overline text-black"
+          >Đề tài:
+        </span>
+        {{ topic?.name }}
+      </p>
+      <v-divider></v-divider>
+    </template>
+    <template v-slot:action> </template>
+    <template v-slot:content>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-3">
+        <v-card class="rounded-lg col-span-2">
+          <v-card-text>
+            <p
+              class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
             >
+              Thông tin đề tài
+            </p>
+            <hr />
+            <div class="mt-3">
+              <v-icon icon="mdi-filter-variant" class="me-2"></v-icon>
+              <span class="font-weight-medium">Phân loại đề tài: </span>
+              <v-chip :color="getTopicTypeColor(topic?.type)">
+                {{ getTopicTypeName(topic?.type) }}
+              </v-chip>
+            </div>
+            <div class="my-2">
+              <v-icon icon="mdi-account-multiple-outline" class="me-2"></v-icon>
+              <span class="font-weight-medium">Số lượng sinh viên: </span>
+              <span>
+                {{ topic.numberOfStudent }}
+              </span>
+            </div>
+            <div class="my-3">
+              <v-icon icon="mdi-calendar-range" class="me-2"></v-icon>
+              <span class="font-weight-medium">Học kì - Niên khóa: </span>
+              <span v-if="topic.semester">
+                {{ getSchoolYearSemester(topic.semester) }}
+              </span>
+            </div>
+            <div class="my-3">
+              <v-icon icon="mdi-text" class="me-2"></v-icon>
+              <span class="font-weight-medium">Mô tả đề tài: </span>
+              <br />
+              <p class="px-3 leading-relaxed indent-7 mt-2 text-justify">
+                {{ topic.description }}
+              </p>
+            </div>
+          </v-card-text>
+        </v-card>
+        <div class="col-span-1 columns-1 gap-y-3">
+          <div class="rounded-lg">
+            <v-card-text class="text-gray-700">
+              <p
+                class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
+              >
+                Giảng viên hướng dẫn
+              </p>
+              <hr />
+              <div class="mt-2">
+                <CustomLecturerItem :lecturer="topic.pi" />
+              </div>
+            </v-card-text>
           </div>
-          <div class="my-2">
-            <span class="font-bold">Phân loại: </span>
-            <v-chip size="small" :color="getTopicTypeColor(topic?.type)">
-              {{ getTopicTypeName(topic?.type) }}
-            </v-chip>
+          <div class="rounded-lg">
+            <v-card-text>
+              <p
+                class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
+              >
+                Sinh viên đăng ký
+                <v-badge
+                  color="indigo"
+                  :content="topic.student.length + '/' + topic.numberOfStudent"
+                  inline
+                ></v-badge>
+              </p>
+              <hr />
+              <div class="mt-2" v-if="topic.student.length !== 0">
+                <div v-for="user in topic.student" :key="user._id">
+                  <CustomUserItem :user="user || {}" />
+                </div>
+              </div>
+            </v-card-text>
           </div>
-        </div>
-        <v-divider></v-divider>
-
-        <div class="my-2">
-          <p class="uppercase font-bold mb-2 text-overline text-indigo">
-            Thông tin đề tài
-          </p>
-          <p class="">
-            <span class="font-bold">Mô tả đề tài: </span>
-            <span class="text-sm">
-              {{ topic.description }}
-            </span>
-          </p>
         </div>
       </div>
-    </v-card>
-    <TopicCancelRegistrationModal
-      :isShow="isShowCancelModal"
-      :topic="topic || {}"
-      @cancel="handleCancelModal"
-    />
-  </div>
+    </template>
+  </CustomCard>
+  <TopicCancelRegistrationModal
+    :isShow="isShowCancelModal"
+    :topic="topic || {}"
+    @cancel="handleCancelModal"
+  />
 </template>
 
 <script lang="ts" setup>
-import axios from "axios";
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { UserDetails } from "@/apis/models/UserDetails";
 import { BASE_API } from "@/constant";
-import { useRoute } from "vue-router";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-import { UserDetails } from "@/apis/models/UserDetails";
+import { useClipboard } from "@vueuse/core";
 
 useTitle("QLĐT - Thông tin đề tài");
+
+const router = useRouter();
+
+const { copy, copied } = useClipboard();
 
 const route = useRoute();
 
