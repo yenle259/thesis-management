@@ -4,8 +4,13 @@
       <div class="flex justify-between">
         <div>
           <span class="font-bold text-2xl pb-4 text-indigo">
-            {{ props.title }}</span
-          >
+            {{ props.title }}
+
+            <v-chip size="small" color="indigo" variant="flat">{{
+              props.topics.length
+            }}</v-chip>
+          </span>
+          <span> </span>
           <p class="font-light text-sm text-black text-caption">
             Danh sách đề tài học kì I (2023 -2024)
           </p>
@@ -124,7 +129,7 @@
             ></v-pagination>
           </div>
           <v-divider></v-divider>
-          <div v-if="topics.length == 0">
+          <div v-if="topics.length === 0">
             <p class="my-3 italic text-center bg-white">Không có đề tài</p>
           </div>
         </div>

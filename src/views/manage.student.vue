@@ -5,7 +5,9 @@
       :subTitle="'Danh sách sinh viên đăng ký đề tài'"
     >
       <template v-slot:action>
-        <v-btn class="me-2" variant="tonal" color="blue">Nhập DS sinh viên</v-btn>
+        <v-btn class="me-2" variant="tonal" color="blue"
+          >Nhập DS sinh viên</v-btn
+        >
         <v-btn variant="tonal" color="blue">Xuất DS sinh viên</v-btn>
       </template>
       <template v-slot:content>
@@ -17,10 +19,11 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
+import { StudentDetails } from "@/apis/models/StudentDetails";
 
 useTitle("QLĐT - Quản lý sinh viên");
 
-const students = ref();
+const students = ref<StudentDetails[]>();
 
 const useStudent = async () => {
   try {
@@ -28,7 +31,7 @@ const useStudent = async () => {
     students.value = response;
     return response;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
   return students;
 };

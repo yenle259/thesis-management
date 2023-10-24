@@ -1,10 +1,16 @@
 <template>
-  <div v-if="user?.role === UserRoleEnum.Admin">
-    <UserInfo :title="'Thông tin cá nhân'" :user="user || {}" />
-  </div>
+  <!-- Common User Info -->
+  <v-card class="mx-8 mt-6 rounded-lg" width="350px">
+    <v-card-text>
+      <CustomStudentInfoItem
+        :title="'Thông tin cá nhân'"
+        :student="user || {}"
+      />
+    </v-card-text>
+  </v-card>
 
   <!-- Topic Table of Student -->
-  <div v-if="user?.role === UserRoleEnum.Student">
+  <div v-if="!user?.role">
     <div>
       <StudentRegisterModule />
     </div>
@@ -81,6 +87,7 @@ useTitle("QLĐT - Thông tin cá nhân");
 const auth = useAuthStore();
 
 const { user } = storeToRefs(auth);
+console.log(user.value);
 
 const topics = ref<TopicDetails[]>();
 
@@ -95,7 +102,9 @@ const isShowCreateModal = ref(false);
 const isShowDeleteModal = ref(false);
 
 const urlByRole =
-  "/topic/" + user.value?.role.toLocaleLowerCase() + `/${user.value?._id}`;
+  user.value?.role === UserRoleEnum.Lecturer
+    ? "/topic/lecturer" + `/${user.value?._id}`
+    : "/topic/student" + `/${user.value?._id}`;
 
 const getTopicList = async () => {
   try {

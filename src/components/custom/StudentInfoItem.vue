@@ -1,8 +1,7 @@
 <template>
   <div v-if="student">
     <div>
-      <v-icon icon="mdi-account-circle-outline" class="me-2"></v-icon>Giảng
-      viên:
+      <v-icon icon="mdi-account-circle-outline" class="me-2"></v-icon>Họ tên:
       <a
         class="text-blue-800"
         @click="router.push('/lecturers/' + student.userId)"
@@ -10,7 +9,7 @@
       >
     </div>
     <div class="my-1">
-      <v-icon icon="mdi-at" class="me-2"></v-icon>Mã số sinh viên:
+      <v-icon icon="mdi-at" class="me-2"></v-icon>Mã số định danh:
 
       {{ student.userId }}
     </div>

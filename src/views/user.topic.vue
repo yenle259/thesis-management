@@ -27,12 +27,12 @@
       </template>
     </AnnounceModal>
   </div>
-  <div class="h-screen">
+  <div class="h-screen" v-if="registerModule">
     <TopicList
       :title="'Danh sách đề tài'"
       :topics="currentSemesterTopics ?? []"
       :is-publish="isShow"
-      :register-module="registerModule"
+      :register-module="registerModule[0].moduleType"
     >
     </TopicList>
   </div>
@@ -42,7 +42,6 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { PublishDate } from "@/apis/models/PublishDate";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";

@@ -10,7 +10,7 @@
             GIẢNG VIÊN
           </p>
           <hr />
-          <CustomLecturerItem :lecturer="lecturer || {}" class="mt-2"/>
+          <CustomLecturerItem :lecturer="lecturer || {}" class="mt-2" />
         </v-card-text>
       </v-card>
     </div>

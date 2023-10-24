@@ -141,7 +141,7 @@ const handleSubmit = async (scheduleTime: any) => {
       id: "6526f1c4ac0072dcd9517532",
     });
 
-    toast.success("Công bố danh sách đề tài thành công");
+    toast.success("Mở đăng ký đề tài thành công");
 
     handleCancel();
     return response;
@@ -161,7 +161,7 @@ const handleSetPublishDate = async (scheduleTime: any) => {
     });
 
     toast.success(
-      "Hẹn thời gian công bố danh sách đề tài: " +
+      "Đặt thời gian mở đăng ký danh sách đề tài: " +
         getFormatDate(parseISO(scheduleTime))
     );
     handleCancel();

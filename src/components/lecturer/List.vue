@@ -40,9 +40,6 @@
                   >Luận văn
                 </v-tooltip>
               </th>
-              <!-- <th class="text-left" v-if="user?.role === UserRoleEnum.Student">
-                Thực hiện
-              </th> -->
             </tr>
           </thead>
           <tbody>
@@ -61,17 +58,6 @@
               <td class="text-center">1</td>
               <td class="text-center">1</td>
               <td class="text-center">2</td>
-              <!-- <td v-if="user?.role === UserRoleEnum.Student">
-                <v-btn
-                  color="info"
-                  variant="tonal"
-                  class="ma-2"
-                  size="small"
-                  @click="handleOpenRegisterModal(lecturer)"
-                >
-                  Đăng ký
-                </v-btn>
-              </td> -->
             </tr>
           </tbody>
         </v-table>

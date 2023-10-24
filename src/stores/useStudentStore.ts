@@ -1,19 +1,16 @@
-import { StudentDetails } from "@/apis/models/StudentDetails";
+import type { RegisterModule } from "@/apis/models/RegisterModule";
 
 export const useStudentStore = defineStore(
   "student",
   () => {
-    const studentInfo = ref<StudentDetails>();
-    const registerModule = ref<string>();
+    const registerModule = ref<RegisterModule[]>();
 
     function reset() {
-      const newStudent = ref<StudentDetails>();
-      const newRegisterModule = ref<string>();
-      studentInfo.value = newStudent.value;
+      const newRegisterModule = ref<RegisterModule[]>();
       registerModule.value = newRegisterModule.value;
     }
 
-    return { studentInfo, registerModule, reset };
+    return { registerModule, reset };
   },
   {
     persist: true,

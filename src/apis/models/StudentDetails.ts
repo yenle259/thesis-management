@@ -1,6 +1,11 @@
-import { UserDetails } from "./UserDetails";
+import { RegisterModule } from "./RegisterModule";
 
 export interface StudentDetails {
-  userInfo: UserDetails;
-  registerModule: string;
+  _id: string;
+  userId: string;
+  email: string;
+  name: string;
+  registerModule: RegisterModule[];
+  updatedAt: Date;
+  createdAt: Date;
 }

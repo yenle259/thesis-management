@@ -1,3 +1,4 @@
+import { RegisterModule } from "@/apis/models/RegisterModule";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
 export function getTopicTypeByName(name: string): TopicTypeEnum | undefined {
@@ -12,7 +13,14 @@ export function getTopicTypeByName(name: string): TopicTypeEnum | undefined {
 }
 
 export function getRegisterModule(registerModule: string) {
-  // const string = ref(registerModule);
-  // const array = ref(string.value.split("-"));
-  return registerModule.split("-").map((item) => getTopicTypeByName(item));
+  return registerModule
+    ? registerModule.split("-").map((item) => getTopicTypeByName(item))
+    : undefined;
+}
+
+export function getRecentRegisterModule(
+  moduleList: RegisterModule[],
+  recentSemesterId: string
+) {
+  return moduleList.find((item) => item.semester._id === recentSemesterId);
 }

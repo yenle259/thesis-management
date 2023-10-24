@@ -16,7 +16,7 @@
               <v-list-item :key="user?._id" class="py-1" v-if="user">
                 <p>{{ user.name }}</p>
                 <p class="text-caption">
-                  {{ getUserRoleName(user.role) }}
+                  {{ user.role ? getUserRoleName(user.role) : "Sinh viên" }}
                 </p>
                 <template v-slot:prepend>
                   <v-btn

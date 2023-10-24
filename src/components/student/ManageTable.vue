@@ -13,20 +13,22 @@
         <tr
           class="text-sm"
           v-for="student in props.students"
-          :key="student.userInfo._id"
+          :key="student._id"
         >
           <td class="uppercase">
-            {{ student.userInfo.userId }}
+            {{ student.userId }}
           </td>
           <td>
-            {{ student.userInfo.name }}
+            {{ student.name }}
           </td>
           <td class="text-caption">
-            {{ student.userInfo.email }}
+            {{ student.email }}
           </td>
-          <td v-if="getRegisterModule(student.registerModule)">
+          <td v-if="student.registerModule[0].moduleType">
             <span
-              v-for="(item, index) in getRegisterModule(student.registerModule)"
+              v-for="(item, index) in getRegisterModule(
+                student.registerModule[0].moduleType
+              )"
               :key="index"
             >
               <v-chip
@@ -38,6 +40,9 @@
                 {{ getTopicTypeName(item) }}
               </v-chip>
             </span>
+          </td>
+          <td v-else>
+            <span class="font-italic">Không có môn học đăng ký</span>
           </td>
         </tr>
       </tbody>

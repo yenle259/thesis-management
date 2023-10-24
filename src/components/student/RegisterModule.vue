@@ -4,9 +4,9 @@
     :subTitle="'Học phần đã đăng ký ở Học kì hiện tại'"
   >
     <template v-slot:content>
-      <div v-if="registerModule" class="grid grid-cols-3">
+      <div v-if="recentModule" class="grid grid-cols-3">
         <div
-          v-for="(item, index) in getRegisterModule(registerModule)"
+          v-for="(item, index) in getRegisterModule(recentModule.moduleType)"
           :key="index"
         >
           <v-card width="320px" class="bg-white rounded-lg c-shadow">
@@ -47,4 +47,14 @@
 
 <script setup lang="ts">
 const { registerModule } = storeToRefs(useStudentStore());
+
+const { user } = storeToRefs(useAuthStore());
+
+const recentSemesterId = "6526d24c7547ab02d497a7a4";
+
+const recentModule = computed(() => {
+  return registerModule.value?.find(
+    (item) => item.semester._id === recentSemesterId
+  );
+});
 </script>

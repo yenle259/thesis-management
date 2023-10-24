@@ -1,29 +1,39 @@
 <template>
   <div v-if="props.topic">
     <v-dialog v-model="dialog" persistent width="600px">
-      <v-card class="pt-4 pb-2 px-2">
+      <v-card class="px-2 pt-3 pb-2 rounded-lg">
         <v-card-title class="text-h5 text-indigo">
-          <span class="uppercase mb-1"> Xác nhận đăng ký </span>
+          <span class="mb-1"> Xác nhận đăng ký </span>
           <p class="font-light text-caption text-black">
             Xác nhận đăng ký đề tài với thông tin đề tài bên dưới
           </p>
         </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-          <p class="uppercase font-bold mb-2">Thông tin đề tài</p>
+
+        <hr />
+        <div class="px-4 py-2">
           <p class="mb-1">
-            <span class="font-bold">Tên đề tài: </span>{{ props.topic.name }}
+            <span class="text-subtitle-2">Tên đề tài: </span>
+            <span>
+              {{ props.topic.name }}
+            </span>
           </p>
           <p class="mb-1">
-            <span class="font-bold">Giảng viên: </span>{{ props.topic.pi.name }}
+            <span class="text-subtitle-2">Giảng viên: </span>
+            <span class="text-indigo">
+              {{ props.topic.pi.name }}
+            </span>
           </p>
           <p class="mb-1">
-            <span class="font-bold">Phân loại: </span>
+            <span class="text-subtitle-2">Phân loại: </span>
             <v-chip :color="getTopicTypeColor(topic.type)" size="small">
               {{ getTopicTypeName(props.topic.type) }}
             </v-chip>
           </p>
-        </v-card-text>
+          <p class="mb-1">
+            <span class="text-subtitle-2">Học kì - Niên khóa: </span
+            >{{ getSchoolYearSemester(topic.semester) }}
+          </p>
+        </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" variant="text" @click="handleCancel"> Hủy </v-btn>
@@ -59,10 +69,7 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
-
-
 const handleRegisterTopic = (topicId: string) => {
-
   axios({
     method: "post",
     url: BASE_API + `/topic/register`,
