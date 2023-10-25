@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <v-menu :close-on-content-click="false" location="bottom">
+      <v-menu location="bottom">
         <template v-slot:activator="{ props }">
           <v-btn color="teal" size="40" v-bind="props" rounded variant="flat"
             ><span class="text-h6">{{

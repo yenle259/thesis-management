@@ -1,15 +1,19 @@
 <template>
   <div v-if="props.topic">
-    <v-dialog v-model="dialog" persistent width="600px">
-      <v-card class="px-2 pt-3 pb-2 rounded-lg">
-        <v-card-title class="text-h5 text-indigo">
-          <span class="mb-1"> Xác nhận đăng ký </span>
-          <p class="font-light text-caption text-black">
-            Xác nhận đăng ký đề tài với thông tin đề tài bên dưới
-          </p>
+    <v-dialog v-model="dialog" width="600px">
+      <v-card class="px-2 pt-3 pb-2 rounded-lg" v-click-outside="handleCancel">
+        <v-card-title class="d-flex text-h5 text-indigo justify-between">
+          <div>
+            <span class="mb-1"> Xác nhận đăng ký </span>
+            <p class="font-light text-caption text-black">
+              Xác nhận đăng ký đề tài với thông tin đề tài bên dưới
+            </p>
+          </div>
+          <v-btn icon @click="handleCancel" variant="flat"
+            ><v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
-
-        <hr />
+        <v-divider></v-divider>
         <div class="px-4 py-2">
           <p class="mb-1">
             <span class="text-subtitle-2">Tên đề tài: </span>
@@ -52,7 +56,7 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { BASE_API } from "@/constant";
+import { BASE_API, TIME_OUT } from "@/constant";
 import { useAuthStore } from "@/stores/useAuthStore";
 import router from "@/router";
 
@@ -83,7 +87,7 @@ const handleRegisterTopic = (topicId: string) => {
       console.log(res.data);
       toast.success("Đăng ký đề tài thành công!");
       emit("registered", props.topic);
-      router.push(`/topic/${props.topic.slug}`);
+      setTimeout(() => router.push(`user/topic/${props.topic.slug}`), TIME_OUT);
     })
     .catch(function (error) {
       if (error.response) {

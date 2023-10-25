@@ -1,69 +1,24 @@
 <template>
-  <div class="px-6 pb-6 h-screen">
-    <v-card variant="flat" class="py-6 px-8 h-4/5">
-      <div v-if="topic">
-        <div class="mb-4 flex justify-between">
-          <v-chip :color="getTopicTypeColor(topic?.type)" class="text-overline">
-            {{ getTopicTypeName(topic?.type) }}
-          </v-chip>
-          <div>
-            <div>
-              <v-btn variant="tonal" color="red" @click="handleCancelModal"
-                >Hủy đăng ký</v-btn
-              >
-              <v-btn class="mx-2" variant="tonal" color="warning"
-                >Xin điểm I</v-btn
-              >
-              <v-btn variant="flat" color="blue">Xác nhận báo cáo</v-btn>
-            </div>
-          </div>
-        </div>
-        <v-divider></v-divider>
-        <p class="my-2 font-bold uppercase text-blue-700 text-xl tracking-wide">
-          <span class="font-bold pb-2 text-overline text-black">Đề tài: </span>
-          {{ topic?.name }}
-        </p>
-        <v-divider></v-divider>
-        <div class="my-2">
-          <p class="uppercase font-bold mb-2 text-overline text-indigo">
-            Thông tin giảng viên hướng dẫn
-          </p>
-          <div>
-            <span class="font-bold">Giảng viên hướng dẫn: </span
-            ><a
-              class="text-blue-800"
-              :href="'/lecturers/' + topic?.pi.userId"
-              >{{ topic?.pi.name }}</a
-            >
-          </div>
-          <div class="my-2">
-            <span class="font-bold">Phân loại: </span>
-            <v-chip size="small" :color="getTopicTypeColor(topic?.type)">
-              {{ getTopicTypeName(topic?.type) }}
-            </v-chip>
-          </div>
-        </div>
-        <v-divider></v-divider>
-
-        <div class="my-2">
-          <p class="uppercase font-bold mb-2 text-overline text-indigo">
-            Thông tin đề tài
-          </p>
-          <p class="">
-            <span class="font-bold">Mô tả đề tài: </span>
-            <span class="text-sm">
-              {{ topic.description }}
-            </span>
-          </p>
-        </div>
+  <TopicDetail v-if="topic && user" :topic="topic || {}">
+    <template v-slot:action>
+      <div
+        v-if="topic.student.map(({ _id }) => _id).includes(user._id)"
+        class="d-flex flex-row justify-end gap-x-2"
+      >
+        <p class="text-overline self-center">Trạng thái</p>
+        <TopicStatusButton
+          :status="'Pending'"
+          class="self-center"
+          @open="handleCancelModal"
+        />
       </div>
-    </v-card>
-    <TopicCancelRegistrationModal
-      :isShow="isShowCancelModal"
-      :topic="topic || {}"
-      @cancel="handleCancelModal"
-    />
-  </div>
+    </template>
+  </TopicDetail>
+  <TopicCancelRegistrationModal
+    :isShow="isShowCancelModal"
+    :topic="topic || {}"
+    @cancel="handleCancelModal"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -90,12 +45,6 @@ const topic = ref<TopicDetails>();
 const students = ref<UserDetails[]>();
 
 const isShowCancelModal = ref(false);
-
-const handleRegisteredStudent = (students: UserDetails[]) => {
-  console.log(students.find((item) => item._id === user.value?._id));
-  return students.find((item) => item._id === user.value?._id);
-  // return false;
-};
 
 console.log(topic.value?.student[0]);
 

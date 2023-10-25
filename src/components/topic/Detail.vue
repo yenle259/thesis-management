@@ -11,19 +11,33 @@
       <v-divider></v-divider>
     </template>
     <template v-slot:action>
-      <v-btn
-        color="info"
-        variant="tonal"
-        class="ma-2"
-        :key="topic._id"
-      >
-        Đăng ký
-      </v-btn>
+      <slot name="action"></slot>
     </template>
+
     <template v-slot:content>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-3">
-        <v-card class="rounded-lg col-span-2">
-          <v-card-text>
+        <div class="col-span-2">
+          <div v-if="false">
+            <v-timeline direction="horizontal" truncate-line="both">
+              <v-timeline-item size="small" dot-color="indigo">
+                <p class="text-subtitle-2 text-indigo">Đã đăng ký</p>
+                <!-- <p class="text-caption"> Đã đăng ký </p> -->
+              </v-timeline-item>
+
+              <v-timeline-item size="small" dot-color="grey">
+                <template v-slot:opposite> Được duyệt </template>
+              </v-timeline-item>
+
+              <v-timeline-item size="small" dot-color="grey">
+                Xác nhận báo cáo
+              </v-timeline-item>
+
+              <v-timeline-item size="small" dot-color="grey">
+                <template v-slot:opposite> Nhập điểm </template>
+              </v-timeline-item>
+            </v-timeline>
+          </div>
+          <v-card class="px-4 py-3 rounded-lg">
             <p
               class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
             >
@@ -59,8 +73,8 @@
                 {{ topic.description }}
               </p>
             </div>
-          </v-card-text>
-        </v-card>
+          </v-card>
+        </div>
         <div class="col-span-1 columns-1 gap-y-3">
           <div class="rounded-lg">
             <v-card-text class="text-gray-700">
@@ -99,54 +113,13 @@
       </div>
     </template>
   </CustomCard>
-  <TopicCancelRegistrationModal
-    :isShow="isShowCancelModal"
-    :topic="topic || {}"
-    @cancel="handleCancelModal"
-  />
 </template>
 
 <script lang="ts" setup>
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { UserDetails } from "@/apis/models/UserDetails";
-import { BASE_API } from "@/constant";
+useTitle("QLĐT - Đề tài đăng ký");
 
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
-
-import { useClipboard } from "@vueuse/core";
-
-useTitle("QLĐT - Thông tin đề tài");
-
-const router = useRouter();
-
-const { copy, copied } = useClipboard();
-
-const route = useRoute();
-
-const topicSlug = route.params.slug;
-
-const topic = ref<TopicDetails>();
-
-const students = ref<UserDetails[]>();
-
-const isShowCancelModal = ref(false);
-
-console.log(topic.value?.student[0]);
-
-axios({
-  url: BASE_API + `/topic/${topicSlug}`,
-  withCredentials: true,
-})
-  .then(function (res) {
-    topic.value = res.data[0];
-    students.value = topic.value?.student;
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-const handleCancelModal = () => {
-  isShowCancelModal.value = !isShowCancelModal.value;
-};
+const props = defineProps<{
+  topic: TopicDetails;
+}>();
 </script>

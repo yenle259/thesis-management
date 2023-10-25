@@ -91,6 +91,7 @@
     "useTitle": true,
     "getRegisterModule": true,
     "getTopicTypeByName": true,
-    "axios": true
+    "axios": true,
+    "getRecentRegisterModule": true
   }
 }

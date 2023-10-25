@@ -68,7 +68,7 @@
               <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
                 <td
                   class="max-w-xs hover:text-blue-800 cursor-pointer"
-                  @click="router.push('/topic/' + topic.slug)"
+                  @click="openInfoModal(topic)"
                 >
                   {{ topic.name }}
                 </td>
@@ -135,6 +135,14 @@
         </div>
       </v-card>
     </div>
+    <TopicInfoModal
+      v-model="model.info"
+      :isShow="model.info"
+      :topic="openTopic || {}"
+      :isRegister="isRegister"
+      @cancel="model.info = false"
+      @register="handleConfirmModal"
+    />
     <TopicRegisterModal
       :isShow="isOpen"
       :topic="selectedTopic || {}"
@@ -168,6 +176,7 @@ const props = defineProps<{
 const model = reactive({
   type: TopicTypeEnum.LV,
   piId: "",
+  info: false,
 });
 
 const isOpen = ref(false);
@@ -176,10 +185,11 @@ const topicIdUpdated = ref<TopicDetails>();
 
 const selectedTopic = ref<TopicDetails>();
 
+const openTopic = ref<TopicDetails>();
+
 const page = ref();
 
 const isRegister = computed(() => {
-  console.log(props.isPublish);
   if (props.isPublish && props.registerModule) {
     return props.registerModule.split("-").includes(model.type);
   } else {
@@ -206,6 +216,11 @@ const unique = computed(() => {
   ];
 });
 
+const openInfoModal = (topic: TopicDetails) => {
+  model.info = true;
+  openTopic.value = topic;
+};
+
 const handleFilterLecturer = (value: string) => {
   model.piId = value;
 };
@@ -219,7 +234,6 @@ const handleDisabled = (topic: TopicDetails) => {
 
 const handleConfirmModal = (topic: TopicDetails) => {
   isOpen.value = !isOpen.value;
-  console.log(topic);
   selectedTopic.value = topic;
 };
 

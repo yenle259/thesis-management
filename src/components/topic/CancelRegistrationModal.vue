@@ -1,29 +1,39 @@
 <template>
   <div v-if="props.topic">
     <v-dialog v-model="dialog" persistent width="600px">
-      <v-card class="pt-4 pb-2 px-2">
-        <v-card-title class="text-h5 text-indigo">
-          <span class="uppercase mb-1"> Hủy đăng ký đề tài </span>
-          <p class="font-light text-caption text-black">
-            Xác nhận hủy đăng ký đề tài với thông tin đề tài bên dưới
-          </p>
+      <v-card class="rounded-lg pt-4 pb-2 px-2" v-click-outside="handleCancel">
+        <v-card-title class="d-flex text-h5 text-indigo justify-between">
+          <div>
+            <span class="mb-1"> Hủy đăng ký đề tài </span>
+            <p class="font-light text-caption text-black">
+              Xác nhận hủy đăng ký đề tài với thông tin đề tài bên dưới
+            </p>
+          </div>
+          <v-btn icon @click="handleCancel" variant="flat"
+            ><v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
-          <p class="uppercase font-bold mb-2">Thông tin đề tài</p>
+        <div class="px-4 py-2">
           <p class="mb-1">
-            <span class="font-bold">Tên đề tài: </span>{{ props.topic.name }}
+            <span class="text-subtitle-2">Tên đề tài: </span
+            >{{ props.topic.name }}
           </p>
           <p class="mb-1">
-            <span class="font-bold">Giảng viên: </span>{{ props.topic.pi.name }}
+            <span class="text-subtitle-2">Giảng viên: </span
+            >{{ props.topic.pi.name }}
           </p>
           <p class="mb-1">
-            <span class="font-bold">Phân loại: </span>
+            <span class="text-subtitle-2">Phân loại: </span>
             <v-chip :color="getTopicTypeColor(topic.type)" size="small">
               {{ getTopicTypeName(props.topic.type) }}
             </v-chip>
           </p>
-        </v-card-text>
+          <p class="mb-1">
+            <span class="text-subtitle-2">Học kì - Niên khóa: </span
+            >{{ getSchoolYearSemester(topic.semester) }}
+          </p>
+        </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" variant="text" @click="handleCancel">
@@ -44,7 +54,7 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { BASE_API } from "@/constant";
+import { BASE_API, TIME_OUT } from "@/constant";
 
 import router from "@/router";
 
@@ -60,7 +70,6 @@ const dialog = computed(() => {
 });
 
 const handleRegisterTopic = (topicId: string) => {
-  // toast.info(topicId + " & " + user.value?._id);
   axios({
     method: "put",
     url: BASE_API + `/topic/unregister/${props.topic.slug}`,
@@ -69,8 +78,8 @@ const handleRegisterTopic = (topicId: string) => {
     .then(function (res) {
       console.log(res.data);
       toast.success("Hủy đăng ký đề tài thành công!");
-      emit("unregistered");
-      router.push("/topic-list");
+      emit("cancel");
+      setTimeout(() => router.push("/topic-list"), TIME_OUT);
     })
     .catch(function (error) {
       toast.error(error.message);

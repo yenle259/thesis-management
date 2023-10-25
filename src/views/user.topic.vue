@@ -27,12 +27,14 @@
       </template>
     </AnnounceModal>
   </div>
-  <div class="h-screen" v-if="registerModule">
+  <div class="h-screen">
     <TopicList
       :title="'Danh sách đề tài'"
       :topics="currentSemesterTopics ?? []"
       :is-publish="isShow"
-      :register-module="registerModule[0].moduleType"
+      :register-module="
+        registerModule ? registerModule[0].moduleType : undefined
+      "
     >
     </TopicList>
   </div>
