@@ -7,12 +7,19 @@
   >
     <template v-slot:action>
       <div
-        v-if="topic.student.map(({ _id }) => _id).includes(user._id)"
+        v-if="
+          topic.student
+            .map(({ studentInfo: { _id } }) => _id)
+            .includes(user._id)
+        "
         class="d-flex flex-row justify-end gap-x-2"
       >
         <p class="text-overline self-center">Trạng thái</p>
         <TopicStatusButton
-          :status="'Pending'"
+          :status="
+            topic.student.find((item) => item.studentInfo._id === user?._id)
+              ?.status
+          "
           class="self-center"
           @open="handleCancelModal"
         />
@@ -35,15 +42,14 @@
 <script lang="ts" setup>
 import { BASE_API } from "@/constant";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { UserDetails } from "@/apis/models/UserDetails";
+import { RegisterStudent } from "@/apis/models/RegisterStudent";
+import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 import { useRoute } from "vue-router";
-import { StudentDetails } from "@/apis/models/StudentDetails";
-import { react } from "@babel/types";
 
 useTitle("QLĐT - Thông tin đề tài");
 
@@ -55,15 +61,13 @@ const topicSlug = route.params.slug;
 
 const topic = ref<TopicDetails>();
 
-const students = ref<UserDetails[]>();
+const students = ref<RegisterStudent[]>();
 
-const studentInfo = ref<StudentDetails>();
+const studentInfo = ref<RegisterStudent>();
 
 const isShowCancelModal = ref(false);
 
 const isShowApproveModal = ref(false);
-
-const isShowRejectModal = ref(false);
 
 const model = reactive({
   modalType: "Approve",
@@ -85,15 +89,15 @@ const handleCancelModal = () => {
   isShowCancelModal.value = !isShowCancelModal.value;
 };
 
-const handleApproveModal = (student: StudentDetails) => {
+const handleApproveModal = (student: RegisterStudent) => {
   isShowApproveModal.value = true;
   studentInfo.value = student;
-  model.modalType = "Approve";
+  model.modalType = RegisterStatusEnum.Approve;
 };
 
-const handleRejectModal = (student: StudentDetails) => {
+const handleRejectModal = (student: RegisterStudent) => {
   isShowApproveModal.value = true;
   studentInfo.value = student;
-  model.modalType = "Reject";
+  model.modalType = RegisterStatusEnum.Reject;
 };
 </script>

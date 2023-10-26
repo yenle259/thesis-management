@@ -40,7 +40,6 @@
               <hr class="mt-1" />
               <div class="p-2">
                 <v-list-item
-                  active-color="blue"
                   class="rounded-lg"
                   v-for="({ label, icon, url }, index) in profileRoutes"
                   :key="index"

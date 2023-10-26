@@ -124,7 +124,6 @@
             <v-pagination
               v-model="page"
               :length="4"
-              active-color="blue"
               variant="text"
               rounded="circle"
               density="compact"

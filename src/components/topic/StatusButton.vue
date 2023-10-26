@@ -25,15 +25,17 @@
 </template>
 
 <script lang="ts" setup>
+import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
+
 const emit = defineEmits(["cancel", "open"]);
 
 const props = defineProps<{
-  status: "Đang chờ duyệt";
+  status: RegisterStatusEnum;
 }>();
 
 const actionList = ref([
   {
-    status: "Pending",
+    status: RegisterStatusEnum.Pending,
     color: "warning",
     label: "Đang chờ duyệt",
     actions: [
@@ -46,7 +48,7 @@ const actionList = ref([
     ],
   },
   {
-    status: "Approved",
+    status: RegisterStatusEnum.Approve,
     color: "success",
     label: "Đã được duyệt",
     actions: [

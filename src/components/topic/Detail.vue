@@ -103,8 +103,8 @@
               </p>
               <hr />
               <div class="mt-2" v-if="topic.student.length !== 0">
-                <div v-for="user in topic.student" :key="user._id">
-                  <CustomUserItem :user="user || {}">
+                <div v-for="user in topic.student" :key="user.studentInfo._id">
+                  <CustomUserItem :user="user.studentInfo || {}">
                     <template
                       v-slot:action
                       v-if="topic.pi._id === auth.user?._id"
@@ -154,8 +154,9 @@
 </template>
 
 <script lang="ts" setup>
+import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { UserDetails } from "@/apis/models/UserDetails";
+
 useTitle("QLĐT - Đề tài đăng ký");
 
 const auth = useAuthStore();
@@ -166,10 +167,10 @@ const props = defineProps<{
   topic: TopicDetails;
 }>();
 
-const handleApprove = (user: UserDetails) => {
+const handleApprove = (user: RegisterStudent) => {
   emit("approved", user);
 };
-const handleReject = (user: UserDetails) => {
+const handleReject = (user: RegisterStudent) => {
   emit("reject", user);
 };
 </script>

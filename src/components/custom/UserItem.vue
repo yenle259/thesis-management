@@ -26,7 +26,8 @@
 </template>
 
 <script setup lang="ts">
+import { StudentDetails } from "@/apis/models/StudentDetails";
 import { UserDetails } from "@/apis/models/UserDetails";
 
-const props = defineProps<{ user: UserDetails }>();
+const props = defineProps<{ user: UserDetails | StudentDetails }>();
 </script>

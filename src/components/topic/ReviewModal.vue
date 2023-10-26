@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="dialog" width="550px">
       <v-card
-        v-if="status === 'Approve'"
+        v-if="status === RegisterStatusEnum.Approve"
         class="rounded-lg pt-2 pb-2 px-2"
         v-click-outside="handleCancel"
       >
@@ -24,26 +24,28 @@
           <p class="mb-1">
             <span class="text-subtitle-2">Mã số sinh viên: </span
             ><span class="uppercase">
-              {{ student.userId }}
+              {{ student.studentInfo.userId }}
             </span>
           </p>
           <p class="mb-1">
             <span class="text-subtitle-2">Tên sinh viên: </span
             ><span>
-              {{ student.name }}
+              {{ student.studentInfo.name }}
             </span>
           </p>
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" variant="text" @click="handleCancel"> Hủy </v-btn>
-          <v-btn color="success" variant="tonal"> Xác nhận </v-btn>
+          <v-btn color="success" variant="tonal" @click="handleApproval">
+            Xác nhận
+          </v-btn>
         </v-card-actions>
       </v-card>
 
       <v-card
         class="rounded-lg pt-2 pb-2 px-2"
-        v-if="status === 'Reject'"
+        v-if="status === RegisterStatusEnum.Reject"
         v-click-outside="handleCancel"
       >
         <v-card-title class="d-flex text-h5 text-indigo justify-between">
@@ -65,9 +67,11 @@
             <span class="text-subtitle-2">Thông tin sinh viên: </span>
             <v-divider vertical thickness="3"></v-divider>
             <div>
-              <p class="text-grey-800 text-sm">{{ student.name }}</p>
+              <p class="text-grey-800 text-sm">
+                {{ student.studentInfo.name }}
+              </p>
               <p class="text-caption text-sm text-grey">
-                {{ student.email }}
+                {{ student.studentInfo.email }}
               </p>
             </div>
           </div>
@@ -99,13 +103,18 @@
 </template>
 
 <script setup lang="ts">
-import { StudentDetails } from "@/apis/models/StudentDetails";
+import API from "@/apis/helpers/axiosBaseConfig";
+import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
+import { RegisterStudent } from "@/apis/models/RegisterStudent";
+
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const emit = defineEmits(["cancel", "unregistered"]);
 
 const props = defineProps<{
   isShow: boolean;
-  student: StudentDetails;
+  student: RegisterStudent;
   status?: string;
 }>();
 
@@ -132,5 +141,39 @@ const dialog = computed(() => {
 
 const handleCancel = () => {
   emit("cancel");
+};
+
+const handleApproval = async () => {
+  try {
+    const { data: response } = await API.put(`/topic/review`, {
+      status: RegisterStatusEnum.Approve,
+      topicIndex: props.student._id,
+    });
+
+    toast.success("Cập nhật thông tin thành công");
+    handleCancel();
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleRejected = async (scheduleTime: any) => {
+  const date = new Date(scheduleTime);
+
+  try {
+    const { data: response } = await API.put(`/publish/set`, {
+      publishDate: date,
+      id: "6526f1c4ac0072dcd9517532",
+    });
+
+    toast.success("Phê duyệt sinh viên đăng ký đề tài thành công");
+
+    handleCancel();
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>

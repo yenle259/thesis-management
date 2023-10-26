@@ -100,8 +100,11 @@
                 </v-window-item>
                 <v-window-item :key="3" :value="3" class="h-56">
                   <div v-if="topic.student.length !== 0">
-                    <div v-for="user in topic.student" :key="user._id">
-                      <CustomUserItem :user="user || {}" />
+                    <div
+                      v-for="user in topic.student"
+                      :key="user.studentInfo._id"
+                    >
+                      <CustomUserItem :user="user.studentInfo || {}" />
                     </div>
                   </div>
                   <div

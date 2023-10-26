@@ -103,8 +103,11 @@
               </td>
               <td class="text-center truncate" width="160px">
                 <div class="flex flex-col gap-y-1 py-1">
-                  <div v-for="student in topic.student" :key="student._id">
-                    <v-chip size="small">{{ student.name }}</v-chip>
+                  <div
+                    v-for="student in topic.student"
+                    :key="student.studentInfo._id"
+                  >
+                    <v-chip size="small">{{ student.studentInfo.name }}</v-chip>
                   </div>
                 </div>
               </td>

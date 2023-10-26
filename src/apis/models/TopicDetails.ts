@@ -1,3 +1,4 @@
+import { RegisterStudent } from "./RegisterStudent";
 import { SchoolYearSemester } from "./SchoolYearSemester";
 import type { TopicTypeEnum } from "./TopicTypeEnum";
 import { UserDetails } from "./UserDetails";
@@ -10,7 +11,7 @@ export interface TopicDetails {
   description: string;
   pi: UserDetails;
   numberOfStudent: number;
-  student: UserDetails[];
+  student: RegisterStudent[];
   isDisplay: boolean;
   semester: SchoolYearSemester;
 }
