@@ -113,7 +113,7 @@
                         <template v-slot:activator="{ props }">
                           <v-btn
                             appendIcon="mdi-chevron-down"
-                            class="self-center me-2 rounded-lg bg-white"
+                            class="self-center me-2 bg-white"
                             variant="tonal"
                             size="small"
                             color="warning"

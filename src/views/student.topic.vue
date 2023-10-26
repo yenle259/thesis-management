@@ -18,21 +18,16 @@
         />
       </div>
     </template>
-    <!-- <template v-slot:lecturer-action>
-      <TopicReviewButton
-        @approved="handleApproveModal"
-        @reject="handleRejectModal"
-      />
-    </template> -->
   </TopicDetail>
   <TopicCancelRegistrationModal
     :isShow="isShowCancelModal"
     :topic="topic || {}"
     @cancel="handleCancelModal"
   />
-  <TopicApproveModal
+  <TopicReviewModal
     :isShow="isShowApproveModal"
     :student="studentInfo || {}"
+    :status="model.modalType"
     @cancel="isShowApproveModal = false"
   />
 </template>
@@ -48,6 +43,7 @@ import "vue3-toastify/dist/index.css";
 
 import { useRoute } from "vue-router";
 import { StudentDetails } from "@/apis/models/StudentDetails";
+import { react } from "@babel/types";
 
 useTitle("QLĐT - Thông tin đề tài");
 
@@ -69,7 +65,9 @@ const isShowApproveModal = ref(false);
 
 const isShowRejectModal = ref(false);
 
-console.log(topic.value?.student[0]);
+const model = reactive({
+  modalType: "Approve",
+});
 
 axios({
   url: BASE_API + `/topic/${topicSlug}`,
@@ -90,10 +88,12 @@ const handleCancelModal = () => {
 const handleApproveModal = (student: StudentDetails) => {
   isShowApproveModal.value = true;
   studentInfo.value = student;
+  model.modalType = "Approve";
 };
 
 const handleRejectModal = (student: StudentDetails) => {
-  isShowRejectModal.value = !isShowRejectModal.value;
+  isShowApproveModal.value = true;
   studentInfo.value = student;
+  model.modalType = "Reject";
 };
 </script>
