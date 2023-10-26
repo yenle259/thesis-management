@@ -9,7 +9,7 @@
           <v-card
             max-width="400px"
             class="rounded-lg hover:shadow-lg"
-            :href="'/user/topic/' + topic.slug"
+            @click="router.push('/user/topic/' + topic.slug)"
           >
             <v-card-text>
               <div>
@@ -50,4 +50,5 @@
 import { TopicDetails } from "@/apis/models/TopicDetails";
 
 const props = defineProps<{ topics: TopicDetails[] }>();
+const router = useRouter();
 </script>

@@ -1,5 +1,10 @@
 <template>
-  <TopicDetail v-if="topic && user" :topic="topic || {}">
+  <TopicDetail
+    v-if="topic && user"
+    :topic="topic || {}"
+    @approved="handleApproveModal"
+    @reject="handleRejectModal"
+  >
     <template v-slot:action>
       <div
         v-if="topic.student.map(({ _id }) => _id).includes(user._id)"
@@ -13,11 +18,22 @@
         />
       </div>
     </template>
+    <!-- <template v-slot:lecturer-action>
+      <TopicReviewButton
+        @approved="handleApproveModal"
+        @reject="handleRejectModal"
+      />
+    </template> -->
   </TopicDetail>
   <TopicCancelRegistrationModal
     :isShow="isShowCancelModal"
     :topic="topic || {}"
     @cancel="handleCancelModal"
+  />
+  <TopicApproveModal
+    :isShow="isShowApproveModal"
+    :student="studentInfo || {}"
+    @cancel="isShowApproveModal = false"
   />
 </template>
 
@@ -31,8 +47,9 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 import { useRoute } from "vue-router";
+import { StudentDetails } from "@/apis/models/StudentDetails";
 
-useTitle("QLĐT - Đề tài đăng ký");
+useTitle("QLĐT - Thông tin đề tài");
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -44,7 +61,13 @@ const topic = ref<TopicDetails>();
 
 const students = ref<UserDetails[]>();
 
+const studentInfo = ref<StudentDetails>();
+
 const isShowCancelModal = ref(false);
+
+const isShowApproveModal = ref(false);
+
+const isShowRejectModal = ref(false);
 
 console.log(topic.value?.student[0]);
 
@@ -62,5 +85,15 @@ axios({
 
 const handleCancelModal = () => {
   isShowCancelModal.value = !isShowCancelModal.value;
+};
+
+const handleApproveModal = (student: StudentDetails) => {
+  isShowApproveModal.value = true;
+  studentInfo.value = student;
+};
+
+const handleRejectModal = (student: StudentDetails) => {
+  isShowRejectModal.value = !isShowRejectModal.value;
+  studentInfo.value = student;
 };
 </script>

@@ -102,17 +102,19 @@
                   </v-list-item>
                 </td>
                 <td v-if="isRegister">
-                  <v-btn
-                    :key="topic._id"
-                    color="info"
-                    :disabled="handleDisabled(topic)"
-                    variant="tonal"
-                    class="ma-2"
-                    @click="handleConfirmModal(topic)"
-                    size="small"
-                  >
-                    Đăng ký
-                  </v-btn>
+                  <div>
+                    <v-btn
+                      :key="topic._id"
+                      color="info"
+                      :disabled="handleDisabled(topic)"
+                      variant="tonal"
+                      class="ma-2"
+                      @click="handleConfirmModal(topic)"
+                      size="small"
+                    >
+                      Đăng ký
+                    </v-btn>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -162,6 +164,10 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 
 const router = useRouter();
+
+const { registeredTopic } = storeToRefs(useStudentStore());
+
+console.log(registeredTopic);
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -228,7 +234,7 @@ const handleFilterLecturer = (value: string) => {
 const handleDisabled = (topic: TopicDetails) => {
   return (
     topic.student?.length === topic.numberOfStudent ||
-    topicIdUpdated.value?._id === topic._id
+    topic._id === registeredTopic.value
   );
 };
 

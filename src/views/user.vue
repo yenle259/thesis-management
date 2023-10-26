@@ -1,6 +1,10 @@
 <template>
   <!-- Common User Info -->
-  <v-card class="mx-8 mt-6 rounded-lg" width="350px">
+  <v-card
+    class="mx-8 mt-6 rounded-lg"
+    width="350px"
+    v-if="user?.role !== UserRoleEnum.Lecturer"
+  >
     <v-card-text>
       <CustomStudentInfoItem
         :title="'Thông tin cá nhân'"

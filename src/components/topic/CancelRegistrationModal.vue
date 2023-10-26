@@ -36,15 +36,15 @@
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" variant="text" @click="handleCancel">
+          <v-btn color="info" variant="text" @click="handleCancel">
             Thoát
           </v-btn>
           <v-btn
-            color="green-darken-1"
+            color="red"
             variant="tonal"
-            @click="handleRegisterTopic(props.topic._id)"
+            @click="handleUnregisterTopic(props.topic._id)"
           >
-            Xác nhận
+            Hủy đăng ký
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -53,13 +53,16 @@
 </template>
 
 <script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { BASE_API, TIME_OUT } from "@/constant";
+import { TIME_OUT } from "@/constant";
 
 import router from "@/router";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+
+const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["cancel", "unregistered"]);
 
@@ -69,21 +72,21 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
-const handleRegisterTopic = (topicId: string) => {
-  axios({
-    method: "put",
-    url: BASE_API + `/topic/unregister/${props.topic.slug}`,
-    withCredentials: true,
-  })
-    .then(function (res) {
-      console.log(res.data);
-      toast.success("Hủy đăng ký đề tài thành công!");
-      emit("cancel");
-      setTimeout(() => router.push("/topic-list"), TIME_OUT);
-    })
-    .catch(function (error) {
-      toast.error(error.message);
-    });
+const handleUnregisterTopic = async (topicId: string) => {
+  try {
+    const { data: response } = await API.put(
+      `/topic/unregister/${props.topic.slug}`,
+      { studentId: user.value?._id }
+    );
+
+    toast.success("Hủy đăng ký đề tài thành công!");
+    emit("cancel");
+    setTimeout(() => router.push("/topic-list"), TIME_OUT);
+
+    console.log(response);
+  } catch (error: any) {
+    toast.error(error.message);
+  }
 };
 
 const handleCancel = () => {

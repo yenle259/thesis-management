@@ -55,8 +55,9 @@
 </template>
 
 <script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { BASE_API, TIME_OUT } from "@/constant";
+import { TIME_OUT } from "@/constant";
 import { useAuthStore } from "@/stores/useAuthStore";
 import router from "@/router";
 
@@ -64,6 +65,8 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 const { user } = storeToRefs(useAuthStore());
+
+const { registeredTopic } = storeToRefs(useStudentStore());
 
 const emit = defineEmits(["cancel", "registered"]);
 
@@ -73,30 +76,25 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
-const handleRegisterTopic = (topicId: string) => {
-  axios({
-    method: "post",
-    url: BASE_API + `/topic/register`,
-    withCredentials: true,
-    data: {
+const handleRegisterTopic = async (topicId: string) => {
+  try {
+    const { data: response } = await API.post(`/topic/register`, {
       studentId: user.value?._id,
       topicId,
-    },
-  })
-    .then(function (res) {
-      console.log(res.data);
-      toast.success("Đăng ký đề tài thành công!");
-      emit("registered", props.topic);
-      setTimeout(() => router.push(`user/topic/${props.topic.slug}`), TIME_OUT);
-    })
-    .catch(function (error) {
-      if (error.response) {
-        const { errors } = error.response.data;
-        if (errors.publishDate) {
-          toast.error(errors.publishDate);
-        }
-      }
     });
+
+    toast.success("Đăng ký đề tài thành công!");
+    emit("registered", props.topic);
+    registeredTopic.value = response.topic._id;
+    setTimeout(() => router.push(`user/topic/${props.topic.slug}`), TIME_OUT);
+  } catch (error: any) {
+    if (error.response) {
+      const { errors } = error.response.data;
+      if (errors.publishDate) {
+        toast.error(errors.publishDate);
+      }
+    }
+  }
 };
 
 const handleCancel = () => {

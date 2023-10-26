@@ -79,7 +79,7 @@
             <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
               <td
                 width="400px"
-                @click="router.push('/topic/' + topic.slug)"
+                @click="router.push('/user/topic/' + topic.slug)"
                 class="hover:text-blue-800 cursor-pointer"
               >
                 {{ topic.name }}

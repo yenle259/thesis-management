@@ -14,7 +14,6 @@
           v-for="item in actions?.actions"
           :key="item.title"
           :append-icon="item.icon"
-          :active-color="item.color"
           :title="item.title"
           class="rounded-lg"
           @click="handleCancelModal"
