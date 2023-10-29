@@ -17,7 +17,7 @@
     <template v-slot:content>
       <v-card class="rounded-lg">
         <v-table>
-          <thead>
+          <thead class="font-bold text-overline">
             <tr>
               <th class="text-left">Họ tên</th>
               <th class="text-left">MSCB</th>

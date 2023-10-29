@@ -11,12 +11,7 @@
       <v-divider></v-divider>
     </template>
     <template v-slot:action>
-      <v-btn
-        color="info"
-        variant="tonal"
-        class="ma-2"
-        :key="topic._id"
-      >
+      <v-btn color="info" variant="tonal" class="ma-2" :key="topic._id">
         Đăng ký
       </v-btn>
     </template>
@@ -107,20 +102,14 @@
 </template>
 
 <script lang="ts" setup>
-import { TopicDetails } from "@/apis/models/TopicDetails";
-import { UserDetails } from "@/apis/models/UserDetails";
 import { BASE_API } from "@/constant";
+import { TopicDetails } from "@/apis/models/TopicDetails";
+import { RegisterStudent } from "@/apis/models/RegisterStudent";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-import { useClipboard } from "@vueuse/core";
-
 useTitle("QLĐT - Thông tin đề tài");
-
-const router = useRouter();
-
-const { copy, copied } = useClipboard();
 
 const route = useRoute();
 
@@ -128,7 +117,7 @@ const topicSlug = route.params.slug;
 
 const topic = ref<TopicDetails>();
 
-const students = ref<UserDetails[]>();
+const students = ref<RegisterStudent[]>();
 
 const isShowCancelModal = ref(false);
 

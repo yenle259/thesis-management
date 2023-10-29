@@ -36,11 +36,11 @@
     :student="studentInfo || {}"
     :status="model.modalType"
     @cancel="isShowApproveModal = false"
+    @updated="handleUpdated"
   />
 </template>
 
 <script lang="ts" setup>
-import { BASE_API } from "@/constant";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
@@ -50,6 +50,7 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 import { useRoute } from "vue-router";
+import API from "@/apis/helpers/axiosBaseConfig";
 
 useTitle("QLĐT - Thông tin đề tài");
 
@@ -73,17 +74,21 @@ const model = reactive({
   modalType: "Approve",
 });
 
-axios({
-  url: BASE_API + `/topic/${topicSlug}`,
-  withCredentials: true,
-})
-  .then(function (res) {
-    topic.value = res.data[0];
+const getTopicDetails = async () => {
+  try {
+    const { data: response } = await API.get(`/topic/${topicSlug}`);
+    topic.value = response[0];
     students.value = topic.value?.student;
-  })
-  .catch(function (error) {
+  } catch (error) {
     console.log(error);
-  });
+  }
+};
+
+getTopicDetails();
+
+const handleUpdated = () => {
+  getTopicDetails();
+};
 
 const handleCancelModal = () => {
   isShowCancelModal.value = !isShowCancelModal.value;

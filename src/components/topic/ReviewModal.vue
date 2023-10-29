@@ -115,7 +115,7 @@ import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-const emit = defineEmits(["cancel", "unregistered"]);
+const emit = defineEmits(["cancel", "updated"]);
 
 const props = defineProps<{
   isShow: boolean;
@@ -151,16 +151,24 @@ const handleCancel = () => {
 const handleUpdateStatus = async (status: RegisterStatusEnum) => {
   let payload = {};
   if (status === RegisterStatusEnum.Reject) {
-    payload = { reason: model.reason, status, topicIndex: props.student._id };
+    payload = {
+      reason: model.reason,
+      status,
+      topicIndex: props.student._id,
+    };
   } else {
-    payload = { status, topicIndex: props.student._id };
+    payload = {
+      status,
+      topicIndex: props.student._id,
+      studentId: props.student.studentInfo._id,
+    };
   }
   try {
     const { data: response } = await API.put(`/topic/review`, payload);
 
     toast.success("Cập nhật thông tin thành công");
     handleCancel();
-    console.log(response);
+    emit("updated");
     return response;
   } catch (error) {
     console.log(error);
