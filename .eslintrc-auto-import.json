@@ -92,6 +92,8 @@
     "getRegisterModule": true,
     "getTopicTypeByName": true,
     "axios": true,
-    "getRecentRegisterModule": true
+    "getRecentRegisterModule": true,
+    "getStatusColor": true,
+    "getStatusName": true
   }
 }

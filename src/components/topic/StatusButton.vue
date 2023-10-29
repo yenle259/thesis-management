@@ -48,6 +48,19 @@ const actionList = ref([
     ],
   },
   {
+    status: RegisterStatusEnum.Reject,
+    color: "red",
+    label: "Không được duyệt",
+    actions: [
+      {
+        icon: "mdi-minus-circle-outline",
+        color: "red",
+        title: "Hủy đăng ký",
+        click: "handleCancelModal",
+      },
+    ],
+  },
+  {
     status: RegisterStatusEnum.Approve,
     color: "success",
     label: "Đã được duyệt",

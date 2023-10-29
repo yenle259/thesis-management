@@ -37,7 +37,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" variant="text" @click="handleCancel"> Hủy </v-btn>
-          <v-btn color="success" variant="tonal" @click="handleApproval">
+          <v-btn
+            color="success"
+            variant="tonal"
+            @click="handleUpdateStatus(RegisterStatusEnum.Approve)"
+          >
             Xác nhận
           </v-btn>
         </v-card-actions>
@@ -93,6 +97,7 @@
             color="red"
             variant="tonal"
             :disabled="model.reason.length <= 15"
+            @click="handleUpdateStatus(RegisterStatusEnum.Reject)"
           >
             Xác nhận
           </v-btn>
@@ -143,34 +148,19 @@ const handleCancel = () => {
   emit("cancel");
 };
 
-const handleApproval = async () => {
+const handleUpdateStatus = async (status: RegisterStatusEnum) => {
+  let payload = {};
+  if (status === RegisterStatusEnum.Reject) {
+    payload = { reason: model.reason, status, topicIndex: props.student._id };
+  } else {
+    payload = { status, topicIndex: props.student._id };
+  }
   try {
-    const { data: response } = await API.put(`/topic/review`, {
-      status: RegisterStatusEnum.Approve,
-      topicIndex: props.student._id,
-    });
+    const { data: response } = await API.put(`/topic/review`, payload);
 
     toast.success("Cập nhật thông tin thành công");
     handleCancel();
     console.log(response);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const handleRejected = async (scheduleTime: any) => {
-  const date = new Date(scheduleTime);
-
-  try {
-    const { data: response } = await API.put(`/publish/set`, {
-      publishDate: date,
-      id: "6526f1c4ac0072dcd9517532",
-    });
-
-    toast.success("Phê duyệt sinh viên đăng ký đề tài thành công");
-
-    handleCancel();
     return response;
   } catch (error) {
     console.log(error);

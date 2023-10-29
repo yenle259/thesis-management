@@ -62,6 +62,10 @@ import router from "@/router";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+const register = useStudentStore();
+
+const { registeredTopic } = storeToRefs(useStudentStore());
+
 const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["cancel", "unregistered"]);
@@ -82,8 +86,7 @@ const handleUnregisterTopic = async (topicId: string) => {
     toast.success("Hủy đăng ký đề tài thành công!");
     emit("cancel");
     setTimeout(() => router.push("/topic-list"), TIME_OUT);
-
-    console.log(response);
+    registeredTopic.value = "";
   } catch (error: any) {
     toast.error(error.message);
   }

@@ -112,14 +112,17 @@
                       <v-menu>
                         <template v-slot:activator="{ props }">
                           <v-btn
-                            appendIcon="mdi-chevron-down"
+                            append-icon="mdi-chevron-down"
                             class="self-center me-2 bg-white"
-                            variant="tonal"
+                            variant="flat"
                             size="small"
-                            color="warning"
+                            :color="getStatusColor(user.status)"
                             v-bind="props"
+                            :disabled="
+                              user.status === RegisterStatusEnum.Approve
+                            "
                           >
-                            Phê duyệt
+                            {{ getStatusName(user.status) }}
                           </v-btn>
                         </template>
                         <v-list class="rounded-lg px-2" density="compact">
@@ -154,8 +157,12 @@
 </template>
 
 <script lang="ts" setup>
+import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { TopicDetails } from "@/apis/models/TopicDetails";
+
+import { getStatusColor } from "@/utils/getStatusColor";
+import { getStatusName } from "@/utils/getStatusName";
 
 useTitle("QLĐT - Đề tài đăng ký");
 

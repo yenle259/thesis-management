@@ -174,7 +174,7 @@ const adminRoutes = ref([
       {
         icon: "mdi-format-list-bulleted",
         label: "Đề tài",
-        url: "/topic-list",
+        url: "/manage/topic",
       },
       {
         icon: "mdi-account",
@@ -184,7 +184,8 @@ const adminRoutes = ref([
       {
         icon: "mdi-account-school",
         label: "Giảng viên",
-        url: "/manage/lecturer",
+        // url: "/manage/lecturer",
+        url: "/lecturers",
       },
     ],
   },

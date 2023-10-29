@@ -18,8 +18,6 @@ export const useStudentStore = defineStore(
 
     function setId(topicType: TopicTypeEnum, topicId: string) {
       const object = { type: topicType, id: topicId };
-      console.log(object);
-      // registeredTopic[0].value = object.value;
     }
 
     return { registerModule, registeredTopic, reset, setId };

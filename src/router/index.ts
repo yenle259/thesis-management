@@ -102,6 +102,12 @@ const routes = [
         },
       },
       {
+        path: "/manage/topic",
+        name: "Quản lí đề tài",
+        component: () => import("@/views/manage.topic.vue"),
+        meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Admin] },
+      },
+      {
         path: "/manage/lecturer",
         name: "Quản lí Giảng viên",
         component: () => import("@/views/manage.lecturer.vue"),
