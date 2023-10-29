@@ -62,7 +62,14 @@
                     @select="handleFilterLecturer"
                   /> -->
                 </th>
-                <th class="text-left" v-if="isRegister">Thực hiện</th>
+                <th
+                  class="text-left"
+                  v-if="
+                    isRegister && !registeredTopicType?.includes(model.type)
+                  "
+                >
+                  Thực hiện
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -102,7 +109,11 @@
                     </p>
                   </v-list-item>
                 </td>
-                <td v-if="isRegister">
+                <td
+                  v-if="
+                    isRegister && !registeredTopicType?.includes(model.type)
+                  "
+                >
                   <div>
                     <v-btn
                       :key="topic._id"
@@ -167,8 +178,6 @@ const router = useRouter();
 
 const { registeredTopic } = storeToRefs(useStudentStore());
 
-console.log(registeredTopic);
-
 const { user } = storeToRefs(useAuthStore());
 
 const props = defineProps<{
@@ -177,6 +186,7 @@ const props = defineProps<{
   topics: TopicDetails[];
   isPublish?: boolean;
   registerModule?: string;
+  registeredTopicType?: TopicTypeEnum[];
 }>();
 
 const model = reactive({

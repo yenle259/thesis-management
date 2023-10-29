@@ -15,9 +15,6 @@
 
   <!-- Topic Table of Student -->
   <div v-if="!user?.role">
-    <div>
-      <StudentRegisterModule />
-    </div>
     <div v-if="topics?.length !== 0">
       <StudentTopic :topics="topics ?? []" />
     </div>

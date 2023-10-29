@@ -32,7 +32,7 @@
       <v-divider> </v-divider>
       <v-card class="overflow-hidden rounded-lg">
         <v-table>
-          <thead  class="font-bold text-overline">
+          <thead class="font-bold text-overline">
             <tr>
               <th class="text-left" width="400px">Tên đề tài</th>
               <th class="text-left">
@@ -136,6 +136,7 @@
                     <v-tooltip text="Xóa đề tài" location="top">
                       <template v-slot:activator="{ props }">
                         <v-btn
+                          :disabled="topic.student.length !== 0"
                           v-bind="props"
                           size="small"
                           variant="text"
@@ -235,6 +236,11 @@ watch(
     console.log(value);
   }
 );
+
+const disabledDeleted = (topic: TopicDetails) => {
+  topic.student.map(({ status }) => console.log(status));
+  return false;
+};
 
 const handleUpdated = () => {
   emit("updatedStatus");

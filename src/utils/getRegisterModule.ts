@@ -1,7 +1,7 @@
 import { RegisterModule } from "@/apis/models/RegisterModule";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
-export function getTopicTypeByName(name: string): TopicTypeEnum | undefined {
+export function getTopicTypeByName(name: string): TopicTypeEnum {
   const topicTypeName: Record<string, TopicTypeEnum> = {
     LV: TopicTypeEnum.LV,
     TL: TopicTypeEnum.TL,

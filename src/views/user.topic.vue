@@ -35,6 +35,7 @@
       :register-module="
         registerModule ? registerModule[0].moduleType : undefined
       "
+      :registeredTopicType="registeredTopicType || []"
     >
     </TopicList>
   </div>
@@ -60,6 +61,8 @@ const { registerModule } = storeToRefs(useStudentStore());
 
 const topics = ref<TopicDetails[]>();
 
+const registeredTopics = ref<TopicDetails[]>();
+
 const isShow = ref(false);
 
 const { change } = usePublishTopicList();
@@ -82,11 +85,19 @@ const getTopicList = async () => {
 
 getTopicList();
 
-const currentSemesterTopics = computed(() => {
-  return topics.value?.filter(
-    ({ semester }) => semester.sysId === model.currentSemester
-  );
-});
+const getRegisteredTopic = async () => {
+  try {
+    const { data: response } = await API.get(
+      "/topic/student" + `/${user.value?._id}`
+    );
+    registeredTopics.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getRegisteredTopic();
 
 const getPublishDate = async () => {
   try {
@@ -99,6 +110,17 @@ const getPublishDate = async () => {
 };
 
 getPublishDate();
+
+//all topic at recent semester
+const currentSemesterTopics = computed(() => {
+  return topics.value?.filter(
+    ({ semester }) => semester.sysId === model.currentSemester
+  );
+});
+
+const registeredTopicType = computed(() => {
+  return registeredTopics.value?.map(({ type }) => type);
+});
 
 const handlePublish = (isPublish: boolean) => {
   change(isPublish);
