@@ -36,9 +36,31 @@
         registerModule ? registerModule[0].moduleType : undefined
       "
       :registeredTopicType="registeredTopicType || []"
+      @create="isOpenCreateModal = true"
     >
+      <template v-slot:action>
+        <div v-if="!user?.role">
+          <v-tooltip text="Thêm mới đề tài" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                variant="elevated"
+                append-icon="mdi-plus"
+                @click="isOpenCreateModal = true"
+                color="indigo"
+                >Đề xuất đề tài</v-btn
+              >
+            </template>
+          </v-tooltip>
+        </div>
+      </template>
     </TopicList>
   </div>
+  <TopicSuggestModal
+    :isShow="isOpenCreateModal"
+    :lecturers="lecturers || []"
+    @cancel="isOpenCreateModal = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -48,6 +70,7 @@ import { PublishDate } from "@/apis/models/PublishDate";
 
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { UserDetails } from "@/apis/models/UserDetails";
 
 useTitle("QLĐT - Danh sách đề tài");
 
@@ -61,9 +84,13 @@ const { registerModule } = storeToRefs(useStudentStore());
 
 const topics = ref<TopicDetails[]>();
 
+const lecturers = ref<UserDetails[]>();
+
 const registeredTopics = ref<TopicDetails[]>();
 
 const isShow = ref(false);
+
+const isOpenCreateModal = ref(false);
 
 const { change } = usePublishTopicList();
 
@@ -110,6 +137,17 @@ const getPublishDate = async () => {
 };
 
 getPublishDate();
+
+const getLecturers = async () => {
+  try {
+    const { data: response } = await API.get("/user/lecturers");
+    lecturers.value = response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getLecturers();
 
 //all topic at recent semester
 const currentSemesterTopics = computed(() => {

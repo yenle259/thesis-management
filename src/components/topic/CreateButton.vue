@@ -5,11 +5,11 @@
         <v-btn
           v-bind="props"
           v-model="model.isDisplay"
-          variant="tonal"
+          variant="elevated"
           append-icon="mdi-plus"
           @click="handleOpenCreateModal"
-          color="info"
-          >Thêm đề tài</v-btn
+          color="indigo"
+          >Đề xuất đề tài</v-btn
         >
       </template>
     </v-tooltip>
@@ -17,7 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-
 const props = defineProps<{ isDisplay: boolean; topicId: string }>();
 
 const model = reactive({

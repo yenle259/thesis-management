@@ -18,6 +18,7 @@
         <div v-if="user?.role === UserRoleEnum.Admin">
           <ManagePublishTopicButton />
         </div>
+        <slot name="action"></slot>
       </div>
       <v-tabs v-model="model.type" grow class="mt-2">
         <v-tab
@@ -180,6 +181,8 @@ const { registeredTopic } = storeToRefs(useStudentStore());
 
 const { user } = storeToRefs(useAuthStore());
 
+const emit = defineEmits(["create"]);
+
 const props = defineProps<{
   title: string;
   subTitle?: string;
@@ -258,4 +261,5 @@ const handleRegistered = (topic: TopicDetails) => {
   isOpen.value = false;
   topicIdUpdated.value = topic;
 };
+
 </script>
