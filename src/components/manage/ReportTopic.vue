@@ -55,6 +55,9 @@
         </tr>
       </tbody>
     </v-table>
+    <div v-if="reports.length === 0" class="text-body-2 text-center my-4">
+      Không có đề tài
+    </div>
   </v-card>
 </template>
 
@@ -64,4 +67,5 @@ import { ReportTopic } from "@/apis/models/ReportTopic";
 const router = useRouter();
 
 const props = defineProps<{ reports: ReportTopic[] }>();
+
 </script>
