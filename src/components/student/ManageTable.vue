@@ -1,11 +1,10 @@
 <template>
   <v-card v-if="props.students" class="rounded-lg">
-    <v-table :hover="true">
+    <v-table>
       <thead>
         <tr>
           <th class="text-left">MSSV</th>
-          <th class="text-left">Tên sinh viên</th>
-          <th class="text-left">Email</th>
+          <th class="text-left">Sinh viên</th>
           <th class="text-left">Học phần đăng kí</th>
         </tr>
       </thead>
@@ -19,10 +18,14 @@
             {{ student.userId }}
           </td>
           <td>
-            {{ student.name }}
-          </td>
-          <td class="text-caption">
-            {{ student.email }}
+            <v-list-item class="rounded-lg w-38">
+              <p class="text-grey-800 text-xs">
+                {{ student.name }}
+              </p>
+              <p class="text-caption text-xs text-grey">
+                {{ student.email }}
+              </p>
+            </v-list-item>
           </td>
           <td v-if="student.registerModule[0].moduleType">
             <span

@@ -3,19 +3,19 @@ import { getTopicTypeName } from "@/utils/getTopicTypeName";
 
 export const topicTypeOptions = [
   {
-    label: getTopicTypeName(TopicTypeEnum.LV),
+    title: getTopicTypeName(TopicTypeEnum.LV),
     value: TopicTypeEnum.LV,
   },
   {
-    label: getTopicTypeName(TopicTypeEnum.TL),
+    title: getTopicTypeName(TopicTypeEnum.TL),
     value: TopicTypeEnum.TL,
   },
   {
-    label: getTopicTypeName(TopicTypeEnum.NL),
+    title: getTopicTypeName(TopicTypeEnum.NL),
     value: TopicTypeEnum.NL,
   },
   {
-    label: getTopicTypeName(TopicTypeEnum.NLCS),
+    title: getTopicTypeName(TopicTypeEnum.NLCS),
     value: TopicTypeEnum.NLCS,
   },
 ];

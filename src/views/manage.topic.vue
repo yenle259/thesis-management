@@ -4,7 +4,10 @@
       :title="'Danh sách đề tài'"
       :subTitle="'Danh sách đề tài đã được duyệt'"
     >
-      <template v-slot:action> </template>
+      <template v-slot:action
+        ><div>
+          <ManagePublishTopicButton /></div
+      ></template>
       <template v-slot:content>
         <div class="d-flex flex-row justify-between">
           <v-tabs v-model="model.tab" class="mt-2">
@@ -15,18 +18,20 @@
               :title="title"
               hide-slider
               density="compact"
-              class="rounded-lg me-1"
+              class="rounded-xl me-1"
               color="indigo"
               :variant="model.tab === value ? 'flat' : 'text'"
               >{{ label }}
             </v-tab>
           </v-tabs>
           <v-btn
+            class="hover:shadow-sm"
             v-if="filterTopics"
+            prepend-icon="mdi-export-variant"
             variant="tonal"
             color="blue"
             @click="handleExportReports(filterTopics)"
-            >Xuất DS đề tài</v-btn
+            >Xuất danh sách</v-btn
           >
         </div>
         <ManageReportTopic :reports="filterTopics || []" />
@@ -47,12 +52,12 @@ useTitle("QLĐT - Quản lý đề tài được duyệt");
 const tabItem = ref([
   {
     label: "Tất cả",
-    title: "Tất cả đề tài",
+    title: "Tất cả đề tài đã được duyệt",
     value: "all",
   },
   {
     label: "Báo cáo",
-    title: "Đề tài báo cáo",
+    title: "Đề tài Luận văn và Tiểu luận",
     value: "report",
   },
 ]);

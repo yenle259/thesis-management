@@ -1,62 +1,118 @@
 <template>
   <div>
-    <v-card class="mx-auto px-6 py-8 hover:shadow-md">
-      <v-form v-model="form">
-        <p class="text-center font-bold text-xl pb-4 text-blue-500">ĐĂNG KÝ</p>
-        <v-text-field
-          v-model="model.userId"
-          :required="true"
-          :rules="rules.userId"
-          :error-messages="errorMessage.userId"
-          class="mb-2"
-          clearable
-          label="Mã số sinh viên"
-          prepend-inner-icon="mdi-account-outline"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="model.name"
-          :required="true"
-          :rules="rules.name"
-          :error-messages="errorMessage.name"
-          class="mb-2"
-          clearable
-          label="Họ và tên"
-          prepend-inner-icon="mdi-account-outline"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="model.password"
-          :readonly="loading"
-          :rules="rules.password"
-          :error-messages="errorMessage.password"
-          label="Mật khẩu"
-          prepend-inner-icon="mdi-key-outline"
-          :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show ? 'text' : 'password'"
-          @click:append-inner="show = !show"
-        ></v-text-field>
-
+    <v-form v-model="form">
+      <v-card-title class="d-flex text-h5 text-indigo justify-between">
+        <div>
+          <span> Thêm tài khoản </span>
+          <p class="font-light text-caption text-black">
+            Nhập vào các thông tin bên dưới để thêm tài khoản
+          </p>
+        </div>
         <v-btn
-          :disabled="!form"
-          :loading="loading"
-          block
-          color="primary"
-          type="submit"
-          variant="elevated"
-          :onclick="handleSubmit"
-        >
-          Submit
-        </v-btn>
-      </v-form>
-    </v-card>
+          icon="mdi-restore"
+          variant="text"
+          color="grey-darken-2"
+          title="Làm mới form thông tin"
+          @click="handleResetForm"
+        ></v-btn>
+      </v-card-title>
+      <v-card-text class="pt-2">
+        <div class="grid grid-cols-2 gap-x-2">
+          <v-text-field
+            v-model="model.userId"
+            :required="true"
+            :rules="rules.userId"
+            :error-messages="errorMessage.userId"
+            class="mb-2"
+            clearable
+            label="Mã số sinh viên"
+            counter
+            prepend-inner-icon="mdi-at"
+            variant="outlined"
+            density="compact"
+          ></v-text-field>
+          <v-text-field
+            v-model="model.password"
+            :readonly="loading"
+            :rules="rules.password"
+            :error-messages="errorMessage.password"
+            :type="show ? 'text' : 'password'"
+            :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append-inner="show = !show"
+            class="mb-2"
+            prepend-inner-icon="mdi-key"
+            variant="outlined"
+            label="Mật khẩu"
+            density="compact"
+          ></v-text-field>
+          <v-text-field
+            v-model="model.name"
+            :required="true"
+            :rules="rules.name"
+            :error-messages="errorMessage.name"
+            class="mb-2"
+            clearable
+            label="Họ tên"
+            prepend-inner-icon="mdi-account-circle-outline"
+            variant="outlined"
+            density="compact"
+          ></v-text-field>
+          <v-text-field
+            v-model="model.email"
+            type="email"
+            :required="true"
+            :rules="rules.email"
+            :error-messages="errorMessage.email"
+            :suffix="STUDENT_MAIL"
+            class="mb-2"
+            label="Email"
+            prepend-inner-icon="mdi-email-outline"
+            variant="outlined"
+            density="compact"
+          ></v-text-field>
+          <v-autocomplete
+            v-model="model.moduleType"
+            :rules="rules.moduleType"
+            :items="topicTypeOptions"
+            prepend-inner-icon="mdi-format-list-bulleted"
+            label="Phân loại đề tài"
+            placeholder="Phân loại đề tài"
+            class="mb-2"
+            multiple
+            chips
+            clearable
+            density="compact"
+            variant="outlined"
+          ></v-autocomplete>
+        </div>
+        <div>
+          <v-btn
+            :disabled="!form"
+            :loading="loading"
+            color="primary"
+            class="me-2"
+            type="submit"
+            variant="elevated"
+            :onclick="handleSubmit"
+          >
+            Thêm mới
+          </v-btn>
+        </div>
+      </v-card-text>
+    </v-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
-import { BASE_API } from "../../../constant";
+import API from "@/apis/helpers/axiosBaseConfig";
+import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 import router from "@/router";
+import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
+
+import { STUDENT_MAIL } from "@/constant";
+
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const show = ref(false);
 const form = ref();
@@ -65,87 +121,109 @@ const loading = ref(false);
 const errorMessage = ref({
   userId: "",
   name: "",
+  email: "",
   password: "",
+  moduleType: "",
 });
 
-const model = ref({
+const model = reactive({
   userId: "",
   name: "",
   email: "",
   password: "",
+  moduleType: [],
 });
 
 const rules = ref({
   userId: [
     (value: any) => {
-      if (value?.length == 0) return "Student ID is required";
+      if (value?.length == 0) return "Hãy nhập vào mã số sinh viên";
       if (value?.length == 8) return true;
-      return "Student ID must be have 8 characters.";
+      return "Mã số sinh viên phải có 8 kí tự";
     },
   ],
   name: [
     (value: any) => {
-      if (value?.length == 0) return "Username is required";
+      if (value?.length == 0) return "Hãy nhập vào họ tên sinh viên";
+      return true;
+    },
+  ],
+  email: [
+    (value: any) => {
+      if (value?.length == 0) return "Hãy nhập vào email";
       return true;
     },
   ],
   password: [
     (value: any) => {
-      if (value?.length == 0) return "Password is required";
+      if (value?.length == 0) return "Hãy nhập vào mật khẩu";
       if (value?.length >= 8) return true;
-      return "Password must be more than 8 characters.";
+      return "Mật khẩu phải hơn 8 kí tự";
+    },
+  ],
+  moduleType: [
+    () => {
+      if (model.moduleType === null) return "Hãy chọn phân loại đề tài";
+      return true;
     },
   ],
 });
 
-const handleEmail = (userId: String, name: String) => {
-  return (name.split(" ")[name.split(" ").length - 1] + userId).toLocaleLowerCase();
+// const handleEmail = (userId: String, name: String) => {
+//   return (
+//     name.split(" ")[name.split(" ").length - 1] + userId
+//   ).toLocaleLowerCase();
+// };
+
+const handleModuleType = (types: TopicTypeEnum[]) => {
+  return types.toString();
 };
 
 watch(
-  () => model.value.userId,
+  () => model.userId,
   () => {
     errorMessage.value.userId = "";
   }
 );
 
 watch(
-  () => model.value.password,
+  () => model.password,
   () => {
     errorMessage.value.password = "";
   }
 );
 
-const handleSubmit = (e: Event) => {
-  e.preventDefault();
-  model.value.email = handleEmail(model.value.userId, model.value.name);
-  console.log(model.value.email);
+watch(
+  () => model.moduleType,
+  () => {
+    console.log(model.moduleType.join("-"));
+  }
+);
 
-  axios({
-    method: "post",
-    url: BASE_API + `/auth/signup`,
-    withCredentials: true,
-    data: {
-      userId: model.value.userId,
-      name: model.value.name,
-      email: model.value.email,
-      password: model.value.password,
-    },
-  })
-    .then(function (response) {
-      console.log(response);
-      router.push("/user");
-    })
-    .catch(function (error) {
-      if (error.response) {
-        const { errors } = error.response.data;
-        if (errors.userId) {
-          errorMessage.value.userId = errors.userId;
-        }
-        if (errors.password) {
-          errorMessage.value.password = errors.password;
-        }
-      }
+const handleResetForm = () => {
+  (model.userId = ""),
+    (model.name = ""),
+    (model.email = ""),
+    (model.password = ""),
+    (model.moduleType = []);
+};
+
+const handleSubmit = async (e: Event) => {
+  e.preventDefault();
+
+  try {
+    const { data: response } = await API.post(`/auth/student/signup`, {
+      userId: model.userId,
+      password: model.password,
+      name: model.name,
+      email: model.email + STUDENT_MAIL,
+      moduleType: model.moduleType.join("-"),
     });
+
+    toast.success("Đã thêm mới sinh viên thành công");
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>

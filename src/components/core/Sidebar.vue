@@ -173,7 +173,7 @@ const adminRoutes = ref([
       },
       {
         icon: "mdi-format-list-bulleted",
-        label: "Đề tài báo cáo",
+        label: "Đề tài",
         url: "/manage/topic",
       },
       {

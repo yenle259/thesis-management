@@ -1,27 +1,30 @@
 <template>
   <v-menu>
     <template v-slot:activator="{ props }">
-      <v-btn
+      <!-- <v-btn
         icon="mdi-dots-vertical"
         v-bind="props"
         variant="tonal"
         color="indigo"
-      ></v-btn>
+      ></v-btn> -->
+      <v-btn
+        size="small"
+        append-icon="mdi-chevron-down"
+        v-bind="props"
+        variant="flat"
+        color="indigo"
+        >Thời gian đăng ký</v-btn
+      >
     </template>
-    <v-list class="rounded-lg px-2">
-      <v-list-item
-        disabled
-        class="rounded-lg"
-        @click="model.setTimeModal = true"
-        >Ngừng đăng ký đề tài
+    <v-list density="compact">
+      <v-list-item disabled @click="model.setTimeModal = true"
+        >Dừng công bố đề tài
       </v-list-item>
-      <v-list-item
-        class="rounded-lg"
-        @click="model.publishModal = !model.publishModal"
+      <v-list-item @click="model.publishModal = !model.publishModal"
         >Mở đăng ký đề tài
       </v-list-item>
-      <v-list-item class="rounded-lg" @click="model.setTimeModal = true"
-        >Đặt thời gian mở đăng ký đề tài
+      <v-list-item @click="model.setTimeModal = true"
+        >Đặt thời gian
       </v-list-item>
     </v-list>
   </v-menu>
