@@ -1,12 +1,13 @@
 import { OptionTab } from "@/apis/models/OptionTab";
 
 export const ACCOUNT_TAB: OptionTab[] = [
-  // {
-  //   label: "Danh sách chung",
-  //   title: "Danh sách tài khoản sinh viên và học phần đăng ký ở học kì hiện tại",
-  //   value: "list",
-  //   icon: "mdi-format-list-bulleted",
-  // },
+  {
+    label: "Danh sách chung",
+    title:
+      "Danh sách tài khoản sinh viên và học phần đăng ký ở học kì hiện tại",
+    value: "list",
+    icon: "mdi-format-list-bulleted",
+  },
   {
     label: "Tài khoản",
     title: "Thêm hoặc cập nhật tài khoản của sinh viên",

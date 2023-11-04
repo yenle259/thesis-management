@@ -10,17 +10,6 @@
           <div></div>
           <v-tabs v-model="model.accountTab" class="mt-2">
             <div class="d-flex flex-row justify-end">
-              <v-tab
-                key="list"
-                value="list"
-                prepend-icon="mdi-format-list-bulleted"
-                hide-slider
-                density="compact"
-                class="rounded-lg me-1"
-                color="indigo"
-                :variant="model.accountTab === 'list' ? 'elevated' : 'text'"
-                >Danh sách chung
-              </v-tab>
               <div>
                 <v-tab
                   v-for="({ title, label, value, icon }, index) in ACCOUNT_TAB"
@@ -44,11 +33,87 @@
             <div class="p-1">
               <v-window-item key="list" value="list">
                 <StudentManageTable
-                  :students="students ?? []"
+                  :students="filterStudents ?? []"
                   @edit="handleEditStudent"
                   @deleted="handleDeleted"
                   @refetch="useStudent"
-                />
+                >
+                  <template v-slot:action>
+                    <div class="px-4 mt-4 d-flex justify-between">
+                      <div class="d-flex flex-row">
+                        <v-text-field
+                          v-model="model.search"
+                          clearable
+                          clear-icon="mdi-close-circle"
+                          @click:clear="model.search = ''"
+                          label="Tìm kiếm sinh viên"
+                          placeholder="Mã số sinh viên, Họ tên"
+                          prepend-inner-icon="mdi-magnify"
+                          density="comfortable"
+                          class="w-96"
+                          max-width="400px"
+                          variant="filled"
+                        ></v-text-field>
+                        <v-btn
+                          class="ml-2"
+                          icon="mdi-restore"
+                          title="Restore"
+                          variant="plain"
+                          @click="handleReset"
+                        ></v-btn>
+                      </div>
+                      <div class="d-flex flex-row gap-x-2">
+                        <p class="py-2">Hiển thị</p>
+                        <v-btn
+                          id="number-per-page"
+                          variant="tonal"
+                          append-icon="mdi-menu-down"
+                          >{{ model.numberOfItemsPerPage }}</v-btn
+                        >
+                        <v-menu activator="#number-per-page">
+                          <v-list density="compact">
+                            <v-list-item
+                              density="compact"
+                              v-for="(value, index) in PAGINATION_OPTIONS"
+                              :key="index"
+                              :value="value"
+                              @click="model.numberOfItemsPerPage = value"
+                            >
+                              {{ value }}
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                        <p class="py-2">mục</p>
+                      </div>
+                    </div>
+                  </template>
+                  <template
+                    v-slot:pagination
+                    v-if="filterStudents?.length !== 0"
+                  >
+                    <div class="d-flex justify-between px-2 py-3">
+                      <p class="self-center indent-4 text-body-2">
+                        Hiển thị
+                        {{
+                          getPaginationText(
+                            model.count,
+                            model.numberOfItemsPerPage,
+                            model.page
+                          )
+                        }}
+                      </p>
+                      <v-pagination
+                        v-model="model.page"
+                        :length="model.totalsPage"
+                        :total-visible="5"
+                        active-color="blue"
+                        variant="text"
+                        density="compact"
+                      ></v-pagination>
+                    </div>
+                  </template>
+                </StudentManageTable>
+
                 <StudentEditInfoModal
                   :isShow="isOpenEditModal"
                   :student="selectedStudent || {}"
@@ -127,17 +192,24 @@ import { StudentDetails } from "@/apis/models/StudentDetails";
 
 import { ACCOUNT_TAB } from "@/constants/tab";
 
+import { PAGINATION_OPTIONS } from "@/constant";
+
+import { getPaginationText } from "@/utils/getPaginationText";
+
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 useTitle("QLĐT - Quản lý sinh viên");
 
 const model = reactive({
-  tab: "",
-  accountTab: "file",
+  accountTab: "list",
   panel: [1],
-  file: undefined,
   search: "",
+  page: 1,
+  count: 0,
+  totalsPage: 1,
+  numberOfItemsPerPage: PAGINATION_OPTIONS[0],
+  file: undefined,
 });
 
 const students = ref<StudentDetails[]>();
@@ -148,8 +220,18 @@ const selectedStudent = ref<StudentDetails>();
 
 const useStudent = async () => {
   try {
-    const { data: response } = await API.get(`/student`);
-    students.value = response;
+    const { data: response } = await API.get(`/student`, {
+      params: {
+        page: model.page,
+        limit: model.numberOfItemsPerPage,
+      },
+    });
+
+    students.value = response.students;
+    model.page = response.currentPage;
+    model.count = response.count;
+    model.totalsPage = response.totalPages;
+
     return response;
   } catch (error) {
     console.log(error);
@@ -158,6 +240,32 @@ const useStudent = async () => {
 };
 
 useStudent();
+
+watch(
+  () => [model.numberOfItemsPerPage, model.page],
+  () => {
+    useStudent();
+  },
+  { immediate: true }
+);
+
+const filterStudents = computed(() => {
+  return students.value?.filter(
+    (student) =>
+      student.userId
+        .toLocaleLowerCase()
+        .includes(model.search.toLocaleLowerCase()) ||
+      student.name
+        .toLocaleLowerCase()
+        .includes(model.search.toLocaleLowerCase())
+  );
+});
+
+const handleReset = () => {
+  model.search = "";
+  model.numberOfItemsPerPage = PAGINATION_OPTIONS[0];
+  model.page = 1;
+};
 
 const handleEditStudent = (student: StudentDetails) => {
   isOpenEditModal.value = true;

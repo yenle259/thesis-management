@@ -11,36 +11,7 @@
     >
   </div>
   <v-card v-if="filterStudents" class="rounded-lg">
-    <div class="px-4 mt-4 d-flex flex-row">
-      <div>
-        <v-text-field
-          v-model="model.search"
-          clearable
-          clear-icon="mdi-close-circle"
-          @click:clear="model.search = ''"
-          label="Tìm kiếm sinh viên"
-          placeholder="Mã số sinh viên, Họ tên"
-          prepend-inner-icon="mdi-magnify"
-          density="comfortable"
-          class="w-96"
-          max-width="400px"
-          variant="filled"
-        ></v-text-field>
-      </div>
-      <!-- <v-btn
-        icon="mdi-cached"
-        title="Refresh"
-        variant="plain"
-        @click="emit('refetch')"
-      ></v-btn> -->
-      <v-btn
-        class="ml-2"
-        icon="mdi-restore"
-        title="Restore"
-        variant="plain"
-        @click="model.search = ''"
-      ></v-btn>
-    </div>
+    <slot name="action"></slot>
     <v-divider inset />
     <v-table>
       <thead>
@@ -164,6 +135,10 @@
         </tr>
       </tbody>
     </v-table>
+    <hr />
+    <div v-if="filterStudents">
+      <slot name="pagination"></slot>
+    </div>
     <div
       v-if="filterStudents.length === 0"
       class="text-body-2 text-center my-4 font-italic"

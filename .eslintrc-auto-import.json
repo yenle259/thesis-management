@@ -97,6 +97,8 @@
     "getStatusName": true,
     "exportData": true,
     "getRegisterModuleObject": true,
-    "getProperty": true
+    "getProperty": true,
+    "getPaginationText": true,
+    "pagesCount": true
   }
 }

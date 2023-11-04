@@ -11,3 +11,5 @@ export const TIME_OUT = 700;
 export const STUDENT_MAIL = "@student.ctu.edu.vn";
 
 export const LECTURER_MAIL = "@ctu.edu.vn";
+
+export const PAGINATION_OPTIONS = [7, 10, 15, 20];
