@@ -244,6 +244,9 @@ useStudent();
 watch(
   () => [model.numberOfItemsPerPage, model.page],
   () => {
+    if (pagesCount(model.count, model.numberOfItemsPerPage) < model.page) {
+      model.page = 1;
+    }
     useStudent();
   },
   { immediate: true }
