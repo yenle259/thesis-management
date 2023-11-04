@@ -137,6 +137,7 @@ const isAdmin = ref(user.value?.role === UserRoleEnum.Admin);
 
 const publicRoutes = ref([
   {
+    subheader: "Cá nhân",
     list: [
       {
         icon: "mdi-account",

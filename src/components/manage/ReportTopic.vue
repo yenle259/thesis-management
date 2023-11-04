@@ -30,7 +30,7 @@
             </v-list-item>
           </td>
           <td>
-            <v-list-item class="rounded-lg w-38">
+            <v-list-item class="rounded-lg w-38" v-if="student">
               <p class="text-grey-800 text-xs">
                 {{ student.name }}
               </p>

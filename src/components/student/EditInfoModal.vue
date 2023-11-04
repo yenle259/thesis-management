@@ -1,0 +1,186 @@
+<template>
+  <div :v-if="props.student">
+    <v-dialog v-model="dialog" persistent width="700px">
+      <v-card class="rounded-lg pt-4 pb-2 px-2">
+        <v-form v-model="form">
+          <v-card-title class="d-flex text-h5 text-indigo justify-between">
+            <div>
+              <span class="mb-1">Cập nhật thông tin sinh viên</span>
+              <p class="font-light text-caption text-black">
+                Cập nhật các thông tin của sinh viên
+              </p>
+            </div>
+            <v-btn icon @click="handleCancel" variant="flat"
+              ><v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <div class="grid grid-cols-2 gap-x-2">
+              <v-text-field
+                v-model="model.userId"
+                :required="true"
+                :rules="rules.userId"
+                class="mb-2"
+                clearable
+                label="Mã số sinh viên"
+                counter
+                prepend-inner-icon="mdi-at"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+              <!-- <v-text-field
+              v-model="model.password"
+              :rules="rules.password"
+              :type="show ? 'text' : 'password'"
+              :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append-inner="show = !show"
+              class="mb-2"
+              prepend-inner-icon="mdi-key"
+              variant="outlined"
+              label="Mật khẩu"
+              density="compact"
+            ></v-text-field> -->
+              <v-text-field
+                v-model="model.name"
+                :required="true"
+                :rules="rules.name"
+                class="mb-2"
+                clearable
+                label="Họ tên"
+                prepend-inner-icon="mdi-account-circle-outline"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+              <v-text-field
+                v-model="model.email"
+                type="email"
+                :required="true"
+                :rules="rules.email"
+                class="mb-2"
+                label="Email"
+                prepend-inner-icon="mdi-email-outline"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+              <v-autocomplete
+                v-model="model.moduleType"
+                :items="topicTypeOptions"
+                prepend-inner-icon="mdi-format-list-bulleted"
+                label="Phân loại đề tài"
+                placeholder="Phân loại đề tài"
+                class="mb-2"
+                multiple
+                chips
+                clearable
+                density="compact"
+                variant="outlined"
+              ></v-autocomplete>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red" variant="text" @click="handleCancel">
+              Hủy
+            </v-btn>
+            <v-btn
+              :disabled="!form"
+              color="blue"
+              variant="tonal"
+              :onclick="handleEditTopic"
+            >
+              <span> Cập nhật </span>
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
+import { RECENT_SEMESTER_ID } from "@/constant";
+
+import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+import { StudentDetails } from "@/apis/models/StudentDetails";
+
+import { studentUpdateRules } from "@/components/form/rules/studentUpdateRules";
+
+import { getRegisterModuleObject } from "@/utils/getRegisterModule";
+
+const form = ref();
+
+const emit = defineEmits(["cancel", "edited"]);
+
+const props = defineProps<{
+  isShow: boolean;
+  student: StudentDetails;
+}>();
+
+const model = reactive({
+  userId: "",
+  name: "",
+  email: "",
+  // password: "",
+  moduleType: [TopicTypeEnum.LV],
+});
+
+const rules = studentUpdateRules();
+
+watch(
+  () => props.student,
+  () => {
+    const { userId, name, email, registerModule } = props.student;
+
+    registerModule?.map((item) => {
+      if (item.semester._id === RECENT_SEMESTER_ID) {
+        model.moduleType = item.moduleType
+          ? getRegisterModuleObject(item.moduleType)
+          : [];
+        return;
+      }
+    });
+
+    model.userId = userId;
+    model.name = name;
+    model.email = email;
+  }
+);
+
+const topicTypeOptions = computed(() => {
+  return Object.values(TopicTypeEnum).map((item) => ({
+    title: getTopicTypeName(item),
+    value: item,
+  }));
+});
+
+const dialog = computed(() => {
+  return props.isShow;
+});
+
+const handleCancel = () => {
+  emit("cancel");
+};
+
+const handleEditTopic = async (e: Event) => {
+  e.preventDefault();
+
+  const { userId, name, email, moduleType } = model;
+  try {
+    const { data: response } = await API.put(
+      `/student/update/${props.student._id}`,
+      {
+        userId,
+        name,
+        email,
+        moduleType: moduleType.join("-"),
+      }
+    );
+
+    emit("edited");
+  } catch (error) {
+    console.log(error);
+  }
+};
+</script>

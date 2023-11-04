@@ -95,6 +95,8 @@
     "getRecentRegisterModule": true,
     "getStatusColor": true,
     "getStatusName": true,
-    "exportData": true
+    "exportData": true,
+    "getRegisterModuleObject": true,
+    "getProperty": true
   }
 }

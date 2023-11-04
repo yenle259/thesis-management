@@ -17,8 +17,13 @@ const API = axios.create({
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    // toast.error(error);
-    console.log(error);
+    const { errors } = error.response.data;
+    Object.keys(errors).map((item) => {
+      if (errors[item]) {
+        toast.error(errors[item]);
+      }
+    });
+    console.log(errors);
   }
 );
 // interceptors.setup(Api)

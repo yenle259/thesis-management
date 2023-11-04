@@ -1,20 +1,13 @@
 <template>
   <div>
     <v-form v-model="form">
-      <v-card-title class="d-flex text-h5 text-indigo justify-between">
-        <div>
+      <v-card-title class="d-flex text-h5 text-indigo justify-end">
+        <!-- <div>
           <span> Thêm tài khoản </span>
           <p class="font-light text-caption text-black">
             Nhập vào các thông tin bên dưới để thêm tài khoản
           </p>
-        </div>
-        <v-btn
-          icon="mdi-restore"
-          variant="text"
-          color="grey-darken-2"
-          title="Làm mới form thông tin"
-          @click="handleResetForm"
-        ></v-btn>
+        </div> -->
       </v-card-title>
       <v-card-text class="pt-2">
         <div class="grid grid-cols-2 gap-x-2">
@@ -85,12 +78,19 @@
             variant="outlined"
           ></v-autocomplete>
         </div>
-        <div>
+        <div class="d-flex justify-end">
+          <v-btn
+            icon="mdi-restore"
+            variant="text"
+            color="grey-darken-2"
+            title="Làm mới form thông tin"
+            @click="handleResetForm"
+          ></v-btn>
           <v-btn
             :disabled="!form"
             :loading="loading"
             color="primary"
-            class="me-2"
+            class="me-2 self-center"
             type="submit"
             variant="elevated"
             :onclick="handleSubmit"
@@ -104,18 +104,19 @@
 </template>
 
 <script setup lang="ts">
-import API from "@/apis/helpers/axiosBaseConfig";
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-import router from "@/router";
 import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 
-import { STUDENT_MAIL } from "@/constant";
+import { BASE_API, STUDENT_MAIL } from "@/constant";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+const emit = defineEmits(["created"]);
+
 const show = ref(false);
+
 const form = ref();
+
 const loading = ref(false);
 
 const errorMessage = ref({
@@ -169,14 +170,17 @@ const rules = ref({
   ],
 });
 
-// const handleEmail = (userId: String, name: String) => {
-//   return (
-//     name.split(" ")[name.split(" ").length - 1] + userId
-//   ).toLocaleLowerCase();
-// };
-
-const handleModuleType = (types: TopicTypeEnum[]) => {
-  return types.toString();
+const handleEmail = (userId: String, name: String) => {
+  const stdName = name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D");
+  return (
+    (
+      stdName.split(" ")[stdName.split(" ").length - 1] + userId
+    ).toLocaleLowerCase() + STUDENT_MAIL
+  );
 };
 
 watch(
@@ -194,9 +198,9 @@ watch(
 );
 
 watch(
-  () => model.moduleType,
+  () => model.userId && model.name,
   () => {
-    console.log(model.moduleType.join("-"));
+    model.email = handleEmail(model.userId, model.name);
   }
 );
 
@@ -211,19 +215,31 @@ const handleResetForm = () => {
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
-  try {
-    const { data: response } = await API.post(`/auth/student/signup`, {
+  axios({
+    method: "post",
+    url: BASE_API + `/auth/student/signup`,
+    withCredentials: true,
+    data: {
       userId: model.userId,
       password: model.password,
       name: model.name,
-      email: model.email + STUDENT_MAIL,
+      email: model.email,
       moduleType: model.moduleType.join("-"),
+    },
+  })
+    .then(function () {
+      emit("created");
+    })
+    .catch(function (error) {
+      if (error.response) {
+        const { errors } = error.response.data;
+        if (errors.userId) {
+          errorMessage.value.userId = errors.userId;
+        }
+        if (errors.password) {
+          errorMessage.value.password = errors.password;
+        }
+      }
     });
-
-    toast.success("Đã thêm mới sinh viên thành công");
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
 };
 </script>

@@ -22,7 +22,7 @@
       </div>
       <v-tabs v-model="model.type" grow class="mt-2">
         <v-tab
-          v-for="{ value, label } in topicTypeOptions"
+          v-for="{ value, title } in topicTypeOptions"
           :key="value"
           :value="value"
           :active="model.type === value"
@@ -31,7 +31,7 @@
           :variant="model.type === value ? 'text' : 'plain'"
           selected-class="text-white"
         >
-          {{ label }}
+          {{ title }}
           <span v-if="model.type === value">
             <v-badge
               text-color="white"
@@ -261,5 +261,4 @@ const handleRegistered = (topic: TopicDetails) => {
   isOpen.value = false;
   topicIdUpdated.value = topic;
 };
-
 </script>

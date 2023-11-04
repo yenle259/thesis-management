@@ -104,10 +104,12 @@
               <td class="text-center truncate" width="160px">
                 <div class="flex flex-col gap-y-1 py-1">
                   <div
-                    v-for="student in topic.student"
-                    :key="student.studentInfo._id"
+                    v-for="({ studentInfo }, index) in topic.student"
+                    :key="index"
                   >
-                    <v-chip size="small">{{ student.studentInfo.name }}</v-chip>
+                    <v-chip size="small" v-if="studentInfo">{{
+                      studentInfo.name
+                    }}</v-chip>
                   </div>
                 </div>
               </td>
