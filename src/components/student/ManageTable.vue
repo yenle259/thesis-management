@@ -58,8 +58,13 @@
           </td>
           <td>
             <v-list-item class="rounded-lg w-38">
-              <p class="text-grey-800 text-xs">
-                {{ student.name }}
+              <p
+                class="text-grey-800 text-xs"
+                :class="{
+                  'text-caption font-italic text-grey': !student.name,
+                }"
+              >
+                {{ student.name ?? "Chưa có tên" }}
               </p>
               <p class="text-caption text-xs text-grey">
                 {{ student.email }}

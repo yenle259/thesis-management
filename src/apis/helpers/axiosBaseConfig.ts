@@ -3,6 +3,7 @@ import { BASE_API } from "@/constant";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import { httpErrorHandler } from "./httpErrorHandler";
 
 const API = axios.create({
   baseURL: BASE_API,
@@ -17,13 +18,14 @@ const API = axios.create({
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    const { errors } = error.response.data;
-    Object.keys(errors).map((item) => {
-      if (errors[item]) {
-        toast.error(errors[item]);
-      }
-    });
-    console.log(errors);
+    // const { errors } = error.response.data;
+    // Object.keys(errors).map((item) => {
+    //   if (errors[item]) {
+    //     toast.error(errors[item]);
+    //   }
+    // });
+    // console.log(errors);
+    httpErrorHandler(error);
   }
 );
 // interceptors.setup(Api)

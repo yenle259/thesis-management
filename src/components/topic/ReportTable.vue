@@ -4,7 +4,7 @@
       <div class="flex justify-between gap-x-2">
         <slot name="tab"></slot>
         <div></div>
-        <div class="d-flex gap-x-2">
+        <!-- <div class="d-flex gap-x-2">
           <div class="flex flex-row content-center p-2">
             <p class="text-overline">Lọc đề tài</p>
           </div>
@@ -31,7 +31,7 @@
               chips
             ></v-autocomplete>
           </div>
-        </div>
+        </div> -->
       </div>
       <v-divider> </v-divider>
       <v-card class="overflow-hidden rounded-lg">
@@ -39,8 +39,7 @@
           <thead class="font-bold text-overline">
             <tr>
               <th class="text-left" width="400px">Tên đề tài</th>
-              <th class="text-left">Phân loại</th>
-              <!-- <th class="text-left">
+              <th class="text-left">
                 <v-btn
                   id="type-menu"
                   size="small"
@@ -48,40 +47,17 @@
                   append-icon="mdi-menu-down"
                   >Phân loại</v-btn
                 >
-                <v-menu activator="#type-menu">
-                  <v-list density="compact" class="rounded-lg">
-                    <div class="mx-1">
-                      <v-list-item
-                        v-for="(
-                          { label, value }, index
-                        ) in topicTypeOptionsCustom"
-                        :key="index"
-                        :value="value"
-                        class="rounded-lg"
-                        @click="model.topicType = value"
-                      >
-                        <span class="text-caption">
-                          {{ label }}
-                        </span>
-                      </v-list-item>
-                    </div>
-                  </v-list>
-                </v-menu>
-              </th> -->
-              <th class="text-center">HK - Năm học</th>
-              <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
-                <template v-slot:activator="{ props }">
-                  <th class="text-center" width="100px" v-bind="props">
-                    Số SV
-                  </th>
-                </template></v-tooltip
-              >
-              <th class="text-center">SV đăng ký</th>
+              </th>
+              <th class="text-center">SV thực hiện</th>
               <th class="text-left">Thực hiện</th>
             </tr>
           </thead>
-          <tbody v-if="filterTopics">
-            <tr class="text-sm" v-for="topic in filterTopics" :key="topic.slug">
+          <tbody v-if="topics">
+            <tr
+              class="text-sm"
+              v-for="({ topic, pi, student }, index) in topics"
+              :key="index"
+            >
               <td
                 width="400px"
                 @click="router.push('/user/topic/' + topic.slug)"
@@ -94,31 +70,10 @@
                   {{ getTopicTypeName(topic.type) }}
                 </v-chip>
               </td>
-              <td width="150px" class="text-center">
-                <div v-if="topic.semester">
-                  {{ getSchoolYearSemester(topic.semester, true) }}
-                </div>
-                <div v-else>#</div>
-              </td>
-              <td class="text-center">
-                <span v-if="topic.student">
-                  {{ topic.student.length + "/" + topic.numberOfStudent }}
-                </span>
-                <span v-else>{{ "0/" + topic.numberOfStudent }}</span>
-              </td>
               <td class="text-center truncate" width="160px">
-                <div class="flex flex-col gap-y-1 py-1">
-                  <div
-                    v-for="({ studentInfo }, index) in topic.student"
-                    :key="index"
-                  >
-                    <v-chip size="small" v-if="studentInfo">{{
-                      studentInfo.name
-                    }}</v-chip>
-                  </div>
-                </div>
+                <v-chip size="small">{{ student.name }}</v-chip>
               </td>
-              <td class="text-center" v-if="user?._id === topic.pi._id">
+              <td class="text-center" v-if="user?._id === pi._id">
                 <v-row>
                   <TopicDisplayStatusButton
                     :is-display="topic.isDisplay"
@@ -159,7 +114,7 @@
             </tr>
           </tbody>
         </v-table>
-        <div v-if="filterTopics.length == 0">
+        <div v-if="topics.length == 0">
           <p class="py-3 italic text-center">Không có đề tài</p>
         </div>
       </v-card>
@@ -173,8 +128,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-
-import { topicTypeOptionsCustom } from "@/components/form/data/topicTypeOptionsCustom";
+import { ReportTopic } from "@/apis/models/ReportTopic";
 
 const router = useRouter();
 
@@ -182,12 +136,12 @@ const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["updatedStatus", "open", "delete"]);
 
-const props = defineProps<{ topics: TopicDetails[] }>();
+const props = defineProps<{ topics: ReportTopic[] }>();
 
 const model = reactive({
   //recent semester
   filterSemester: "6526d24c7547ab02d497a7a4",
-  topicType: null,
+  topicType: "",
   tab: "",
 });
 
@@ -220,22 +174,22 @@ const sysOptions = computed(() => {
   }));
 });
 
-const filterTopics = computed(() => {
-  if (model.filterSemester && model.topicType) {
-    return props.topics.filter(
-      (topic) =>
-        topic.semester._id === model.filterSemester &&
-        topic.type === model.topicType
-    );
-  } else if (model.filterSemester) {
-    return props.topics.filter(
-      (topic) => topic.semester._id === model.filterSemester
-    );
-  } else if (model.topicType) {
-    return props.topics.filter((topic) => topic.type === model.topicType);
-  }
-  return props.topics;
-});
+// const filterTopics = computed(() => {
+//   if (model.filterSemester && model.topicType) {
+//     return props.topics.filter(
+//       (topic) =>
+//         topic.semester._id === model.filterSemester &&
+//         topic.type === model.topicType
+//     );
+//   } else if (model.filterSemester) {
+//     return props.topics.filter(
+//       (topic) => topic.semester._id === model.filterSemester
+//     );
+//   } else if (model.topicType) {
+//     return props.topics.filter((topic) => topic.type === model.topicType);
+//   }
+//   return props.topics;
+// });
 
 watch(
   () => model.topicType,

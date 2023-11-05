@@ -21,6 +21,7 @@
                 v-model="model.userId"
                 :required="true"
                 :rules="rules.userId"
+                :error-messages="errorMessage.userId"
                 class="mb-2"
                 clearable
                 label="Mã số sinh viên"
@@ -45,6 +46,7 @@
                 v-model="model.name"
                 :required="true"
                 :rules="rules.name"
+                :error-messages="errorMessage.name"
                 class="mb-2"
                 clearable
                 label="Họ tên"
@@ -57,6 +59,7 @@
                 type="email"
                 :required="true"
                 :rules="rules.email"
+                :error-messages="errorMessage.email"
                 class="mb-2"
                 label="Email"
                 prepend-inner-icon="mdi-email-outline"
@@ -128,6 +131,14 @@ const model = reactive({
 
 const rules = studentUpdateRules();
 
+const errorMessage = ref({
+  userId: "",
+  name: "",
+  email: "",
+  password: "",
+  moduleType: "",
+});
+
 watch(
   () => props.student,
   () => {
@@ -179,8 +190,8 @@ const handleEditTopic = async (e: Event) => {
     );
 
     emit("edited");
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error.response);
   }
 };
 </script>

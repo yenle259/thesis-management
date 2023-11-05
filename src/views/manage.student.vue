@@ -224,6 +224,7 @@ const useStudent = async () => {
       params: {
         page: model.page,
         limit: model.numberOfItemsPerPage,
+        search: model.search,
       },
     });
 
@@ -242,7 +243,7 @@ const useStudent = async () => {
 useStudent();
 
 watch(
-  () => [model.numberOfItemsPerPage, model.page],
+  () => [model.numberOfItemsPerPage, model.page, model.search],
   () => {
     if (pagesCount(model.count, model.numberOfItemsPerPage) < model.page) {
       model.page = 1;

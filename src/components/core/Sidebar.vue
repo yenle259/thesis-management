@@ -16,34 +16,33 @@
           </a>
         </div>
         <v-divider></v-divider>
-        <!-- user account and email -->
-        <!-- <v-list-item :key="user?._id" class="py-2">
-          <p class="">{{ user?.name }}</p>
-          <p class="text-caption">{{ user?.email }}</p>
-          <template v-slot:prepend>
-            <v-btn
-              class="me-2"
-              variant="flat"
-              color="teal"
-              size="40"
-              rounded
-              @click="
-                () => {
-                  router.push('/user');
-                }
-              "
-            >
-              <span class="text-h5">{{
-                user?.name.charAt(0).toLocaleUpperCase()
-              }}</span>
-            </v-btn>
-          </template>
-        </v-list-item> -->
-
-        <v-divider></v-divider>
 
         <v-list nav density="compact">
           <!-- public route for student and lecturer -->
+
+          <div
+            v-for="({ role, subheader, list }, index) in routeByRole"
+            :key="index"
+          >
+            <div v-if="role === user?.role">
+              <v-list-subheader v-if="subheader" color="white"
+                ><span class="uppercase">
+                  {{ subheader }}
+                </span>
+              </v-list-subheader>
+              <div class="px-1">
+                <v-list-item
+                  v-for="{ url, label, icon } in list"
+                  :key="url"
+                  :title="label"
+                  :value="url"
+                  :prepend-icon="icon"
+                  @click="router.push(url)"
+                  active-class="rounded-lg bg-white text-indigo"
+                ></v-list-item>
+              </div>
+            </div>
+          </div>
 
           <div v-if="!isAdmin">
             <div
@@ -60,32 +59,7 @@
                   v-for="{ url, label, icon } in list"
                   :key="url"
                   :title="label"
-                  :value="label"
-                  :prepend-icon="icon"
-                  @click="router.push(url)"
-                  active-class="rounded-lg bg-white text-indigo"
-                ></v-list-item>
-              </div>
-            </div>
-          </div>
-
-          <!-- admin route list -->
-          <div v-if="isAdmin">
-            <div
-              v-for="({ subheader, list }, index) in adminRoutes"
-              :key="index"
-            >
-              <v-list-subheader color="white"
-                ><span class="uppercase">
-                  {{ subheader }}
-                </span>
-              </v-list-subheader>
-              <div class="px-1">
-                <v-list-item
-                  v-for="{ url, label, icon } in list"
-                  :key="url"
-                  :title="label"
-                  :value="label"
+                  :value="url"
                   :prepend-icon="icon"
                   @click="router.push(url)"
                   active-class="rounded-lg bg-white text-indigo"
@@ -137,16 +111,6 @@ const isAdmin = ref(user.value?.role === UserRoleEnum.Admin);
 
 const publicRoutes = ref([
   {
-    subheader: "Cá nhân",
-    list: [
-      {
-        icon: "mdi-account",
-        label: "Đề tài của tôi",
-        url: "/user",
-      },
-    ],
-  },
-  {
     subheader: "Thông tin chung",
     list: [
       {
@@ -163,8 +127,30 @@ const publicRoutes = ref([
   },
 ]);
 
-const adminRoutes = ref([
+const routeByRole = [
   {
+    subheader: "Cá nhân",
+    list: [
+      {
+        icon: "mdi-account",
+        label: "Thông tin của tôi",
+        url: "/user",
+      },
+    ],
+  },
+  {
+    role: UserRoleEnum.Lecturer,
+    subheader: "Cá nhân",
+    list: [
+      {
+        icon: "mdi-account",
+        label: "Đề tài của tôi",
+        url: "/my-topic",
+      },
+    ],
+  },
+  {
+    role: UserRoleEnum.Admin,
     subheader: "Quản lí",
     list: [
       {
@@ -185,12 +171,11 @@ const adminRoutes = ref([
       {
         icon: "mdi-account-school",
         label: "Giảng viên",
-        // url: "/manage/lecturer",
         url: "/lecturers",
       },
     ],
   },
-]);
+];
 
 const handleLogout = () => {
   axios({

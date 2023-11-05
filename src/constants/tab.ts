@@ -21,3 +21,24 @@ export const ACCOUNT_TAB: OptionTab[] = [
     icon: "mdi-file-document-outline",
   },
 ];
+
+export const TOPIC_STATUS: OptionTab[] = [
+  {
+    label: "Chung",
+    title: "Danh sách đề tài",
+    value: "pending",
+    icon: "mdi-account-multiple-plus",
+  },
+  {
+    label: "Đã duyệt",
+    title: "Danh sách đề tài đã duyệt và nhận hướng dẫn với sinh viên",
+    value: "approved",
+    icon: "mdi-check-circle-outline",
+  },
+  {
+    label: "Được đề xuất",
+    title: "Danh sách đề tài sinh viên đề xuất",
+    value: "suggested",
+    icon: "mdi-comment-text-outline",
+  },
+];

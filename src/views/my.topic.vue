@@ -1,25 +1,4 @@
 <template>
-  <!-- Common User Info -->
-  <v-card
-    class="mx-8 mt-6 rounded-lg"
-    width="350px"
-    v-if="user?.role !== UserRoleEnum.Lecturer"
-  >
-    <v-card-text>
-      <CustomStudentInfoItem
-        :title="'Thông tin cá nhân'"
-        :student="user || {}"
-      />
-    </v-card-text>
-  </v-card>
-
-  <!-- Topic Table of Student -->
-  <div v-if="!user?.role">
-    <div v-if="topics?.length !== 0">
-      <StudentTopic :topics="topics ?? []" />
-    </div>
-  </div>
-
   <!-- Topic Table of Lecturer -->
   <div v-if="user?.role === UserRoleEnum.Lecturer">
     <div>
@@ -45,30 +24,35 @@
               >
             </div>
           </div>
+          <v-tabs v-model="model.topicStatusTab" class="mt-4">
+            <v-tab
+              v-for="({ title, label, value }, index) in TOPIC_STATUS"
+              :key="index"
+              :value="value"
+              :title="title"
+              hide-slider
+              density="compact"
+              class="rounded-xl me-1"
+              color="indigo"
+              :variant="model.topicStatusTab === value ? 'flat' : 'text'"
+              >{{ label }}
+            </v-tab>
+          </v-tabs>
+          <v-window v-model="model.topicStatusTab">
+            <v-window-item key="pending" value="pending">
+              <UserLecturerTopicTable
+                :topics="topics ?? []"
+                @updated-status="handleUpdated"
+                @open="handleEditForm"
+                @delete="handleDeleteModal"
+              />
+            </v-window-item>
+            <v-window-item key="approved" value="approved">
+              <TopicReportTable :topics="reportTopics || []" />
+            </v-window-item>
+            <v-window-item key="suggested" value="suggested"> </v-window-item>
+          </v-window>
 
-          <UserLecturerTopicTable
-            :topics="topics ?? []"
-            @updated-status="handleUpdated"
-            @open="handleEditForm"
-            @delete="handleDeleteModal"
-          >
-            <template v-slot:tab
-              ><v-tabs v-model="model.tab" class="mt-2">
-                <v-tab
-                  v-for="({ title, label, value }, index) in TOPIC_STATUS"
-                  :key="index"
-                  :value="value"
-                  :title="title"
-                  hide-slider
-                  density="compact"
-                  class="rounded-xl me-1"
-                  color="indigo"
-                  :variant="model.tab === value ? 'flat' : 'text'"
-                  >{{ label }}
-                </v-tab>
-              </v-tabs></template
-            >
-          </UserLecturerTopicTable>
           <TopicCreateModal
             :is-show="isShowCreateModal"
             @cancel="handleOpenCreateModal"
@@ -110,6 +94,8 @@ const { user } = storeToRefs(auth);
 
 const topics = ref<TopicDetails[]>();
 
+const reportTopics = ref<TopicDetails[]>();
+
 const editTopic = ref<TopicDetails>();
 
 const deleteTopic = ref<TopicDetails>();
@@ -121,7 +107,8 @@ const isShowCreateModal = ref(false);
 const isShowDeleteModal = ref(false);
 
 const model = reactive({
-  tab: TOPIC_STATUS[0].value,
+  topicStatusTab: TOPIC_STATUS[0].value,
+  total: 0,
 });
 
 const urlByRole =
@@ -142,24 +129,25 @@ const getTopicList = async () => {
   }
 };
 
+getTopicList();
+
 const getReportTopics = async () => {
   try {
     const { data: response } = await API.get(
       `/report/lecturer/${user.value?._id}`
     );
-    // topics.value = response;
+    reportTopics.value = response.topics;
+    model.total = response.total;
     return response;
   } catch (error) {
     console.log(error);
   }
 };
 
-getTopicList();
-
 watch(
-  () => model.tab,
+  () => model.topicStatusTab,
   () => {
-    if (model.tab === TOPIC_STATUS[1].value) {
+    if (model.topicStatusTab === TOPIC_STATUS[1].value) {
       getReportTopics();
     }
   }
@@ -203,17 +191,5 @@ const handleDeletedTopic = () => {
   toast.success("Xóa đề tài thành công");
   isShowDeleteModal.value = !isShowDeleteModal.value;
   getTopicList();
-};
-</script>
-<script lang="ts">
-export default {
-  beforeRouteEnter(to, from, next) {
-    const auth = useAuthStore();
-    if (auth.user?.role === UserRoleEnum.Lecturer) {
-      next("/my-topic");
-    } else {
-      next(true);
-    }
-  },
 };
 </script>

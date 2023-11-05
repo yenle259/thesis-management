@@ -92,6 +92,7 @@ const routes = [
           allowRoles: [UserRoleEnum.Admin, UserRoleEnum.Lecturer],
         },
       },
+      // admin route
       {
         path: "/manage/student",
         name: "Quản lí Sinh viên",
@@ -112,6 +113,13 @@ const routes = [
         name: "Quản lí Giảng viên",
         component: () => import("@/views/manage.lecturer.vue"),
         meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Admin] },
+      },
+      //
+      {
+        path: "/my-topic",
+        name: "Đề tài của tôi",
+        component: () => import("@/views/my.topic.vue"),
+        meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Lecturer] },
       },
     ],
   },
