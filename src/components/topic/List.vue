@@ -57,11 +57,6 @@
                 <th class="text-left">Học kì - Năm học</th>
                 <th class="text-center">
                   Giảng viên
-                  <!-- <CustomFilterButton
-                    :label="'Giảng viên'"
-                    :options="unique"
-                    @select="handleFilterLecturer"
-                  /> -->
                 </th>
                 <th
                   class="text-left"
