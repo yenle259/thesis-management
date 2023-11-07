@@ -36,17 +36,18 @@
         registerModule ? registerModule[0].moduleType : undefined
       "
       :registeredTopicType="registeredTopicType || []"
-      @create="isOpenCreateModal = true"
+      @create="isOpenSuggestModal = true"
     >
       <template v-slot:action>
-        <div v-if="!user?.role">
-          <v-tooltip text="Thêm mới đề tài" location="top">
+        <div v-if="!user?.role && isSuggestedTopic">
+          <v-tooltip text="Đề xuất đề tài muốn thực hiện" location="top">
             <template v-slot:activator="{ props }">
               <v-btn
+                :disabled="!!module?.moduleType"
                 v-bind="props"
                 variant="elevated"
                 append-icon="mdi-plus"
-                @click="isOpenCreateModal = true"
+                @click="isOpenSuggestModal = true"
                 color="indigo"
                 >Đề xuất đề tài</v-btn
               >
@@ -57,9 +58,11 @@
     </TopicList>
   </div>
   <TopicSuggestModal
-    :isShow="isOpenCreateModal"
+    :isShow="isOpenSuggestModal"
+    :register-module="module || {}"
     :lecturers="lecturers || []"
-    @cancel="isOpenCreateModal = false"
+    @cancel="isOpenSuggestModal = false"
+    @created="handleSuggestedTopic"
   />
 </template>
 
@@ -67,10 +70,16 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { PublishDate } from "@/apis/models/PublishDate";
+import { UserDetails } from "@/apis/models/UserDetails";
+import { ReportTopic } from "@/apis/models/ReportTopic";
+import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
+import { RegisterModule } from "@/apis/models/RegisterModule";
 
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { UserDetails } from "@/apis/models/UserDetails";
+
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 useTitle("QLĐT - Danh sách đề tài");
 
@@ -82,6 +91,8 @@ const model = reactive({
 
 const { registerModule } = storeToRefs(useStudentStore());
 
+const module = ref<RegisterModule>();
+
 const topics = ref<TopicDetails[]>();
 
 const lecturers = ref<UserDetails[]>();
@@ -90,7 +101,7 @@ const registeredTopics = ref<TopicDetails[]>();
 
 const isShow = ref(false);
 
-const isOpenCreateModal = ref(false);
+const isOpenSuggestModal = ref(false);
 
 const { change } = usePublishTopicList();
 
@@ -111,6 +122,23 @@ const getTopicList = async () => {
 };
 
 getTopicList();
+
+const getRecentRegisterModule = async () => {
+  try {
+    const { data: response } = await API.get(
+      `/student/module/${user.value?._id}`
+    );
+    module.value = response.module;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//role: student -> get register module of recent semester
+if (!user.value?.role) {
+  getRecentRegisterModule();
+}
 
 const getRegisteredTopic = async () => {
   try {
@@ -156,6 +184,12 @@ const currentSemesterTopics = computed(() => {
   );
 });
 
+const isSuggestedTopic = computed(() => {
+  return registeredTopics.value?.some(
+    ({ status }) => status === TopicStatusEnum.SUGGESTED
+  );
+});
+
 const registeredTopicType = computed(() => {
   return registeredTopics.value?.map(({ type }) => type);
 });
@@ -165,5 +199,10 @@ const handlePublish = (isPublish: boolean) => {
   if (isPublish) {
     isShow.value = isPublish;
   }
+};
+
+const handleSuggestedTopic = (topic: ReportTopic) => {
+  isOpenSuggestModal.value = false;
+  toast.success(`Đã đề xuất đề tài với giảng viên ${topic.pi.name}`);
 };
 </script>

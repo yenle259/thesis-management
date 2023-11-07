@@ -56,14 +56,39 @@
                         ></v-text-field>
                         <v-btn
                           class="ml-2"
+                          selected-class="text-blue"
                           icon="mdi-restore"
                           title="Restore"
                           variant="plain"
                           @click="handleReset"
                         ></v-btn>
                       </div>
-                      <div class="d-flex flex-row gap-x-2">
-                        <p class="py-2">Hiển thị</p>
+                      <div class="d-flex gap-x-2">
+                        <div class="flex flex-row content-center p-2">
+                          <p class="text-overline">Lọc đề tài</p>
+                        </div>
+                        <div class="w-52">
+                          <v-select
+                            v-model="model.registerModuleType"
+                            :items="topicTypeOptions"
+                            clearable
+                            chips
+                            label="Phân loại đề tài"
+                            variant="filled"
+                            density="compact"
+                            class="rounded-lg"
+                          ></v-select>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <template
+                    v-slot:pagination
+                    v-if="filterStudents?.length !== 0"
+                  >
+                    <div class="d-flex justify-between px-2 py-3">
+                      <div class="d-flex flex-row gap-x-3">
+                        <p class="self-center indent-4 text-body-2">Hiển thị</p>
                         <v-btn
                           id="number-per-page"
                           variant="tonal"
@@ -83,25 +108,17 @@
                             </v-list-item>
                           </v-list>
                         </v-menu>
-                        <p class="py-2">mục</p>
+                        <v-divider vertical thickness="2"></v-divider>
+                        <p class="self-center text-body-2">
+                          {{
+                            getPaginationText(
+                              model.count,
+                              model.numberOfItemsPerPage,
+                              model.page
+                            )
+                          }}
+                        </p>
                       </div>
-                    </div>
-                  </template>
-                  <template
-                    v-slot:pagination
-                    v-if="filterStudents?.length !== 0"
-                  >
-                    <div class="d-flex justify-between px-2 py-3">
-                      <p class="self-center indent-4 text-body-2">
-                        Hiển thị
-                        {{
-                          getPaginationText(
-                            model.count,
-                            model.numberOfItemsPerPage,
-                            model.page
-                          )
-                        }}
-                      </p>
                       <v-pagination
                         v-model="model.page"
                         :length="model.totalsPage"
@@ -194,7 +211,7 @@ import { ACCOUNT_TAB } from "@/constants/tab";
 
 import { PAGINATION_OPTIONS } from "@/constant";
 
-import { getPaginationText } from "@/utils/getPaginationText";
+import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -210,6 +227,7 @@ const model = reactive({
   totalsPage: 1,
   numberOfItemsPerPage: PAGINATION_OPTIONS[0],
   file: undefined,
+  registerModuleType: null,
 });
 
 const students = ref<StudentDetails[]>();

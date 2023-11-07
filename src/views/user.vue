@@ -21,7 +21,7 @@
   </div>
 
   <!-- Topic Table of Lecturer -->
-  <div v-if="user?.role === UserRoleEnum.Lecturer">
+  <!-- <div v-if="user?.role === UserRoleEnum.Lecturer">
     <div>
       <div class="px-4 pb-6">
         <div variant="flat" class="py-6 px-4">
@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts" setup>

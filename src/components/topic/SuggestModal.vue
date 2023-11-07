@@ -5,7 +5,7 @@
         <v-form v-model="form">
           <v-card-title class="d-flex text-h5 text-indigo justify-between">
             <div>
-              <span class="uppercase mb-1"> Đề xuất đề tài </span>
+              <span> Đề xuất đề tài </span>
               <p class="text-caption text-black">
                 Hãy chọn các trường bên dưới để thực hiện đề xuất đề tài trong
                 học kì này
@@ -23,9 +23,8 @@
                   v-model="model.lecturerId"
                   :rules="rules.lecturerId"
                   :items="lecturerNameOptions"
-                  autofocus
-                  label="Giảng viên hướng dẫn"
-                  class="mb-2"
+                  hint="Chọn giảng viên muốn đề xuất đề tài"
+                  label="Giảng viên"
                   clearable
                 >
                   <template v-slot:item="{ props, item }">
@@ -43,7 +42,6 @@
                   :rules="rules.topicType"
                   :items="topicTypeOptions"
                   label="Phân loại đề tài"
-                  class="mb-2"
                   chips
                   clearable
                 ></v-autocomplete>
@@ -56,6 +54,14 @@
               label="Tên đề tài"
               clearable
             ></v-text-field>
+            <v-textarea
+              v-model="model.description"
+              clearable
+              counter
+              label="Mô tả đề tài"
+              hint="Mô tả đề tài với các nội dung liên quan (công nghệ, phạm vi...)"
+              class="mb-2"
+            ></v-textarea>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -66,7 +72,7 @@
               :disabled="!form"
               color="blue"
               variant="tonal"
-              :onclick="handleRegister"
+              @click="handleSuggestTopic"
             >
               Đăng ký
             </v-btn>
@@ -78,8 +84,19 @@
 </template>
 
 <script setup lang="ts">
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+import API from "@/apis/helpers/axiosBaseConfig";
+import { RegisterModule } from "@/apis/models/RegisterModule";
 import { UserDetails } from "@/apis/models/UserDetails";
+
+const { user } = storeToRefs(useAuthStore());
+
+const emit = defineEmits(["cancel", "created"]);
+
+const props = defineProps<{
+  isShow: boolean;
+  lecturers: UserDetails[];
+  registerModule: RegisterModule;
+}>();
 
 const form = ref();
 
@@ -87,6 +104,7 @@ const model = reactive({
   lecturerId: null,
   topicType: null,
   topicName: null,
+  description: null,
   error: "",
 });
 
@@ -112,14 +130,6 @@ const rules = ref({
   ],
 });
 
-const emit = defineEmits(["cancel", "updated"]);
-
-const props = defineProps<{
-  isShow: boolean;
-  lecturer: UserDetails;
-  lecturers: UserDetails[];
-}>();
-
 const lecturerNameOptions = computed(() => {
   return props.lecturers?.map(({ _id, name, email }) => ({
     subtitle: email,
@@ -138,10 +148,12 @@ const lecturerNameOptions = computed(() => {
 // );
 
 const topicTypeOptions = computed(() => {
-  return Object.values(TopicTypeEnum).map((item) => ({
-    title: getTopicTypeName(item),
-    value: item,
-  }));
+  return getRegisterModuleObject(props.registerModule.moduleType).map(
+    (item) => ({
+      title: getTopicTypeName(item),
+      value: item,
+    })
+  );
 });
 
 const dialog = computed(() => {
@@ -155,8 +167,27 @@ const handleCancel = () => {
   emit("cancel");
 };
 
-const handleRegister = () => {
+const handleSuggestTopic = async (e: Event) => {
   console.log(model);
-  // emit("cancel");
+  e.preventDefault();
+
+  try {
+    const { data: response } = await API.post(`/topic/suggest`, {
+      name: model.topicName,
+      pi: model.lecturerId,
+      studentId: user.value?._id,
+      type: model.topicType,
+      description: model.description,
+    });
+
+    model.topicName = null;
+    model.topicType = null;
+    model.description = null;
+    model.lecturerId = null;
+
+    emit("created", response.topic);
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>

@@ -181,8 +181,6 @@ const { registeredTopic } = storeToRefs(useStudentStore());
 
 const { user } = storeToRefs(useAuthStore());
 
-const emit = defineEmits(["create"]);
-
 const props = defineProps<{
   title: string;
   subTitle?: string;
@@ -238,10 +236,6 @@ const unique = computed(() => {
 const openInfoModal = (topic: TopicDetails) => {
   model.info = true;
   openTopic.value = topic;
-};
-
-const handleFilterLecturer = (value: string) => {
-  model.piId = value;
 };
 
 const handleDisabled = (topic: TopicDetails) => {

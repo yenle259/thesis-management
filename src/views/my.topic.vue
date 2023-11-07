@@ -50,7 +50,17 @@
             <v-window-item key="approved" value="approved">
               <TopicReportTable :topics="reportTopics || []" />
             </v-window-item>
-            <v-window-item key="suggested" value="suggested"> </v-window-item>
+            <v-window-item
+              :key="TopicStatusEnum.SUGGESTED"
+              :value="TopicStatusEnum.SUGGESTED"
+            >
+              <UserLecturerTopicTable
+                :topics="topics ?? []"
+                @updated-status="handleUpdated"
+                @open="handleEditForm"
+                @delete="handleDeleteModal"
+              />
+            </v-window-item>
           </v-window>
 
           <TopicCreateModal
@@ -79,6 +89,7 @@
 <script lang="ts" setup>
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { TOPIC_STATUS } from "@/constants/tab";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -109,6 +120,7 @@ const isShowDeleteModal = ref(false);
 const model = reactive({
   topicStatusTab: TOPIC_STATUS[0].value,
   total: 0,
+  status: "",
 });
 
 const urlByRole =
@@ -118,11 +130,13 @@ const urlByRole =
 
 const getTopicList = async () => {
   try {
-    const { data: response } = await API({
-      url: urlByRole,
-      withCredentials: true,
+    const { data: response } = await API.get(urlByRole, {
+      params:
+        model.topicStatusTab === TopicStatusEnum.SUGGESTED
+          ? { status: TopicStatusEnum.SUGGESTED }
+          : {},
     });
-    topics.value = response;
+    topics.value = response.topics;
     return response;
   } catch (error) {
     console.log(error);
@@ -147,8 +161,14 @@ const getReportTopics = async () => {
 watch(
   () => model.topicStatusTab,
   () => {
-    if (model.topicStatusTab === TOPIC_STATUS[1].value) {
+    if (model.topicStatusTab === TOPIC_STATUS[2].value) {
       getReportTopics();
+    } else if (model.topicStatusTab === TOPIC_STATUS[1].value) {
+      model.status = TopicStatusEnum.SUGGESTED;
+      getTopicList();
+    } else {
+      model.status = "";
+      getTopicList();
     }
   }
 );

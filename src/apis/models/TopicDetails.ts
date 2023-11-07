@@ -1,5 +1,6 @@
 import { RegisterStudent } from "./RegisterStudent";
 import { SchoolYearSemester } from "./SchoolYearSemester";
+import { TopicStatusEnum } from "./TopicStatusEnum";
 import type { TopicTypeEnum } from "./TopicTypeEnum";
 import { UserDetails } from "./UserDetails";
 
@@ -14,4 +15,5 @@ export interface TopicDetails {
   student: RegisterStudent[];
   isDisplay: boolean;
   semester: SchoolYearSemester;
+  status?: TopicStatusEnum;
 }

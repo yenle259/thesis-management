@@ -1,4 +1,5 @@
 import { OptionTab } from "@/apis/models/OptionTab";
+import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 
 export const ACCOUNT_TAB: OptionTab[] = [
   {
@@ -9,7 +10,7 @@ export const ACCOUNT_TAB: OptionTab[] = [
     icon: "mdi-format-list-bulleted",
   },
   {
-    label: "Tài khoản",
+    label: "Thêm Tài khoản",
     title: "Thêm hoặc cập nhật tài khoản của sinh viên",
     value: "file",
     icon: "mdi-account-multiple-plus",
@@ -30,15 +31,15 @@ export const TOPIC_STATUS: OptionTab[] = [
     icon: "mdi-account-multiple-plus",
   },
   {
+    label: "Được đề xuất",
+    title: "Danh sách đề tài sinh viên đề xuất",
+    value: TopicStatusEnum.SUGGESTED,
+    icon: "mdi-comment-text-outline",
+  },
+  {
     label: "Đã duyệt",
     title: "Danh sách đề tài đã duyệt và nhận hướng dẫn với sinh viên",
     value: "approved",
     icon: "mdi-check-circle-outline",
-  },
-  {
-    label: "Được đề xuất",
-    title: "Danh sách đề tài sinh viên đề xuất",
-    value: "suggested",
-    icon: "mdi-comment-text-outline",
   },
 ];

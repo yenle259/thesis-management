@@ -1,6 +1,15 @@
 <template>
   <div>
-    <div class="d-flex flex-row justify-end gap-x-2 mb-2">
+    <div class="d-flex flex-row justify-end gap-x-2 mb-4 my-2">
+      <v-btn
+        color="blue"
+        append-icon="mdi-download"
+        class="me-2"
+        title="Tải xuống file dữ liệu mẫu để import"
+        variant="tonal"
+        @click="model.fileImport = undefined"
+        >Mẫu file import</v-btn
+      >
       <div v-if="model.fileImport">
         <v-btn
           icon="mdi-restore"
@@ -43,7 +52,7 @@
             <span class="font-semibold">Nhấn vào để upload</span>
           </p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
-            .xlsx file or spreadsheet
+            Tải lên file dữ liệu để thực hiện import (.xlsx)
           </p>
           <p
             v-if="!model.fileImport"
