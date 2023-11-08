@@ -65,7 +65,9 @@
                       </div>
                       <div class="d-flex gap-x-2">
                         <div class="flex flex-row content-center p-2">
-                          <p class="text-overline">Lọc đề tài</p>
+                          <p>
+                            <v-icon>mdi-filter-variant</v-icon>
+                          </p>
                         </div>
                         <div class="w-52">
                           <v-select

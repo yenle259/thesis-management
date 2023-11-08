@@ -171,7 +171,7 @@ const routeByRole = [
       {
         icon: "mdi-account-school",
         label: "Giảng viên",
-        url: "/lecturers",
+        url: "/manage/lecturer",
       },
     ],
   },

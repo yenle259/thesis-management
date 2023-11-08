@@ -23,6 +23,22 @@ export const ACCOUNT_TAB: OptionTab[] = [
   },
 ];
 
+export const LECTURER_TAB: OptionTab[] = [
+  {
+    label: "Danh sách chung",
+    title:
+      "Danh sách tài khoản cán bộ giảng viên",
+    value: "list",
+    icon: "mdi-format-list-bulleted",
+  },
+  {
+    label: "Thêm Tài khoản",
+    title: "Thêm hoặc cập nhật tài khoản cán bộ",
+    value: "file",
+    icon: "mdi-account-multiple-plus",
+  },
+];
+
 export const TOPIC_STATUS: OptionTab[] = [
   {
     label: "Chung",

@@ -1,12 +1,6 @@
 <template>
   <v-menu>
     <template v-slot:activator="{ props }">
-      <!-- <v-btn
-        icon="mdi-dots-vertical"
-        v-bind="props"
-        variant="tonal"
-        color="indigo"
-      ></v-btn> -->
       <v-btn
         append-icon="mdi-chevron-down"
         v-bind="props"
@@ -16,13 +10,25 @@
       >
     </template>
     <v-list density="compact" class="rounded-lg">
-      <v-list-item disabled @click="model.setTimeModal = true"
-        >Dừng công bố đề tài
+      <v-list-item class="mb-2">
+        <span> Cho phép đăng ký </span>
+        <template v-slot:append>
+          <v-switch
+            v-model="model.isPublish"
+            true-value="true"
+            false-value="false"
+            hide-details
+            inset
+            color="primary"
+            class="mx-auto ml-2"
+          ></v-switch>
+        </template>
       </v-list-item>
-      <v-list-item @click="model.publishModal = !model.publishModal"
+      <hr />
+      <v-list-item @click="model.publishModal = !model.publishModal" class="mt-2 mx-2 rounded-lg"
         >Cho phép đăng ký
       </v-list-item>
-      <v-list-item @click="model.setTimeModal = true"
+      <v-list-item @click="model.setTimeModal = true" class="mx-2 rounded-lg"
         >Đặt thời gian
       </v-list-item>
     </v-list>
@@ -125,7 +131,8 @@ const rules = ref({
 watch(
   () => model.isPublish,
   () => {
-    publish.change(model.isPublish);
+    // publish.change(model.isPublish);
+    model.publishModal = !model.publishModal;
   }
 );
 
