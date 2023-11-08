@@ -61,7 +61,7 @@
                       class="text-overline mb-1"
                       :color="getStatusColor(topic.student[0].status)"
                       >{{
-                        getStatusNameObject(topic.student[0].status)
+                        getStatusLabel(topic.student[0].status)
                       }}</v-chip
                     >
                   </div>
@@ -120,7 +120,7 @@
                       class="text-overline mb-1"
                       :color="getStatusColor(topic.student[0].status)"
                       >{{
-                        getStatusNameObject(topic.student[0].status)
+                        getStatusLabel(topic.student[0].status)
                       }}</v-chip
                     >
                   </div>
@@ -163,7 +163,7 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { RegisterModule } from "@/apis/models/RegisterModule";
 import { ReportTopic } from "@/apis/models/ReportTopic";
 
-import { getStatusNameObject } from "@/utils/getStatusName";
+import { getStatusLabel } from "@/utils/getStatusName";
 
 const { user } = storeToRefs(useAuthStore());
 

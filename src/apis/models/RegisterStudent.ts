@@ -3,7 +3,7 @@ import { StudentDetails } from "./StudentDetails";
 
 export interface RegisterStudent {
   _id: string;
-  studentInfo: StudentDetails | string;
+  studentInfo: StudentDetails;
   status: RegisterStatusEnum;
   reason: string;
 }

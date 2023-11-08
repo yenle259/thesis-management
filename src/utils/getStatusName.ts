@@ -19,3 +19,12 @@ export function getStatusNameObject(status: Status): string | undefined {
   };
   return statusColor[status];
 }
+
+export function getStatusLabel(status: Status): string {
+  const statusColor: Record<Status, string> = {
+    [RegisterStatusEnum.Approve]: "Đã được duyệt",
+    [RegisterStatusEnum.Reject]: "Không được duyệt",
+    [RegisterStatusEnum.Pending]: "Đang chờ duyệt",
+  };
+  return statusColor[status];
+}

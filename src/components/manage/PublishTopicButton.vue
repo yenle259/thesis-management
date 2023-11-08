@@ -8,7 +8,6 @@
         color="indigo"
       ></v-btn> -->
       <v-btn
-        size="small"
         append-icon="mdi-chevron-down"
         v-bind="props"
         variant="flat"
@@ -16,12 +15,12 @@
         >Thời gian đăng ký</v-btn
       >
     </template>
-    <v-list density="compact">
+    <v-list density="compact" class="rounded-lg">
       <v-list-item disabled @click="model.setTimeModal = true"
         >Dừng công bố đề tài
       </v-list-item>
       <v-list-item @click="model.publishModal = !model.publishModal"
-        >Mở đăng ký đề tài
+        >Cho phép đăng ký
       </v-list-item>
       <v-list-item @click="model.setTimeModal = true"
         >Đặt thời gian

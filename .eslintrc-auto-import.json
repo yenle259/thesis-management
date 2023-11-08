@@ -99,6 +99,8 @@
     "getRegisterModuleObject": true,
     "getProperty": true,
     "getPaginationText": true,
-    "pagesCount": true
+    "pagesCount": true,
+    "getStatusNameObject": true,
+    "getStatusLabel": true
   }
 }

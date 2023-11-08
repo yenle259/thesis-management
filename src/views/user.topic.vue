@@ -39,11 +39,11 @@
       @create="isOpenSuggestModal = true"
     >
       <template v-slot:action>
-        <div v-if="!user?.role && isSuggestedTopic">
+        <div v-if="!user?.role">
           <v-tooltip text="Đề xuất đề tài muốn thực hiện" location="top">
             <template v-slot:activator="{ props }">
               <v-btn
-                :disabled="!!module?.moduleType"
+                :disabled="!module?.moduleType || isSuggestedTopic"
                 v-bind="props"
                 variant="elevated"
                 append-icon="mdi-plus"
@@ -201,8 +201,8 @@ const handlePublish = (isPublish: boolean) => {
   }
 };
 
-const handleSuggestedTopic = (topic: ReportTopic) => {
+const handleSuggestedTopic = () => {
   isOpenSuggestModal.value = false;
-  toast.success(`Đã đề xuất đề tài với giảng viên ${topic.pi.name}`);
+  toast.success(`Đã đề xuất đề tài với giảng viên`);
 };
 </script>

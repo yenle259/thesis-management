@@ -185,7 +185,7 @@ const handleSuggestTopic = async (e: Event) => {
     model.description = null;
     model.lecturerId = null;
 
-    emit("created", response.topic);
+    emit("created");
   } catch (error) {
     console.log(error);
   }
