@@ -135,7 +135,7 @@
 
                 <LecturerEditInfoModal
                   :isShow="isOpenEditModal"
-                  :student="selectedStudent || {}"
+                  :user="selectedUser || {}"
                   @cancel="isOpenEditModal = false"
                   @edited="handleUpdated"
                 />
@@ -226,7 +226,7 @@ const lecturers = ref<LecturerDetails[]>();
 
 const isOpenEditModal = ref(false);
 
-const selectedStudent = ref<StudentDetails>();
+const selectedUser = ref<StudentDetails>();
 
 const useStudent = async () => {
   try {
@@ -304,23 +304,23 @@ const handleReset = () => {
 
 const handleEditStudent = (student: StudentDetails) => {
   isOpenEditModal.value = true;
-  selectedStudent.value = student;
+  selectedUser.value = student;
 };
 
 const handleUpdated = () => {
   isOpenEditModal.value = false;
-  useStudent();
+  getLecturers();
   toast.success("Cập nhật thông tin cán bộ thành công");
 };
 
 const handleCreated = () => {
-  useStudent();
+  getLecturers();
   toast.success("Thêm mới cán bộ thành công");
   model.accountTab = "list";
 };
 
 const handleDeleted = () => {
-  useStudent();
+  getLecturers();
   toast.success("Xóa tài khoản cán bộ thành công");
 };
 </script>

@@ -3,8 +3,8 @@ export const lecturerUpdateRules = () => {
     userId: [
       (value: any) => {
         if (value?.length == 0) return "Hãy nhập vào mã số cán bộ";
-        if (value?.length == 8) return true;
-        return "Mã số cán bộ phải có 8 kí tự";
+        if (value?.length == 4) return true;
+        return "Mã số cán bộ phải có 4 kí tự";
       },
     ],
     name: [

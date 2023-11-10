@@ -90,25 +90,47 @@ const filterTopics = computed(() => {
 });
 
 const createDataToExport = (reports: ReportTopic[]) => {
-  return reports.map(({ pi, topic, student, isReport }) => ({
-    "Mã số giảng viên": pi.userId,
-    "Họ tên Giảng viên": pi.name,
-    "Mã số sinh viên": student.userId,
-    "Họ tên sinh viên": student.name,
-    "Tên đề tài": topic.name,
-    "Phân loại đề tài": getTopicTypeName(topic.type),
-    "Xác nhận báo cáo": isReport ? "Có" : "Chưa",
+  return reports.map(({ pi, topic, student }) => ({
+    lecturerId: pi.userId,
+    lecturerName: pi.name,
+    studentId: student.userId,
+    studentName: student.name,
+    topicName: topic.name,
+    topicType: getTopicTypeName(topic.type),
+    // "Xác nhận báo cáo": isReport ? "Có" : "Chưa",
   }));
 };
 
 const handleExportReports = (reports: ReportTopic[]) => {
   const data = createDataToExport(reports);
+  data.unshift({
+    lecturerId: "MSCB",
+    lecturerName: "Tên giảng viên",
+    studentId: "MSSV",
+    studentName: "Tên sinh viên",
+    topicName: "Tên đề tài",
+    topicType: "Phân loại đề tài",
+  });
 
-  const ws = utils.json_to_sheet(data);
+  const ws = utils.json_to_sheet(data, {
+    skipHeader: true,
+  });
+
+  const wscols = [
+    { wch: 10 },
+    { wch: 20 },
+    { wch: 10 },
+    { wch: 20 },
+    { wch: 70 },
+    { wch: 20 },
+  ];
+
+  ws["!cols"] = wscols;
+
   /* create workbook and append worksheet */
   const wb = utils.book_new();
   utils.book_append_sheet(wb, ws, "Data");
   /* export to XLSX */
-  writeFileXLSX(wb, "Danh sach huong dan de tai.xlsx");
+  writeFileXLSX(wb, "Danh sach huong dan de tai.xlsx", { cellStyles: true });
 };
 </script>

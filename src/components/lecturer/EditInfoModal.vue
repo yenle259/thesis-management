@@ -1,5 +1,5 @@
 <template>
-  <div :v-if="props.student">
+  <div :v-if="props.user">
     <v-dialog v-model="dialog" persistent width="700px">
       <v-card class="rounded-lg pt-4 pb-2 px-2">
         <v-form v-model="form">
@@ -67,7 +67,7 @@
                 density="compact"
               ></v-text-field>
               <v-autocomplete
-                v-model="model.moduleType"
+                v-model="model.role"
                 :items="userRoleOptions"
                 prepend-inner-icon="mdi-format-list-bulleted"
                 label="Vai trò cán bộ"
@@ -102,8 +102,7 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-import { StudentDetails } from "@/apis/models/StudentDetails";
+import { LecturerDetails } from "@/apis/models/LecturerDetails";
 import { userRoleOptions } from "@/components/form/data/userRoleOptions";
 
 import { lecturerUpdateRules } from "@/components/form/rules/lecturerUpdateRules";
@@ -114,7 +113,7 @@ const emit = defineEmits(["cancel", "edited"]);
 
 const props = defineProps<{
   isShow: boolean;
-  student: StudentDetails;
+  user: LecturerDetails;
 }>();
 
 const model = reactive({
@@ -122,7 +121,7 @@ const model = reactive({
   name: "",
   email: "",
   // password: "",
-  moduleType: [TopicTypeEnum.LV],
+  role: props.user.role,
 });
 
 const rules = lecturerUpdateRules();
@@ -136,22 +135,15 @@ const errorMessage = ref({
 });
 
 watch(
-  () => props.student,
+  () => props.user,
   () => {
-    const { userId, name, email } = props.student;
-
+    const { userId, name, email, role } = props.user;
     model.userId = userId;
     model.name = name;
     model.email = email;
+    model.role = role;
   }
 );
-
-const topicTypeOptions = computed(() => {
-  return Object.values(TopicTypeEnum).map((item) => ({
-    title: getTopicTypeName(item),
-    value: item,
-  }));
-});
 
 const dialog = computed(() => {
   return props.isShow;
@@ -164,14 +156,15 @@ const handleCancel = () => {
 const handleEditTopic = async (e: Event) => {
   e.preventDefault();
 
-  const { userId, name, email } = model;
+  const { userId, name, role, email } = model;
   try {
     const { data: response } = await API.put(
-      `/user/update/${props.student._id}`,
+      `/user/update/${props.user._id}`,
       {
         userId,
         name,
         email,
+        role,
       }
     );
 
