@@ -81,7 +81,7 @@ const getReports = async () => {
 getReports();
 
 const filterTopics = computed(() => {
-  if (model.tab === "report") {
+  if (model.tab === "report") {3
     return reports.value?.filter(({ topic }) =>
       [TopicTypeEnum.LV, TopicTypeEnum.TL].includes(topic.type)
     );

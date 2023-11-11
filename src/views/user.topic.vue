@@ -80,6 +80,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 useTitle("QLĐT - Danh sách đề tài");
 
@@ -168,8 +169,12 @@ getPublishDate();
 
 const getLecturers = async () => {
   try {
-    const { data: response } = await API.get("/user/lecturers");
-    lecturers.value = response;
+    const { data: response } = await API.get("/user/lecturers", {
+      params: {
+        role: UserRoleEnum.Lecturer,
+      },
+    });
+    lecturers.value = response.lecturers;
   } catch (error) {
     console.log(error);
   }
@@ -204,5 +209,6 @@ const handlePublish = (isPublish: boolean) => {
 const handleSuggestedTopic = () => {
   isOpenSuggestModal.value = false;
   toast.success(`Đã đề xuất đề tài với giảng viên`);
+  getTopicList();
 };
 </script>

@@ -68,7 +68,7 @@
                   </v-list>
                 </v-menu>
               </th> -->
-              <th class="text-center">HK - Năm học</th>
+              <!-- <th class="text-center">HK - Năm học</th> -->
               <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
                 <template v-slot:activator="{ props }">
                   <th class="text-center" width="100px" v-bind="props">
@@ -94,12 +94,12 @@
                   {{ getTopicTypeName(topic.type) }}
                 </v-chip>
               </td>
-              <td width="150px" class="text-center">
+              <!-- <td width="150px" class="text-center">
                 <div v-if="topic.semester">
                   {{ getSchoolYearSemester(topic.semester, true) }}
                 </div>
                 <div v-else>#</div>
-              </td>
+              </td> -->
               <td class="text-center">
                 <span v-if="topic.student">
                   {{ topic.student.length + "/" + topic.numberOfStudent }}

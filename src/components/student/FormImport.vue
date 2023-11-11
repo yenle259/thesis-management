@@ -7,7 +7,7 @@
         class="me-2"
         title="Tải xuống file dữ liệu mẫu để import"
         variant="tonal"
-        @click="model.fileImport = undefined"
+        @click="handleDownloadSample"
         >Mẫu file import</v-btn
       >
       <div v-if="model.fileImport">
@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import { read, utils } from "xlsx";
+import { read, utils, writeFileXLSX } from "xlsx";
 import { STUDENT_IMPORT } from "@/constants/header";
 
 import "vue3-toastify/dist/index.css";
@@ -197,5 +197,20 @@ const handleSubmit = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const handleDownloadSample = () => {
+  const data: any[] = [];
+  const headers = ["userId", "name", "password", "email"];
+
+  const ws = utils.json_to_sheet(data, { header: headers });
+
+  const wscols = [{ wch: 10 }, { wch: 20 }, { wch: 10 }, { wch: 40 }];
+
+  ws["!cols"] = wscols;
+
+  const wb = utils.book_new();
+  utils.book_append_sheet(wb, ws, "Data");
+  writeFileXLSX(wb, "Mau file import nguoi dung.xlsx", { cellStyles: true });
 };
 </script>
