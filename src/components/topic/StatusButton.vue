@@ -64,20 +64,20 @@ const actionList = ref([
     status: RegisterStatusEnum.Approve,
     color: "success",
     label: "Đã được duyệt",
-    actions: [
-      {
-        icon: "mdi-mail",
-        color: "orange",
-        title: "Xin điểm I",
-        click: "handleCancelModal",
-      },
-      {
-        icon: "mdi-check-circle-outline",
-        color: "green",
-        title: "Xác nhận báo cáo",
-        click: "handleCancelModal",
-      },
-    ],
+    // actions: [
+    //   {
+    //     icon: "mdi-mail",
+    //     color: "orange",
+    //     title: "Xin điểm I",
+    //     click: "handleCancelModal",
+    //   },
+    //   {
+    //     icon: "mdi-check-circle-outline",
+    //     color: "green",
+    //     title: "Xác nhận báo cáo",
+    //     click: "handleCancelModal",
+    //   },
+    // ],
   },
 ]);
 

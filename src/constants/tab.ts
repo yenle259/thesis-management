@@ -47,7 +47,7 @@ export const TOPIC_STATUS: OptionTab[] = [
     icon: "mdi-account-multiple-plus",
   },
   {
-    label: "Được đề xuất",
+    label: "Sinh viên đề xuất",
     title: "Danh sách đề tài sinh viên đề xuất",
     value: TopicStatusEnum.SUGGESTED,
     icon: "mdi-comment-text-outline",

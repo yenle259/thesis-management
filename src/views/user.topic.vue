@@ -32,10 +32,9 @@
       :title="'Danh sách đề tài'"
       :topics="currentSemesterTopics ?? []"
       :modules="modules ?? []"
+      :moduleSelected="model.module || ''"
       :is-publish="isShow"
-      :register-module="
-        registerModule ? registerModule[0].moduleType : undefined
-      "
+      :register-module="registerModule ? registerModule[0].moduleType : ''"
       :registered="registeredTopicModuleId || []"
       @create="isOpenSuggestModal = true"
     >
@@ -54,6 +53,72 @@
               >
             </template>
           </v-tooltip>
+        </div>
+      </template>
+      <template v-slot:filter>
+        <v-tabs v-model="model.module" grow class="mt-2">
+          <v-tab
+            v-for="{ value, title, subvalue } in moduleOptions"
+            :key="value"
+            :value="value"
+            :active="model.module === value"
+            :color="getTopicModuleColor(subvalue)"
+            class="rounded-t-lg"
+            :variant="model.module === value ? 'text' : 'plain'"
+          >
+            {{ title }}
+            <span v-if="model.module === value">
+              <v-badge
+                text-color="white"
+                :color="getTopicModuleColor(subvalue)"
+                :content="model.count"
+                inline
+              ></v-badge
+            ></span>
+          </v-tab>
+        </v-tabs>
+      </template>
+      <template v-slot:pagination>
+        <div class="d-flex justify-between px-2 py-3">
+          <div class="d-flex flex-row gap-x-3">
+            <p class="self-center indent-4 text-body-2">Hiển thị</p>
+            <v-btn
+              id="number-per-page"
+              variant="tonal"
+              append-icon="mdi-menu-down"
+              >{{ model.numberOfItemsPerPage }}</v-btn
+            >
+            <v-menu activator="#number-per-page">
+              <v-list density="compact">
+                <v-list-item
+                  density="compact"
+                  v-for="(value, index) in PAGINATION_OPTIONS"
+                  :key="index"
+                  :value="value"
+                  @click="model.numberOfItemsPerPage = value"
+                >
+                  {{ value }}
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <p class="self-center text-body-2">
+              {{
+                getPaginationText(
+                  model.count,
+                  model.numberOfItemsPerPage,
+                  model.page
+                )
+              }}
+            </p>
+          </div>
+          <v-pagination
+            v-model="model.page"
+            :length="model.totalsPage"
+            :total-visible="5"
+            active-color="blue"
+            variant="text"
+            density="compact"
+          ></v-pagination>
         </div>
       </template>
     </TopicList>
@@ -80,6 +145,7 @@ import { RegisterModule } from "@/apis/models/RegisterModule";
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+import { PAGINATION_OPTIONS } from "@/constant";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -90,6 +156,11 @@ const { user } = storeToRefs(useAuthStore());
 
 const model = reactive({
   currentSemester: "s1b2023", //hk1-2023
+  module: "654fd81877f71c8576f9a337",
+  page: 1,
+  count: 0,
+  totalsPage: 1,
+  numberOfItemsPerPage: PAGINATION_OPTIONS[0],
 });
 
 const { registerModule } = storeToRefs(useStudentStore());
@@ -112,14 +183,20 @@ const { change } = usePublishTopicList();
 
 const publishDate = ref<PublishDate>();
 
-// const totalPages = ref<number>();
-
-// const currentPage = ref<number[]>();
-
 const getTopicList = async () => {
   try {
-    const { data: response } = await API.get(`/topic`);
-    topics.value = response;
+    const { page, numberOfItemsPerPage, module } = model;
+    const { data: response } = await API.get(`/topic`, {
+      params: {
+        page,
+        limit: numberOfItemsPerPage,
+        module: module !== null ? module : null,
+      },
+    });
+    topics.value = response.topics;
+    model.page = response.currentPage;
+    model.count = response.count;
+    model.totalsPage = response.totalPages;
     return response;
   } catch (error) {
     console.log(error);
@@ -198,6 +275,24 @@ const getModules = async () => {
 };
 
 getModules();
+
+watch(
+  () => model.module,
+  () => {
+    if (model.module) {
+      getTopicList();
+    }
+  },
+  { immediate: true }
+);
+
+const moduleOptions = computed(() => {
+  return modules.value?.map(({ moduleId, name, _id }) => ({
+    title: moduleId + " | " + name,
+    value: _id,
+    subvalue: moduleId,
+  }));
+});
 
 //all topic at recent semester
 const currentSemesterTopics = computed(() => {

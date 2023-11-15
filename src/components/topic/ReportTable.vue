@@ -39,15 +39,7 @@
           <thead class="font-bold text-overline">
             <tr>
               <th class="text-left" width="400px">Tên đề tài</th>
-              <th class="text-left">
-                <v-btn
-                  id="type-menu"
-                  size="small"
-                  variant="text"
-                  append-icon="mdi-menu-down"
-                  >Phân loại</v-btn
-                >
-              </th>
+              <th class="text-left">Học phần</th>
               <th class="text-center">SV thực hiện</th>
               <th class="text-left">Thực hiện</th>
             </tr>
@@ -66,8 +58,11 @@
                 {{ topic.name }}
               </td>
               <td>
-                <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-                  {{ getTopicTypeName(topic.type) }}
+                <v-chip
+                  :color="getTopicModuleColor(topic.module.moduleId)"
+                  size="small"
+                >
+                  {{ topic.module.name }}
                 </v-chip>
               </td>
               <td class="text-center truncate" width="160px">
@@ -75,11 +70,6 @@
               </td>
               <td class="text-center" v-if="user?._id === pi._id">
                 <v-row>
-                  <TopicDisplayStatusButton
-                    :is-display="topic.isDisplay"
-                    :topic-id="topic._id"
-                    @updated="handleUpdated"
-                  />
                   <div>
                     <v-tooltip text="Chỉnh sửa thông tin đề tài" location="top">
                       <template v-slot:activator="{ props }">
@@ -90,21 +80,6 @@
                           icon="mdi-pencil"
                           color="indigo"
                           @click="handleOpenEditForm(topic)"
-                        ></v-btn>
-                      </template>
-                    </v-tooltip>
-                  </div>
-                  <div>
-                    <v-tooltip text="Xóa đề tài" location="top">
-                      <template v-slot:activator="{ props }">
-                        <v-btn
-                          :disabled="topic.student.length !== 0"
-                          v-bind="props"
-                          size="small"
-                          variant="text"
-                          icon="mdi-delete-outline"
-                          color="red-accent-1"
-                          @click="handleOpenConfirmModal(topic)"
                         ></v-btn>
                       </template>
                     </v-tooltip>
@@ -129,6 +104,7 @@ import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 import { ReportTopic } from "@/apis/models/ReportTopic";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 const router = useRouter();
 
@@ -136,7 +112,9 @@ const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["updatedStatus", "open", "delete"]);
 
-const props = defineProps<{ topics: ReportTopic[] }>();
+const props = defineProps<{
+  topics: ReportTopic[];
+}>();
 
 const model = reactive({
   //recent semester

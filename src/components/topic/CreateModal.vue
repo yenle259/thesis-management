@@ -33,8 +33,8 @@
                   :rules="rules.topicType"
                   :items="moduleOptions"
                   hint="Chọn một trong các học phần"
-                  label="Phân loại học phần"
-                  placeholder="Phân loại học phần"
+                  label="Học phần"
+                  placeholder="Học phần"
                   class="mb-2"
                   width="300"
                   chips
@@ -72,7 +72,7 @@
                 <v-autocomplete
                   v-model="model.semesterId"
                   :rules="rules.semesterId"
-                  :items="semesterOptions"
+                  :items="sysOptions"
                   hint="Chọn Học kì - Niên khóa của đề tài"
                   label="Học kì - Năm học"
                   placeholder="Học kì - Năm học"
@@ -119,12 +119,12 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
-import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 
-import { useAuthStore } from "@/stores/useAuthStore";
 import { RECENT_SEMESTER_ID } from "@/constant";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { topicRules } from "../form/rules/topicRules";
+
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface Option {
   title: string;
@@ -137,15 +137,12 @@ const emit = defineEmits(["cancel", "created"]);
 const props = defineProps<{
   isShow: boolean;
   sysOptions: Option[];
+  modules: ModuleDetails[];
 }>();
 
 const { user } = storeToRefs(useAuthStore());
 
 const form = ref();
-
-const semesters = ref<SchoolYearSemester[]>();
-
-const modules = ref<ModuleDetails[]>();
 
 const model = reactive({
   name: null,
@@ -160,39 +157,8 @@ const model = reactive({
 
 const rules = topicRules();
 
-const getData = async () => {
-  try {
-    const { data: response } = await API.get(`/sys`);
-    modules.value = response;
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getData();
-
-const getModules = async () => {
-  try {
-    const { data: response } = await API.get(`/module`);
-    modules.value = response;
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getModules();
-
-const semesterOptions = computed(() => {
-  return semesters.value?.map((item) => ({
-    title: getSchoolYearSemester(item),
-    value: item._id,
-  }));
-});
-
 const moduleOptions = computed(() => {
-  return modules.value?.map((module) => ({
+  return props.modules?.map((module) => ({
     title: module.moduleId + " | " + module.name,
     value: module._id,
     subtitle: module.name,

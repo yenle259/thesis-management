@@ -83,7 +83,7 @@
               variant="tonal"
               @click="handleSuggestTopic"
             >
-              Đăng ký
+              Xác nhận
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -155,14 +155,6 @@ const lecturerNameOptions = computed(() => {
 const registeredModules = computed(() => {
   return props.registered.map(({ module }) => module.moduleId);
 });
-
-// const isDisabledSuggest = computed(() => {
-//   return (
-//     moduleOptions.value.filter(
-//       ({ subvalue }) => !registeredModules.value.includes(subvalue)
-//     ).length !== 0
-//   );
-// });
 
 watch(
   () => registeredModules,

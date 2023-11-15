@@ -108,32 +108,20 @@ import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
+import { Option } from "@/apis/models/Option";
 
 const form = ref();
 
 const semesters = ref<SchoolYearSemester[]>();
-
-const modules = ref<ModuleDetails[]>();
 
 const emit = defineEmits(["cancel", "edited"]);
 
 const props = defineProps<{
   isShow: boolean;
   editTopic: TopicDetails;
+  modules: ModuleDetails[];
+  sysOptions: Option[];
 }>();
-
-const getModules = async () => {
-  try {
-    const { data: response } = await API.get(`/module`);
-    modules.value = response;
-
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getModules();
 
 const model = reactive({
   name: "",
@@ -173,19 +161,19 @@ const rules = ref({
   ],
 });
 
-const sysOptions = computed(() => {
-  return semesters.value?.map((item: any) => ({
-    title: getSchoolYearSemester(item),
-    value: item._id,
-  }));
-});
+// const sysOptions = computed(() => {
+//   return semesters.value?.map((item: any) => ({
+//     title: getSchoolYearSemester(item),
+//     value: item._id,
+//   }));
+// });
 
 const dialog = computed(() => {
   return props.isShow;
 });
 
 const moduleOptions = computed(() => {
-  return modules.value?.map((module) => ({
+  return props.modules?.map((module) => ({
     title: module.moduleId + " | " + module.name,
     value: module._id,
   }));
@@ -234,18 +222,6 @@ const handleCancel = () => {
   } = props.editTopic;
   setModelData(name, module, numberOfStudent, description, semesterId);
 };
-
-const getData = async () => {
-  try {
-    const { data: response } = await API.get(`/sys`);
-    semesters.value = response;
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getData();
 
 const handleEditTopic = async (e: Event) => {
   e.preventDefault();
