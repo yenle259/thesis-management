@@ -62,10 +62,9 @@
                     <span class="text-subtitle-2">Phân loại đề tài: </span>
                     <span>
                       <v-chip
-                        :color="getTopicTypeColor(topic?.type)"
-                        size="small"
+                        :color="getTopicModuleColor(topic.module.moduleId)"
                       >
-                        {{ getTopicTypeName(topic?.type) }}
+                        {{ topic.module.moduleId + " | " + topic.module.name }}
                       </v-chip>
                     </span>
                   </div>
@@ -101,7 +100,10 @@
                 <v-window-item :key="3" :value="3" class="h-56">
                   <div v-if="topic.student.length !== 0">
                     <div v-for="(user, index) in topic.student" :key="index">
-                      <CustomUserItem v-if="!!user.studentInfo" :user="user.studentInfo || {}" />
+                      <CustomUserItem
+                        v-if="!!user.studentInfo"
+                        :user="user.studentInfo || {}"
+                      />
                     </div>
                   </div>
                   <div
@@ -127,7 +129,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-const { user } = storeToRefs(useAuthStore());
+import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
 
 const model = reactive({
   tab: 4,

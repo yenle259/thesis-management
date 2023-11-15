@@ -18,7 +18,7 @@
           <v-divider></v-divider>
           <v-card-text>
             <div class="flex flex-row">
-              <div class="w-3/5 me-2">
+              <div class="w-1/2 me-2">
                 <v-autocomplete
                   v-model="model.lecturerId"
                   :rules="rules.lecturerId"
@@ -36,15 +36,24 @@
                   </template>
                 </v-autocomplete>
               </div>
-              <div class="w-2/5">
+              <div class="w-1/2">
                 <v-autocomplete
                   v-model="model.topicType"
                   :rules="rules.topicType"
-                  :items="topicTypeOptions"
-                  label="Phân loại đề tài"
+                  :items="
+                    moduleOptions.filter(
+                      ({ subvalue }) => !registeredModules.includes(subvalue)
+                    )
+                  "
+                  hint="Chọn một trong các phân loại đề tài"
+                  label="Học phần"
+                  placeholder="Học phần"
+                  class="mb-2"
+                  width="300"
                   chips
                   clearable
-                ></v-autocomplete>
+                >
+                </v-autocomplete>
               </div>
             </div>
             <v-text-field
@@ -87,15 +96,19 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { RegisterModule } from "@/apis/models/RegisterModule";
 import { UserDetails } from "@/apis/models/UserDetails";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
+import { TopicDetails } from "@/apis/models/TopicDetails";
 
 const { user } = storeToRefs(useAuthStore());
 
-const emit = defineEmits(["cancel", "created"]);
+const emit = defineEmits(["cancel", "suggested"]);
 
 const props = defineProps<{
   isShow: boolean;
   lecturers: UserDetails[];
+  modules: ModuleDetails[];
   registerModule: RegisterModule;
+  registered: TopicDetails[];
 }>();
 
 const form = ref();
@@ -106,6 +119,7 @@ const model = reactive({
   topicName: null,
   description: null,
   error: "",
+  availabelModule: [""],
 });
 
 const rules = ref({
@@ -138,22 +152,35 @@ const lecturerNameOptions = computed(() => {
   }));
 });
 
-// watch(
-//   () => model.lecturerId,
-//   (value) => {
-//     const topicByLecturerId = topics.value?.filter(
-//       ({ pi }) => pi._id === value
-//     );
-//   }
-// );
+const registeredModules = computed(() => {
+  return props.registered.map(({ module }) => module.moduleId);
+});
 
-const topicTypeOptions = computed(() => {
-  return getRegisterModuleObject(props.registerModule.moduleType).map(
-    (item) => ({
-      title: getTopicTypeName(item),
-      value: item,
-    })
-  );
+// const isDisabledSuggest = computed(() => {
+//   return (
+//     moduleOptions.value.filter(
+//       ({ subvalue }) => !registeredModules.value.includes(subvalue)
+//     ).length !== 0
+//   );
+// });
+
+watch(
+  () => registeredModules,
+  () => {
+    console.log(registeredModules);
+  }
+);
+
+const moduleOptions = computed(() => {
+  return props.modules
+    ?.map(({ _id, moduleId, name }) => ({
+      title: moduleId + " | " + name,
+      value: _id,
+      subvalue: moduleId,
+    }))
+    .filter(({ subvalue }) =>
+      props.registerModule.moduleType.includes(subvalue)
+    );
 });
 
 const dialog = computed(() => {
@@ -173,10 +200,10 @@ const handleSuggestTopic = async (e: Event) => {
 
   try {
     const { data: response } = await API.post(`/topic/suggest`, {
+      studentId: user.value?._id,
       name: model.topicName,
       pi: model.lecturerId,
-      studentId: user.value?._id,
-      type: model.topicType,
+      module: model.topicType,
       description: model.description,
     });
 
@@ -185,7 +212,7 @@ const handleSuggestTopic = async (e: Event) => {
     model.description = null;
     model.lecturerId = null;
 
-    emit("created");
+    emit("suggested");
   } catch (error) {
     console.log(error);
   }

@@ -1,6 +1,4 @@
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-
-export const studentUpdateRules = () => {
+export const studentCreateRules = () => {
   const rules = ref({
     userId: [
       (value: any) => {
@@ -28,7 +26,6 @@ export const studentUpdateRules = () => {
         return "Mật khẩu phải hơn 8 kí tự";
       },
     ],
-
   });
   return rules;
 };

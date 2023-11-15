@@ -65,6 +65,7 @@
 
           <TopicCreateModal
             :is-show="isShowCreateModal"
+            :sys-options="sysOptions ?? []"
             @cancel="handleOpenCreateModal"
             @created="handleCreatedTopic"
           />
@@ -88,6 +89,7 @@
 
 <script lang="ts" setup>
 import API from "@/apis/helpers/axiosBaseConfig";
+import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
@@ -104,6 +106,8 @@ const auth = useAuthStore();
 const { user } = storeToRefs(auth);
 
 const topics = ref<TopicDetails[]>();
+
+const semesters = ref<SchoolYearSemester[]>();
 
 const reportTopics = ref<TopicDetails[]>();
 
@@ -123,19 +127,17 @@ const model = reactive({
   status: "",
 });
 
-const urlByRole =
-  user.value?.role === UserRoleEnum.Lecturer
-    ? "/topic/lecturer" + `/${user.value?._id}`
-    : "/topic/student" + `/${user.value?._id}`;
-
 const getTopicList = async () => {
   try {
-    const { data: response } = await API.get(urlByRole, {
-      params:
-        model.topicStatusTab === TopicStatusEnum.SUGGESTED
-          ? { status: TopicStatusEnum.SUGGESTED }
-          : {},
-    });
+    const { data: response } = await API.get(
+      `/topic/lecturer/${user.value?._id}`,
+      {
+        params:
+          model.topicStatusTab === TopicStatusEnum.SUGGESTED
+            ? { status: TopicStatusEnum.SUGGESTED }
+            : {},
+      }
+    );
     topics.value = response.topics;
     return response;
   } catch (error) {
@@ -144,6 +146,19 @@ const getTopicList = async () => {
 };
 
 getTopicList();
+
+// get data for semester options
+const getSemesters = async () => {
+  try {
+    const { data: response } = await API.get(`/sys`);
+    semesters.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getSemesters();
 
 const getReportTopics = async () => {
   try {
@@ -157,6 +172,13 @@ const getReportTopics = async () => {
     console.log(error);
   }
 };
+
+const sysOptions = computed(() => {
+  return semesters.value?.map((item: any) => ({
+    title: getSchoolYearSemester(item, true),
+    value: item._id,
+  }));
+});
 
 watch(
   () => model.topicStatusTab,

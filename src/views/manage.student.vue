@@ -71,11 +71,18 @@
                         </div>
                         <div class="w-52">
                           <v-select
-                            v-model="model.registerModuleType"
-                            :items="topicTypeOptions"
+                            v-model="model.filterModule"
+                            :items="
+                              moduleOptions?.concat([
+                                {
+                                  title: 'Chưa đăng ký',
+                                  value: 'none',
+                                },
+                              ])
+                            "
                             clearable
                             chips
-                            label="Phân loại đề tài"
+                            label="Học phần đăng ký"
                             variant="filled"
                             density="compact"
                             class="rounded-lg"
@@ -136,6 +143,7 @@
                 <StudentEditInfoModal
                   :isShow="isOpenEditModal"
                   :student="selectedStudent || {}"
+                  :moduleOptions="moduleOptions || []"
                   @cancel="isOpenEditModal = false"
                   @edited="handleUpdated"
                 />
@@ -173,7 +181,13 @@
                         </div>
                       </v-expansion-panel-title>
                       <v-expansion-panel-text>
-                        <SignupForm @created="handleCreated" />
+                        <SignupForm
+                          :modules="modules ?? []"
+                          :module-options="
+                            modules ? useModuleOptions(modules) : []
+                          "
+                          @created="handleCreated"
+                        />
                       </v-expansion-panel-text>
                     </v-expansion-panel>
 
@@ -208,16 +222,13 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { StudentDetails } from "@/apis/models/StudentDetails";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { ACCOUNT_TAB } from "@/constants/tab";
-
 import { PAGINATION_OPTIONS } from "@/constant";
-
-import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { arrowFunctionExpression } from "@babel/types";
 
 useTitle("QLĐT - Quản lý sinh viên");
 
@@ -231,9 +242,12 @@ const model = reactive({
   numberOfItemsPerPage: PAGINATION_OPTIONS[0],
   file: undefined,
   registerModuleType: null,
+  filterModule: null,
 });
 
 const students = ref<StudentDetails[]>();
+
+const modules = ref<ModuleDetails[]>();
 
 const isOpenEditModal = ref(false);
 
@@ -241,11 +255,14 @@ const selectedStudent = ref<StudentDetails>();
 
 const useStudent = async () => {
   try {
+    const { page, numberOfItemsPerPage, search, filterModule } = model;
+
     const { data: response } = await API.get(`/student`, {
       params: {
-        page: model.page,
-        limit: model.numberOfItemsPerPage,
-        search: model.search,
+        page,
+        limit: numberOfItemsPerPage,
+        search: search !== "" ? search : null,
+        module: filterModule !== null ? filterModule : null,
       },
     });
 
@@ -263,8 +280,34 @@ const useStudent = async () => {
 
 useStudent();
 
+const getModules = async () => {
+  try {
+    const { data: response } = await API.get(`/module`);
+    modules.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getModules();
+
+const moduleOptions = computed(() => {
+  return modules.value?.map((module) => ({
+    title: module.moduleId + " | " + module.name,
+    // value: module._id,
+    value: module.moduleId,
+  }));
+});
+
 watch(
-  () => [model.numberOfItemsPerPage, model.page, model.search],
+  () => [
+    model.numberOfItemsPerPage,
+    model.page,
+    model.search,
+    model.filterModule,
+  ],
   () => {
     if (pagesCount(model.count, model.numberOfItemsPerPage) < model.page) {
       model.page = 1;
@@ -272,6 +315,13 @@ watch(
     useStudent();
   },
   { immediate: true }
+);
+
+watch(
+  () => model.registerModuleType,
+  (value) => {
+    console.log(value);
+  }
 );
 
 const filterStudents = computed(() => {
@@ -290,6 +340,7 @@ const handleReset = () => {
   model.search = "";
   model.numberOfItemsPerPage = PAGINATION_OPTIONS[0];
   model.page = 1;
+  model.filterModule = null;
 };
 
 const handleEditStudent = (student: StudentDetails) => {

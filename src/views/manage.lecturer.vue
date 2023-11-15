@@ -209,7 +209,7 @@ import { LecturerDetails } from "@/apis/models/LecturerDetails";
 useTitle("QLĐT - Quản lý cán bộ");
 
 const model = reactive({
-  accountTab: "list",
+  accountTab: "",
   panel: [1],
   search: "",
   page: 1,
@@ -217,7 +217,7 @@ const model = reactive({
   totalsPage: 1,
   numberOfItemsPerPage: PAGINATION_OPTIONS[0],
   file: undefined,
-  role: "",
+  role: null,
 });
 
 const students = ref<StudentDetails[]>();
@@ -298,6 +298,7 @@ const filterStudents = computed(() => {
 
 const handleReset = () => {
   model.search = "";
+  model.role = null;
   model.numberOfItemsPerPage = PAGINATION_OPTIONS[0];
   model.page = 1;
 };

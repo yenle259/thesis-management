@@ -14,7 +14,7 @@
               :items="topicTypeOptions"
               clearable
               chips
-              label="Phân loại đề tài"
+              label="Phân loại học phần"
               variant="outlined"
               density="compact"
               class="rounded-lg"
@@ -39,36 +39,8 @@
           <thead class="font-bold text-overline">
             <tr>
               <th class="text-left" width="400px">Tên đề tài</th>
-              <th class="text-left">Phân loại</th>
-              <!-- <th class="text-left">
-                <v-btn
-                  id="type-menu"
-                  size="small"
-                  variant="text"
-                  append-icon="mdi-menu-down"
-                  >Phân loại</v-btn
-                >
-                <v-menu activator="#type-menu">
-                  <v-list density="compact" class="rounded-lg">
-                    <div class="mx-1">
-                      <v-list-item
-                        v-for="(
-                          { label, value }, index
-                        ) in topicTypeOptionsCustom"
-                        :key="index"
-                        :value="value"
-                        class="rounded-lg"
-                        @click="model.topicType = value"
-                      >
-                        <span class="text-caption">
-                          {{ label }}
-                        </span>
-                      </v-list-item>
-                    </div>
-                  </v-list>
-                </v-menu>
-              </th> -->
-              <!-- <th class="text-center">HK - Năm học</th> -->
+              <th class="text-left">Học phần</th>
+              <th class="text-center">HK - Năm học</th>
               <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
                 <template v-slot:activator="{ props }">
                   <th class="text-center" width="100px" v-bind="props">
@@ -90,16 +62,20 @@
                 {{ topic.name }}
               </td>
               <td>
-                <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-                  {{ getTopicTypeName(topic.type) }}
+                <v-chip
+                  v-if="topic.module"
+                  :color="getTopicModuleColor(topic.module.moduleId)"
+                  size="small"
+                >
+                  {{ topic.module.name }}
                 </v-chip>
               </td>
-              <!-- <td width="150px" class="text-center">
+              <td width="150px" class="text-center">
                 <div v-if="topic.semester">
                   {{ getSchoolYearSemester(topic.semester, true) }}
                 </div>
                 <div v-else>#</div>
-              </td> -->
+              </td>
               <td class="text-center">
                 <span v-if="topic.student">
                   {{ topic.student.length + "/" + topic.numberOfStudent }}
@@ -174,7 +150,7 @@ import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
-import { topicTypeOptionsCustom } from "@/components/form/data/topicTypeOptionsCustom";
+import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
 
 const router = useRouter();
 
@@ -194,7 +170,7 @@ const model = reactive({
 const semesters = ref<SchoolYearSemester[]>();
 
 // get data for semester options
-const getData = async () => {
+const getSemesters = async () => {
   try {
     const { data: response } = await API.get(`/sys`);
     semesters.value = response;
@@ -204,7 +180,7 @@ const getData = async () => {
   }
 };
 
-getData();
+getSemesters();
 
 const topicTypeOptions = computed(() => {
   return Object.values(TopicTypeEnum).map((item) => ({

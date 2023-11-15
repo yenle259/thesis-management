@@ -43,8 +43,11 @@
             {{ topic.name }}
           </td>
           <td>
-            <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-              {{ getTopicTypeName(topic.type) }}
+            <v-chip
+              :color="getTopicModuleColor(topic.module.moduleId)"
+              size="small"
+            >
+              {{ topic.module.name }}
             </v-chip>
           </td>
           <td class="text-center">
@@ -67,5 +70,4 @@ import { ReportTopic } from "@/apis/models/ReportTopic";
 const router = useRouter();
 
 const props = defineProps<{ reports: ReportTopic[] }>();
-
 </script>

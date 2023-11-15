@@ -18,18 +18,18 @@
                 <th class="text-right">Đề tài đăng ký tương ứng</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody v-if="module.moduleType">
               <tr
-                v-for="(item, index) in getRegisterModule(module.moduleType)"
+                v-for="(item, index) in module.moduleType.split('-')"
                 :key="index"
               >
                 <th>
                   <div v-if="item">
                     <v-chip
-                      :color="getTopicTypeColor(item)"
+                      :color="getTopicModuleColor(item)"
                       class="text-overline"
                     >
-                      {{ getTopicTypeName(item) }}
+                      {{ item }}
                     </v-chip>
                   </div>
                 </th>
@@ -60,9 +60,7 @@
                       size="small"
                       class="text-overline mb-1"
                       :color="getStatusColor(topic.student[0].status)"
-                      >{{
-                        getStatusLabel(topic.student[0].status)
-                      }}</v-chip
+                      >{{ getStatusLabel(topic.student[0].status) }}</v-chip
                     >
                   </div>
                   <p class="text-caption">
@@ -75,12 +73,15 @@
                   >{{ topic.pi.name }}
                 </div>
                 <div class="text-caption mb-1">
-                  <span class="font-bold">Phân loại đề tài: </span>
+                  <span class="font-bold">Học phần: </span>
                   <v-chip
                     size="small"
                     class="mb-1"
-                    :color="getTopicTypeColor(topic.type)"
-                    >{{ getTopicTypeName(topic.type) }}</v-chip
+                    :color="getTopicModuleColor(topic.module.moduleId)"
+                  >
+                    {{
+                      topic.module.moduleId + " | " + topic.module.name
+                    }}</v-chip
                   >
                 </div>
                 <div
@@ -119,9 +120,7 @@
                       size="small"
                       class="text-overline mb-1"
                       :color="getStatusColor(topic.student[0].status)"
-                      >{{
-                        getStatusLabel(topic.student[0].status)
-                      }}</v-chip
+                      >{{ getStatusLabel(topic.student[0].status) }}</v-chip
                     >
                   </div>
                   <p class="text-caption" v-if="topic.semester">
@@ -138,8 +137,11 @@
                   <v-chip
                     size="small"
                     class="mb-1"
-                    :color="getTopicTypeColor(topic.type)"
-                    >{{ getTopicTypeName(topic.type) }}</v-chip
+                    :color="getTopicModuleColor(topic.module.moduleId)"
+                  >
+                    {{
+                      topic.module.moduleId + " | " + topic.module.name
+                    }}</v-chip
                   >
                 </div>
                 <div

@@ -3,12 +3,17 @@
     <v-dialog v-model="dialog" persistent width="700px">
       <v-card class="pt-4 pb-2 px-2 rounded-lg">
         <v-form v-model="form">
-          <v-card-title class="text-h5 text-indigo">
-            <span class="uppercase mb-1"> Thêm mới đề tài </span>
-            <p class="font-light text-sm text-black text-caption">
-              Hãy điền thông tin vào các trường bên dưới để thực hiện thêm mới
-              đề tài
-            </p>
+          <v-card-title class="d-flex text-h5 text-indigo justify-between">
+            <div>
+              <span class="mb-1"> Thêm mới đề tài</span>
+              <p class="font-light text-caption text-black">
+                Hãy điền thông tin vào các trường bên dưới để thực hiện thêm mới
+                đề tài
+              </p>
+            </div>
+            <v-btn icon @click="handleCancel" variant="flat"
+              ><v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
@@ -24,18 +29,19 @@
             <div class="flex flex-row">
               <div class="w-3/5 me-2">
                 <v-autocomplete
-                  v-model="model.type"
+                  v-model="model.module"
                   :rules="rules.topicType"
-                  :items="topicTypeOptions"
-                  hint="Chọn một trong các phân loại đề tài"
-                  label="Phân loại đề tài"
-                  placeholder="Phân loại đề tài"
+                  :items="moduleOptions"
+                  hint="Chọn một trong các học phần"
+                  label="Phân loại học phần"
+                  placeholder="Phân loại học phần"
                   class="mb-2"
                   width="300"
                   chips
                   clearable
                   variant="outlined"
-                ></v-autocomplete>
+                >
+                </v-autocomplete>
               </div>
               <div class="w-2/5">
                 <v-text-field
@@ -114,15 +120,23 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RECENT_SEMESTER_ID } from "@/constant";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
+import { topicRules } from "../form/rules/topicRules";
+
+interface Option {
+  title: string;
+  value: string;
+  subtitle?: string;
+}
 
 const emit = defineEmits(["cancel", "created"]);
 
 const props = defineProps<{
   isShow: boolean;
+  sysOptions: Option[];
 }>();
 
 const { user } = storeToRefs(useAuthStore());
@@ -131,55 +145,57 @@ const form = ref();
 
 const semesters = ref<SchoolYearSemester[]>();
 
+const modules = ref<ModuleDetails[]>();
+
 const model = reactive({
   name: null,
   type: null,
   numberOfStudent: 1,
   description: null,
   isDisplay: false,
-  semesterId: "6526d24c7547ab02d497a7a4",
+  semesterId: RECENT_SEMESTER_ID,
   error: "",
+  module: null,
 });
 
-const rules = ref({
-  name: [
-    (value: any) => {
-      if (value?.length == 0 || model.name === null)
-        return "Tên đề tài không được rỗng";
-      return true;
-    },
-  ],
-  topicType: [
-    () => {
-      if (model.type === null) return "Hãy chọn phân loại đề tài";
-      return true;
-    },
-  ],
-  semesterId: [
-    () => {
-      if (model.semesterId === null) return "Hãy chọn Học kì - Niên khóa";
-      return true;
-    },
-  ],
-  numberOfStudent: [
-    (value: any) => {
-      if (value <= 0) return "Số sinh viên ít nhất là 1";
-      return true;
-    },
-  ],
-});
+const rules = topicRules();
 
-const topicTypeOptions = computed(() => {
-  return Object.values(TopicTypeEnum).map((item) => ({
-    title: getTopicTypeName(item),
-    value: item,
-  }));
-});
+const getData = async () => {
+  try {
+    const { data: response } = await API.get(`/sys`);
+    modules.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getData();
+
+const getModules = async () => {
+  try {
+    const { data: response } = await API.get(`/module`);
+    modules.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getModules();
 
 const semesterOptions = computed(() => {
   return semesters.value?.map((item) => ({
     title: getSchoolYearSemester(item),
     value: item._id,
+  }));
+});
+
+const moduleOptions = computed(() => {
+  return modules.value?.map((module) => ({
+    title: module.moduleId + " | " + module.name,
+    value: module._id,
+    subtitle: module.name,
   }));
 });
 
@@ -193,18 +209,6 @@ const handleCancel = () => {
   emit("cancel");
 };
 
-const getData = async () => {
-  try {
-    const { data: response } = await API.get(`/sys`);
-    semesters.value = response;
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getData();
-
 const handleCreateTopic = (e: Event) => {
   console.log(model);
   e.preventDefault();
@@ -213,11 +217,11 @@ const handleCreateTopic = (e: Event) => {
     API.post(`/topic`, {
       name: model.name,
       pi: user.value?._id,
-      type: model.type,
       isDisplay: model.isDisplay,
       description: model.description,
       numberOfStudent: model.numberOfStudent,
       semester: model.semesterId,
+      module: model.module,
     });
     model.name = null;
     model.type = null;
@@ -225,6 +229,7 @@ const handleCreateTopic = (e: Event) => {
     model.description = null;
     model.isDisplay = false;
     model.semesterId = RECENT_SEMESTER_ID;
+    model.module = null;
 
     emit("created");
   } catch (error) {

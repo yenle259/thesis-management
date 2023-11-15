@@ -28,9 +28,12 @@
             </span>
           </p>
           <p class="mb-1">
-            <span class="text-subtitle-2">Phân loại: </span>
-            <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-              {{ getTopicTypeName(props.topic.type) }}
+            <span class="text-subtitle-2">Học phần: </span>
+            <v-chip
+              :color="getTopicModuleColor(topic.module.moduleId)"
+              size="small"
+            >
+              {{ topic.module.moduleId + " | " + topic.module.name }}
             </v-chip>
           </p>
           <p class="mb-1">

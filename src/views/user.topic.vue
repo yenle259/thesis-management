@@ -31,11 +31,12 @@
     <TopicList
       :title="'Danh sách đề tài'"
       :topics="currentSemesterTopics ?? []"
+      :modules="modules ?? []"
       :is-publish="isShow"
       :register-module="
         registerModule ? registerModule[0].moduleType : undefined
       "
-      :registeredTopicType="registeredTopicType || []"
+      :registered="registeredTopicModuleId || []"
       @create="isOpenSuggestModal = true"
     >
       <template v-slot:action>
@@ -43,7 +44,7 @@
           <v-tooltip text="Đề xuất đề tài muốn thực hiện" location="top">
             <template v-slot:activator="{ props }">
               <v-btn
-                :disabled="!module?.moduleType || isSuggestedTopic"
+                :disabled="!module?.moduleType || isDisabledSuggested"
                 v-bind="props"
                 variant="elevated"
                 append-icon="mdi-plus"
@@ -61,8 +62,10 @@
     :isShow="isOpenSuggestModal"
     :register-module="module || {}"
     :lecturers="lecturers || []"
+    :modules="modules || []"
+    :registered="registeredTopics || []"
     @cancel="isOpenSuggestModal = false"
-    @created="handleSuggestedTopic"
+    @suggested="handleSuggestedTopic"
   />
 </template>
 
@@ -71,16 +74,15 @@ import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { PublishDate } from "@/apis/models/PublishDate";
 import { UserDetails } from "@/apis/models/UserDetails";
-import { ReportTopic } from "@/apis/models/ReportTopic";
-import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { RegisterModule } from "@/apis/models/RegisterModule";
 
 import { usePublishTopicList } from "@/stores/usePublishTopicList";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 useTitle("QLĐT - Danh sách đề tài");
 
@@ -97,6 +99,8 @@ const module = ref<RegisterModule>();
 const topics = ref<TopicDetails[]>();
 
 const lecturers = ref<UserDetails[]>();
+
+const modules = ref<ModuleDetails[]>();
 
 const registeredTopics = ref<TopicDetails[]>();
 
@@ -182,6 +186,19 @@ const getLecturers = async () => {
 
 getLecturers();
 
+const getModules = async () => {
+  try {
+    const { data: response } = await API.get(`/module`);
+    modules.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getModules();
+
 //all topic at recent semester
 const currentSemesterTopics = computed(() => {
   return topics.value?.filter(
@@ -189,14 +206,15 @@ const currentSemesterTopics = computed(() => {
   );
 });
 
-const isSuggestedTopic = computed(() => {
-  return registeredTopics.value?.some(
-    ({ status }) => status === TopicStatusEnum.SUGGESTED
-  );
+const registeredTopicModuleId = computed(() => {
+  return registeredTopics.value?.map(({ module }) => module.moduleId);
 });
 
-const registeredTopicType = computed(() => {
-  return registeredTopics.value?.map(({ type }) => type);
+const isDisabledSuggested = computed(() => {
+  return (
+    registeredTopics.value?.length ===
+    module.value?.moduleType.split("-").length
+  );
 });
 
 const handlePublish = (isPublish: boolean) => {
@@ -209,6 +227,7 @@ const handlePublish = (isPublish: boolean) => {
 const handleSuggestedTopic = () => {
   isOpenSuggestModal.value = false;
   toast.success(`Đã đề xuất đề tài với giảng viên`);
-  getTopicList();
+  // getTopicList();
+  getRegisteredTopic();
 };
 </script>

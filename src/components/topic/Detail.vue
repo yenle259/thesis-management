@@ -47,7 +47,13 @@
             <div class="mt-3">
               <v-icon icon="mdi-filter-variant" class="me-2"></v-icon>
               <span class="font-weight-medium">Phân loại đề tài: </span>
-              <v-chip :color="getTopicTypeColor(topic?.type)">
+              <v-chip
+                v-if="topic.module"
+                :color="getTopicModuleColor(topic.module.moduleId)"
+              >
+                {{ topic.module.moduleId + ' | ' + topic.module.name}}
+              </v-chip>
+              <v-chip v-else :color="getTopicTypeColor(topic?.type)">
                 {{ getTopicTypeName(topic?.type) }}
               </v-chip>
             </div>
@@ -161,8 +167,7 @@ import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 
-import { getStatusColor } from "@/utils/getStatusColor";
-import { getStatusName } from "@/utils/getStatusName";
+import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
 
 useTitle("QLĐT - Đề tài đăng ký");
 

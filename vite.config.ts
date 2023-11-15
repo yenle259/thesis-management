@@ -39,7 +39,14 @@ const AutoImport: any = createAutoImportContext({
       ],
     },
   ],
-  dirs: ["src/apis", "src/utils", "src/components", "src/stores", "src/pages"],
+  dirs: [
+    "src/apis",
+    "src/utils",
+    "src/components",
+    "src/stores",
+    "src/pages",
+    "src/components/form/data",
+  ],
   dts: "@types/auto-imports.d.ts",
   eslintrc: { enabled: true },
   vueTemplate: true,
@@ -78,6 +85,7 @@ export default defineConfig(async ({ command, mode }) => {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         "@img": path.resolve(__dirname, "./src/assets/images"),
+        "@data": path.resolve(__dirname, "./src/components/form/data"),
       },
       extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
     },

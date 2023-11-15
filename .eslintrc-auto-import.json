@@ -101,6 +101,12 @@
     "getPaginationText": true,
     "pagesCount": true,
     "getStatusNameObject": true,
-    "getStatusLabel": true
+    "getStatusLabel": true,
+    "getTopicModuleColor": true,
+    "topicTypeOptions": true,
+    "topicTypeOptionsCustom": true,
+    "useModuleOptions": true,
+    "userRoleOptions": true,
+    "getModule": true
   }
 }

@@ -3,15 +3,18 @@
     <v-dialog v-model="dialog" persistent width="700px">
       <v-card class="pt-4 pb-2 px-2">
         <v-form v-model="form">
-          <v-card-title class="text-h5 text-indigo">
+          <v-card-title class="d-flex text-h5 text-indigo justify-between">
             <div>
-              <p class="uppercase mb-1">
+              <p class="mb-1">
                 <span>Cập nhật đề tài </span>
               </p>
               <p class="font-light text-sm text-black text-caption">
                 Chỉnh sửa các thông tin đề tài bên dưới
               </p>
             </div>
+            <v-btn icon @click="handleCancel" variant="flat"
+              ><v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
@@ -27,12 +30,12 @@
             <div class="flex flex-row">
               <div class="w-3/5 me-2">
                 <v-autocomplete
-                  v-model="model.type"
-                  :rules="rules.topicType"
-                  :items="topicTypeOptions"
-                  hint="Chọn một trong các phân loại đề tài"
-                  label="Phân loại đề tài"
-                  placeholder="Phân loại đề tài"
+                  v-model="model.module"
+                  :rules="rules.module"
+                  :items="moduleOptions"
+                  hint="Học phần của đề tài"
+                  label="Học phần"
+                  placeholder="Học phần"
                   class="mb-2"
                   width="300"
                   chips
@@ -56,6 +59,7 @@
               </div>
             </div>
             <v-textarea
+              class="mb-2"
               v-model="model.description"
               clearable
               counter="500"
@@ -102,15 +106,14 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
-
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 const form = ref();
 
 const semesters = ref<SchoolYearSemester[]>();
+
+const modules = ref<ModuleDetails[]>();
 
 const emit = defineEmits(["cancel", "edited"]);
 
@@ -119,9 +122,22 @@ const props = defineProps<{
   editTopic: TopicDetails;
 }>();
 
+const getModules = async () => {
+  try {
+    const { data: response } = await API.get(`/module`);
+    modules.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getModules();
+
 const model = reactive({
   name: "",
-  type: "",
+  module: "",
   numberOfStudent: 1,
   description: "",
   isDisplay: false,
@@ -137,9 +153,9 @@ const rules = ref({
       return true;
     },
   ],
-  topicType: [
+  module: [
     () => {
-      if (model.type === null) return "Phân loại đề tài không được rỗng";
+      if (model.module === null) return "Học phần không được rỗng";
       return true;
     },
   ],
@@ -157,13 +173,6 @@ const rules = ref({
   ],
 });
 
-const topicTypeOptions = computed(() => {
-  return Object.values(TopicTypeEnum).map((item) => ({
-    title: getTopicTypeName(item),
-    value: item,
-  }));
-});
-
 const sysOptions = computed(() => {
   return semesters.value?.map((item: any) => ({
     title: getSchoolYearSemester(item),
@@ -175,32 +184,42 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
+const moduleOptions = computed(() => {
+  return modules.value?.map((module) => ({
+    title: module.moduleId + " | " + module.name,
+    value: module._id,
+  }));
+});
+
 watch(
   () => props.editTopic,
   () => {
-    const { name, type, numberOfStudent, description, semester } =
+    const { name, module, numberOfStudent, description, semester } =
       props.editTopic;
     if (semester !== undefined) {
-      setModelData(name, type, numberOfStudent, description, semester._id);
+      setModelData(name, module, numberOfStudent, description, semester._id);
     } else {
-      setModelData(name, type, numberOfStudent, description);
+      setModelData(name, module, numberOfStudent, description);
     }
   }
 );
 
 const setModelData = (
   name: string,
-  type: TopicTypeEnum,
+  module: ModuleDetails,
   numberOfStudent: number,
   description: string,
   semesterId?: string
 ) => {
   model.name = name;
-  model.type = type;
   model.numberOfStudent = numberOfStudent;
   model.description = description;
+
   if (semesterId) {
     model.semesterId = semesterId;
+  }
+  if (module) {
+    model.module = module._id;
   }
 };
 
@@ -208,12 +227,12 @@ const handleCancel = () => {
   emit("cancel");
   const {
     name,
-    type,
+    module,
     numberOfStudent,
     description,
     semester: { _id: semesterId },
   } = props.editTopic;
-  setModelData(name, type, numberOfStudent, description, semesterId);
+  setModelData(name, module, numberOfStudent, description, semesterId);
 };
 
 const getData = async () => {
@@ -231,13 +250,13 @@ getData();
 const handleEditTopic = async (e: Event) => {
   e.preventDefault();
 
-  const { name, type, description, numberOfStudent, semesterId } = model;
+  const { name, module, description, numberOfStudent, semesterId } = model;
   try {
     const { data: response } = await API.put(
       `/topic/update/${props.editTopic._id}`,
       {
         name,
-        type,
+        module,
         description,
         numberOfStudent,
         semester: semesterId,
@@ -246,7 +265,7 @@ const handleEditTopic = async (e: Event) => {
 
     //set data for form by response data
     model.name = response.name;
-    model.type = response.type;
+    model.module = response.module;
     model.numberOfStudent = response.numberOfStudent;
     model.description = response.description;
     model.semesterId = response.semester;

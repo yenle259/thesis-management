@@ -2,12 +2,6 @@
   <div>
     <v-form v-model="form">
       <v-card-title class="d-flex text-h5 text-indigo justify-end">
-        <!-- <div>
-          <span> Thêm tài khoản </span>
-          <p class="font-light text-caption text-black">
-            Nhập vào các thông tin bên dưới để thêm tài khoản
-          </p>
-        </div> -->
       </v-card-title>
       <v-card-text class="pt-2">
         <div class="grid grid-cols-2 gap-x-2">
@@ -56,7 +50,6 @@
             :required="true"
             :rules="rules.email"
             :error-messages="errorMessage.email"
-            :suffix="STUDENT_MAIL"
             class="mb-2"
             label="Email"
             prepend-inner-icon="mdi-email-outline"
@@ -66,10 +59,11 @@
           <v-autocomplete
             v-model="model.moduleType"
             :rules="rules.moduleType"
-            :items="topicTypeOptions"
+            :items="moduleOptions"
+            item-value="subvalue"
             prepend-inner-icon="mdi-format-list-bulleted"
-            label="Phân loại đề tài"
-            placeholder="Phân loại đề tài"
+            label="Học phần đăng ký"
+            placeholder="Học phần đăng ký"
             class="mb-2"
             multiple
             chips
@@ -104,14 +98,22 @@
 </template>
 
 <script setup lang="ts">
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
-
 import { BASE_API, STUDENT_MAIL } from "@/constant";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+import { useModuleOptions } from "@/components/form/data/useModuleOptions";
+
 const emit = defineEmits(["created"]);
+
+const props = defineProps<{
+  modules: ModuleDetails[];
+}>();
+
+const moduleOptions = useModuleOptions(props.modules);
 
 const show = ref(false);
 

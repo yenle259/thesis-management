@@ -2,15 +2,16 @@
   <hr />
   <div class="d-flex flex-row justify-end my-4">
     <v-btn
-      v-if="filterStudents"
+      v-if="props.students"
       class="hover:shadow-sm"
       prepend-icon="mdi-export-variant"
       variant="tonal"
       color="blue"
+      @click="handleExport(props.students)"
       >Xuất danh sách</v-btn
     >
   </div>
-  <v-card v-if="filterStudents" class="rounded-lg">
+  <v-card v-if="props.students" class="rounded-lg">
     <slot name="action"></slot>
     <v-divider inset />
     <v-table>
@@ -18,39 +19,14 @@
         <tr class="text-overline">
           <th class="text-left">MSSV</th>
           <th class="text-left">Sinh viên</th>
-          <th class="text-left">
-            <v-btn
-              id="type-menu"
-              size="small"
-              variant="text"
-              append-icon="mdi-menu-down"
-              >Học phần đăng ký</v-btn
-            >
-            <v-menu activator="#type-menu">
-              <v-list density="compact" class="rounded-lg">
-                <div class="mx-1">
-                  <v-list-item
-                    v-for="({ label, value }, index) in topicTypeOptionsCustom"
-                    :key="index"
-                    :value="value"
-                    class="rounded-lg"
-                    @click="model.type = value"
-                  >
-                    <span class="text-caption">
-                      {{ label }}
-                    </span>
-                  </v-list-item>
-                </div>
-              </v-list>
-            </v-menu>
-          </th>
+          <th class="text-left">Học phần đăng ký</th>
           <th>Thực hiện</th>
         </tr>
       </thead>
       <tbody>
         <tr
           class="text-sm"
-          v-for="student in filterStudents"
+          v-for="student in props.students"
           :key="student._id"
         >
           <td class="uppercase">
@@ -73,16 +49,16 @@
           </td>
           <td v-if="student.registerModule[0].moduleType">
             <span
-              v-for="(item, index) in getRegisterModule(
-                student.registerModule[0].moduleType
-              )"
+              v-for="(
+                item, index
+              ) in student.registerModule[0].moduleType.split('-')"
               :key="index"
             >
               <v-chip
                 class="me-1"
                 v-if="item"
                 size="small"
-                :color="getTopicTypeColor(item)"
+                :color="getTopicModuleColor(item)"
               >
                 {{ item }}
               </v-chip>
@@ -141,11 +117,11 @@
       </tbody>
     </v-table>
     <hr />
-    <div v-if="filterStudents">
+    <div v-if="props.students">
       <slot name="pagination"></slot>
     </div>
     <div
-      v-if="filterStudents.length === 0"
+      v-if="props.students.length === 0"
       class="text-body-2 text-center my-4 font-italic"
     >
       Không có sinh viên
@@ -163,33 +139,17 @@
 <script setup lang="ts">
 import { StudentDetails } from "@/apis/models/StudentDetails";
 
-import { topicTypeOptionsCustom } from "@/components/form/data/topicTypeOptionsCustom";
+import { RECENT_SEMESTER_ID } from "@/constant";
+
+import { utils, writeFileXLSX } from "xlsx";
 
 const emit = defineEmits(["edit", "deactive", "deleted", "refetch"]);
 
 const props = defineProps<{ students: StudentDetails[] }>();
 
-const model = reactive({
-  search: "",
-  type: "",
-});
-
 const isShowDeleteModal = ref(false);
 
 const selectedStudent = ref<StudentDetails>();
-
-const filterStudents = computed(() => {
-  return props.students?.filter(
-    (student) =>
-      student.userId
-        .toLocaleLowerCase()
-        .includes(model.search.toLocaleLowerCase()) ||
-      student.name
-        .toLocaleLowerCase()
-        .includes(model.search.toLocaleLowerCase()) ||
-      student.registerModule[0].moduleType === model.type
-  );
-});
 
 const handleEdit = (student: StudentDetails) => {
   emit("edit", student);
@@ -203,5 +163,47 @@ const handleDeleteStudent = (student: StudentDetails) => {
 const handleDeleted = () => {
   isShowDeleteModal.value = false;
   emit("deleted");
+};
+
+const createDataToExport = (students: StudentDetails[]) => {
+  const data = students.map(({ userId, name, email, registerModule }) => {
+    const recentModule = getRecentRegisterModule(
+      registerModule,
+      RECENT_SEMESTER_ID
+    )?.moduleType;
+    return {
+      userId,
+      name,
+      email,
+      module: recentModule !== "" ? recentModule : "Chưa có",
+    };
+  });
+  return data;
+};
+
+const handleExport = (students: StudentDetails[]) => {
+  const data = createDataToExport(students);
+  data.unshift({
+    userId: "MSSV",
+    name: "Họ tên sinh viên",
+    email: "Email",
+    module: "Học phần đăng ký",
+  });
+
+  const ws = utils.json_to_sheet(data, {
+    skipHeader: true,
+  });
+
+  const wscols = [{ wch: 10 }, { wch: 20 }, { wch: 40 }, { wch: 20 }];
+
+  ws["!cols"] = wscols;
+
+  /* create workbook and append worksheet */
+  const wb = utils.book_new();
+  utils.book_append_sheet(wb, ws, "Data");
+  /* export to XLSX */
+  writeFileXLSX(wb, "Danh sach hoc phan dang ky cua sinh vien.xlsx", {
+    cellStyles: true,
+  });
 };
 </script>

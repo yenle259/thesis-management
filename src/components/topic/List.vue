@@ -22,11 +22,11 @@
       </div>
       <v-tabs v-model="model.type" grow class="mt-2">
         <v-tab
-          v-for="{ value, title } in topicTypeOptions"
+          v-for="{ value, title } in moduleOptions"
           :key="value"
           :value="value"
           :active="model.type === value"
-          :color="getTopicTypeColor(value)"
+          :color="getTopicModuleColor(value)"
           class="rounded-t-lg"
           :variant="model.type === value ? 'text' : 'plain'"
           selected-class="text-white"
@@ -35,7 +35,7 @@
           <span v-if="model.type === value">
             <v-badge
               text-color="white"
-              :color="getTopicTypeColor(value)"
+              :color="getTopicModuleColor(value)"
               :content="topics.length"
               inline
             ></v-badge
@@ -48,20 +48,18 @@
             <thead class="font-bold text-overline">
               <tr>
                 <th class="text-left">Tên đề tài</th>
-                <th class="text-left">Phân loại</th>
+                <th class="text-left">Học phần</th>
                 <v-tooltip text="(SV đã đăng ký/Tổng SV)" location="top">
                   <template v-slot:activator="{ props }">
                     <th class="text-center" v-bind="props">Số SV</th>
                   </template></v-tooltip
                 >
                 <th class="text-left">Học kì - Năm học</th>
-                <th class="text-center">
-                  Giảng viên
-                </th>
+                <th class="text-center">Giảng viên</th>
                 <th
                   class="text-left"
                   v-if="
-                    isRegister && !registeredTopicType?.includes(model.type)
+                    isRegister && !registered?.includes(model.type)
                   "
                 >
                   Thực hiện
@@ -77,8 +75,11 @@
                   {{ topic.name }}
                 </td>
                 <td>
-                  <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-                    {{ getTopicTypeName(topic.type) }}
+                  <v-chip
+                    :color="getTopicModuleColor(topic.module.moduleId)"
+                    size="small"
+                  >
+                    {{ topic.module.name }}
                   </v-chip>
                 </td>
                 <td class="text-center">
@@ -103,11 +104,11 @@
                     <p class="text-caption text-xs text-grey">
                       {{ topic.pi.email }}
                     </p>
-                  </v-list-item>
+                </v-list-item>
                 </td>
                 <td
                   v-if="
-                    isRegister && !registeredTopicType?.includes(model.type)
+                    isRegister && !registered.includes(model.type)
                   "
                 >
                   <div>
@@ -139,7 +140,7 @@
           </div>
           <v-divider></v-divider>
           <div v-if="topics.length === 0">
-            <p class="my-3 italic text-center bg-white">Không có đề tài</p>
+            <p class="my-3 italic text-center text-caption">Không có đề tài</p>
           </div>
         </div>
       </v-card>
@@ -164,11 +165,10 @@
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 
 const router = useRouter();
 
@@ -180,13 +180,14 @@ const props = defineProps<{
   title: string;
   subTitle?: string;
   topics: TopicDetails[];
+  modules: ModuleDetails[];
   isPublish?: boolean;
-  registerModule?: string;
-  registeredTopicType?: TopicTypeEnum[];
+  registerModule: string;
+  registered: string[];
 }>();
 
 const model = reactive({
-  type: TopicTypeEnum.LV,
+  type: props.registerModule.split("-")[0],
   piId: "",
   info: false,
 });
@@ -201,6 +202,8 @@ const openTopic = ref<TopicDetails>();
 
 const page = ref();
 
+// const moduleOptions = useModuleOptions(props.modules);
+
 const isRegister = computed(() => {
   if (props.isPublish && props.registerModule) {
     return props.registerModule.split("-").includes(model.type);
@@ -210,7 +213,14 @@ const isRegister = computed(() => {
 });
 
 const topics = computed(() => {
-  return props.topics.filter(({ type }) => type === model.type);
+  return props.topics.filter(({ module }) => module.moduleId === model.type);
+});
+
+const moduleOptions = computed(() => {
+  return props.modules.map((module) => ({
+    title: module.moduleId + " | " + module.name,
+    value: module.moduleId,
+  }));
 });
 
 const lecturerOptions = computed(() => {

@@ -1,24 +1,30 @@
 <template>
   <div v-if="props.deleteTopic">
     <v-dialog v-model="dialog" persistent width="600px">
-      <v-card class="pt-4 pb-2 px-2">
-        <v-card-title class="text-h5 text-indigo">
-          <span class="uppercase mb-1"> Xóa đề tài </span>
-          <p class="font-light text-caption text-black">
-            Xác nhận xóa đề tài với thông tin bên dưới
-          </p>
+      <v-card class="pt-3 pb-2 px-2 rounded-lg">
+        <v-card-title class="d-flex text-h5 text-indigo justify-between">
+          <div>
+            <span class="mb-1"> Xóa đề tài</span>
+            <p class="font-light text-caption text-black">
+              Xác nhận xóa đề tài với thông tin bên dưới
+            </p>
+          </div>
+          <v-btn icon @click="handleCancel" variant="flat"
+            ><v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <p class="uppercase font-bold text-overline">Thông tin đề tài</p>
           <p class="mb-1">
             <span class="text-subtitle-2">Tên đề tài: </span
             >{{ props.deleteTopic.name }}
           </p>
           <p class="mb-1">
             <span class="text-subtitle-2">Phân loại: </span>
-            <v-chip :color="getTopicTypeColor(deleteTopic.type)" size="small">
-              {{ getTopicTypeName(props.deleteTopic.type) }}
+            <v-chip :color="getTopicModuleColor(deleteTopic.type)" size="small">
+              {{
+                deleteTopic.module.moduleId + " | " + deleteTopic.module.name
+              }}
             </v-chip>
           </p>
         </v-card-text>

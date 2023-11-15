@@ -29,12 +29,12 @@ import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { RegisterModule } from "@/apis/models/RegisterModule";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+import { ReportTopic } from "@/apis/models/ReportTopic";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { ReportTopic } from "@/apis/models/ReportTopic";
 
 useTitle("QLĐT - Thông tin cá nhân");
 
@@ -88,7 +88,11 @@ const getRecentRegisterModule = async () => {
   }
 };
 
-getRecentRegisterModule();
+//student route
+if (!user.value?.role) {
+  getRecentRegisterModule();
+}
+
 </script>
 
 <script lang="ts">

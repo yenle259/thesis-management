@@ -18,6 +18,10 @@ export function getRegisterModule(registerModule: string) {
     : undefined;
 }
 
+export function getModule(registerModule: string) {
+  return registerModule ? registerModule.split("-") : undefined;
+}
+
 export function getRegisterModuleObject(registerModule: string) {
   return registerModule.split("-").map((item) => getTopicTypeByName(item));
 }

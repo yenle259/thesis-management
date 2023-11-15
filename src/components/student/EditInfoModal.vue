@@ -1,7 +1,7 @@
 <template>
   <div :v-if="props.student">
-    <v-dialog v-model="dialog" persistent width="700px">
-      <v-card class="rounded-lg pt-4 pb-2 px-2">
+    <v-dialog v-model="dialog" persistent width="650px">
+      <v-card class="rounded-lg pt-3 pb-2 px-2">
         <v-form v-model="form">
           <v-card-title class="d-flex text-h5 text-indigo justify-between">
             <div>
@@ -16,7 +16,7 @@
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
-            <div class="grid grid-cols-2 gap-x-2">
+            <div class="gap-x-2">
               <v-text-field
                 v-model="model.userId"
                 :required="true"
@@ -68,10 +68,11 @@
               ></v-text-field>
               <v-autocomplete
                 v-model="model.moduleType"
-                :items="topicTypeOptions"
+                :items="moduleOptions"
+                item-value="subvalue"
                 prepend-inner-icon="mdi-format-list-bulleted"
-                label="Phân loại đề tài"
-                placeholder="Phân loại đề tài"
+                label="Học phần"
+                placeholder="Học phần"
                 class="mb-2"
                 multiple
                 chips
@@ -103,14 +104,11 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
-import { RECENT_SEMESTER_ID } from "@/constant";
-
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
 import { StudentDetails } from "@/apis/models/StudentDetails";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
+import { RECENT_SEMESTER_ID } from "@/constant";
 import { studentUpdateRules } from "@/components/form/rules/studentUpdateRules";
-
-import { getRegisterModuleObject } from "@/utils/getRegisterModule";
 
 const form = ref();
 
@@ -121,13 +119,37 @@ const props = defineProps<{
   student: StudentDetails;
 }>();
 
+const getModules = async () => {
+  try {
+    const { data: response } = await API.get(`/module`);
+    modules.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getModules();
+
+const moduleOptions = computed(() => {
+  return modules.value?.map((module) => ({
+    title: module.moduleId + " | " + module.name,
+    value: module._id,
+    subtitle: module.name,
+    subvalue: module.moduleId,
+  }));
+});
+
 const model = reactive({
   userId: "",
   name: "",
   email: "",
   // password: "",
-  moduleType: [TopicTypeEnum.LV],
+  moduleType: ["CT554"],
 });
+
+const modules = ref<ModuleDetails[]>();
 
 const rules = studentUpdateRules();
 
@@ -146,9 +168,7 @@ watch(
 
     registerModule?.map((item) => {
       if (item.semester._id === RECENT_SEMESTER_ID) {
-        model.moduleType = item.moduleType
-          ? getRegisterModuleObject(item.moduleType)
-          : [];
+        model.moduleType = item.moduleType.split("-");
         return;
       }
     });
@@ -159,12 +179,15 @@ watch(
   }
 );
 
-const topicTypeOptions = computed(() => {
-  return Object.values(TopicTypeEnum).map((item) => ({
-    title: getTopicTypeName(item),
-    value: item,
-  }));
-});
+watch(
+  () => model.moduleType,
+  () => {
+    if (model.moduleType[0] === "") {
+      model.moduleType = [];
+    }
+    console.log(model.moduleType);
+  }
+);
 
 const dialog = computed(() => {
   return props.isShow;

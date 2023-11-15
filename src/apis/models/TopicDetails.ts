@@ -1,3 +1,4 @@
+import { ModuleDetails } from "./ModuleDetails";
 import { RegisterStudent } from "./RegisterStudent";
 import { SchoolYearSemester } from "./SchoolYearSemester";
 import { TopicStatusEnum } from "./TopicStatusEnum";
@@ -9,6 +10,7 @@ export interface TopicDetails {
   name: string;
   slug: string;
   type: TopicTypeEnum;
+  module: ModuleDetails;
   description: string;
   pi: UserDetails;
   numberOfStudent: number;

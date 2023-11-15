@@ -1,5 +1,5 @@
 <template>
-  <div v-if="props.topic">
+  <div v-if="topic">
     <v-dialog v-model="dialog" persistent width="600px">
       <v-card class="rounded-lg pt-4 pb-2 px-2" v-click-outside="handleCancel">
         <v-card-title class="d-flex text-h5 text-indigo justify-between">
@@ -16,17 +16,18 @@
         <v-divider></v-divider>
         <div class="px-4 py-2">
           <p class="mb-1">
-            <span class="text-subtitle-2">Tên đề tài: </span
-            >{{ props.topic.name }}
+            <span class="text-subtitle-2">Tên đề tài: </span>{{ topic.name }}
           </p>
           <p class="mb-1">
-            <span class="text-subtitle-2">Giảng viên: </span
-            >{{ props.topic.pi.name }}
+            <span class="text-subtitle-2">Giảng viên: </span>{{ topic.pi.name }}
           </p>
           <p class="mb-1">
             <span class="text-subtitle-2">Phân loại: </span>
-            <v-chip :color="getTopicTypeColor(topic.type)" size="small">
-              {{ getTopicTypeName(props.topic.type) }}
+            <v-chip
+              :color="getTopicModuleColor(topic.module.moduleId)"
+              size="small"
+            >
+              {{ topic.module.moduleId + " | " + topic.module.name }}
             </v-chip>
           </p>
           <p class="mb-1">
@@ -42,7 +43,7 @@
           <v-btn
             color="red"
             variant="tonal"
-            @click="handleUnregisterTopic(props.topic._id)"
+            @click="handleUnregisterTopic(topic._id)"
           >
             Hủy đăng ký
           </v-btn>
