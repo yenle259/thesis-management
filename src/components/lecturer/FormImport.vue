@@ -18,13 +18,6 @@
           variant="plain"
           @click="model.fileImport = undefined"
         ></v-btn>
-        <!-- <v-btn
-          variant="tonal"
-          color="info"
-          @click="handleSubmit"
-          :disabled="!students"
-          >Thiết lập data</v-btn
-        > -->
       </div>
     </div>
     <div class="flex items-center justify-center w-full">
@@ -77,13 +70,13 @@
       </label>
     </div>
 
-    <div v-if="students" class="mt-8">
+    <div v-if="lecturers" class="mt-8">
       <hr />
       <v-card-title class="d-flex flex-row text-indigo justify-between mt-4">
         <div>
           <span class="text-h6"> Xem trước dữ liệu </span>
           <p class="font-light text-caption text-black">
-            Xem thông tin sinh viên trong file dữ liệu vừa nhập vào
+            Xem thông tin giảng viên trong file dữ liệu vừa nhập vào
           </p>
         </div>
         <div>
@@ -95,36 +88,36 @@
       <v-table density="comfortable">
         <thead>
           <tr class="text-overline">
-            <th v-for="(item, index) in STUDENT_IMPORT" :key="index">
+            <th v-for="(item, index) in LECTURER_IMPORT" :key="index">
               {{ item }}
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="({ ...STUDENT_IMPORT }, index) in students" :key="index">
+          <tr v-for="({ ...LECTURER_IMPORT }, index) in lecturers" :key="index">
             <td
               :class="{
-                'text-caption text-red': !STUDENT_IMPORT.userId,
+                'text-caption text-red': !LECTURER_IMPORT.userId,
               }"
             >
-              {{ STUDENT_IMPORT.userId ?? "null" }}
+              {{ LECTURER_IMPORT.userId ?? "null" }}
             </td>
             <td
               :class="{
-                'text-caption text-red': !STUDENT_IMPORT.name,
+                'text-caption text-red': !LECTURER_IMPORT.name,
               }"
             >
-              {{ STUDENT_IMPORT.name ?? "null" }}
+              {{ LECTURER_IMPORT.name ?? "null" }}
             </td>
             <td
               :class="{
-                'text-caption text-red': !STUDENT_IMPORT.password,
+                'text-caption text-red': !LECTURER_IMPORT.password,
               }"
             >
-              <span v-if="STUDENT_IMPORT.password">
+              <span v-if="LECTURER_IMPORT.password">
                 <v-text-field
                   variant="plain"
-                  :value="STUDENT_IMPORT.password"
+                  :value="LECTURER_IMPORT.password"
                   type="password"
                 >
                 </v-text-field>
@@ -133,18 +126,17 @@
             </td>
             <td
               :class="{
-                'text-caption text-red': !STUDENT_IMPORT.email,
+                'text-caption text-red': !LECTURER_IMPORT.email,
               }"
             >
-              {{ STUDENT_IMPORT.email ?? "null" }}
+              {{ LECTURER_IMPORT.email ?? "null" }}
             </td>
             <td
               :class="{
-                'font-italic text-caption text-grey':
-                  !STUDENT_IMPORT.moduleType,
+                'font-italic text-caption text-grey': !LECTURER_IMPORT.role,
               }"
             >
-              {{ STUDENT_IMPORT.moduleType ?? `Không có` }}
+              {{ LECTURER_IMPORT.role ?? `Không có` }}
             </td>
           </tr>
         </tbody>
@@ -155,14 +147,15 @@
 
 <script setup lang="ts">
 import { read, utils, writeFileXLSX } from "xlsx";
-import { STUDENT_IMPORT } from "@/constants/header";
-
-import "vue3-toastify/dist/index.css";
+import { LECTURER_IMPORT } from "@/constants/header";
 import API from "@/apis/helpers/axiosBaseConfig";
+
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const emit = defineEmits(["created"]);
 
-const students = ref();
+const lecturers = ref();
 
 const model = reactive({
   fileImport: undefined,
@@ -182,42 +175,49 @@ watch(
           defval: null,
           // header: STUDENT_IMPORT,
         });
-        students.value = data;
-        console.log(students.value);
+        lecturers.value = data;
+        console.log(lecturers.value);
       };
       reader.readAsBinaryString(model.fileImport[0]);
     } else {
-      students.value = null;
+      lecturers.value = null;
     }
   }
 );
 
-const handleSubmit = async () => {
-  console.log(students.value);
-  try {
-    const { data: response } = await API.post(
-      `/student/account/import`,
-      students.value
-    );
-    emit("created");
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const handleDownloadSample = () => {
   const data: any[] = [];
-  const headers = ["userId", "name", "password", "email", "moduleType"];
+  const headers = ["userId", "name", "password", "email", "role"];
 
   const ws = utils.json_to_sheet(data, { header: headers });
 
-  const wscols = [{ wch: 10 }, { wch: 20 }, { wch: 10 }, { wch: 40 }];
+  const wscols = [
+    { wch: 10 },
+    { wch: 30 },
+    { wch: 10 },
+    { wch: 30 },
+    { wch: 20 },
+  ];
 
   ws["!cols"] = wscols;
 
   const wb = utils.book_new();
   utils.book_append_sheet(wb, ws, "Data");
   writeFileXLSX(wb, "Mau file import nguoi dung.xlsx", { cellStyles: true });
+};
+
+const handleSubmit = async () => {
+  console.log(lecturers.value);
+  try {
+    const { data: response } = await API.post(
+      `/user/account/import`,
+      lecturers.value
+    );
+    // console.log(response);
+    emit("created");
+    return response;
+  } catch (error) {
+    toast.error("" + error);
+  }
 };
 </script>

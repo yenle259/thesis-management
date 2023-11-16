@@ -26,15 +26,60 @@
           </v-tabs>
           <v-btn
             class="hover:shadow-sm"
-            v-if="filterTopics"
+            v-if="reports"
             prepend-icon="mdi-export-variant"
             variant="tonal"
             color="blue"
-            @click="handleExportReports(filterTopics)"
+            @click="handleExportReports(reports)"
             >Xuất danh sách</v-btn
           >
         </div>
-        <ManageReportTopic :reports="filterTopics || []" />
+        <ManageReportTopic :reports="reports || []">
+          <template v-slot:pagination>
+            <div class="d-flex justify-between px-2 py-3">
+              <div class="d-flex flex-row gap-x-3">
+                <p class="self-center indent-4 text-body-2">Hiển thị</p>
+                <v-btn
+                  id="number-per-page"
+                  variant="tonal"
+                  append-icon="mdi-menu-down"
+                  >{{ model.numberOfItemsPerPage }}</v-btn
+                >
+                <v-menu activator="#number-per-page">
+                  <v-list density="compact">
+                    <v-list-item
+                      density="compact"
+                      v-for="(value, index) in PAGINATION_OPTIONS"
+                      :key="index"
+                      :value="value"
+                      @click="model.numberOfItemsPerPage = value"
+                    >
+                      {{ value }}
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-divider vertical thickness="2"></v-divider>
+                <p class="self-center text-body-2">
+                  {{
+                    getPaginationText(
+                      model.count,
+                      model.numberOfItemsPerPage,
+                      model.page
+                    )
+                  }}
+                </p>
+              </div>
+              <v-pagination
+                v-model="model.page"
+                :length="model.totalsPage"
+                :total-visible="5"
+                active-color="blue"
+                variant="text"
+                density="compact"
+              ></v-pagination>
+            </div>
+          </template>
+        </ManageReportTopic>
       </template>
     </CustomCard>
   </div>
@@ -43,7 +88,7 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ReportTopic } from "@/apis/models/ReportTopic";
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
+import { PAGINATION_OPTIONS } from "@/constant";
 
 import { utils, writeFileXLSX } from "xlsx";
 
@@ -64,14 +109,29 @@ const tabItem = ref([
 
 const model = reactive({
   tab: "all",
+  isReport: false,
+  page: 1,
+  count: 0,
+  totalsPage: 1,
+  numberOfItemsPerPage: PAGINATION_OPTIONS[0],
 });
 
 const reports = ref<ReportTopic[]>();
 
 const getReports = async () => {
   try {
-    const { data: response } = await API.get(`/report`);
-    reports.value = response;
+    const { page, numberOfItemsPerPage, isReport } = model;
+    const { data: response } = await API.get(`/report`, {
+      params: {
+        page: page,
+        limit: numberOfItemsPerPage,
+        isReport: !isReport ? null : isReport,
+      },
+    });
+    reports.value = response.topics;
+    model.page = response.currentPage;
+    model.totalsPage = response.totalPages;
+    model.count = response.count;
     return response;
   } catch (error) {
     console.log(error);
@@ -80,14 +140,18 @@ const getReports = async () => {
 
 getReports();
 
-const filterTopics = computed(() => {
-  if (model.tab === "report") {3
-    return reports.value?.filter(({ topic }) =>
-      [TopicTypeEnum.LV, TopicTypeEnum.TL].includes(topic.type)
-    );
+watch(
+  () => model.tab,
+  () => {
+    if (model.tab !== "all") {
+      model.isReport = true;
+      getReports();
+    } else {
+      model.isReport = false;
+      getReports();
+    }
   }
-  return reports.value;
-});
+);
 
 const createDataToExport = (reports: ReportTopic[]) => {
   return reports.map(({ pi, topic, student }) => ({

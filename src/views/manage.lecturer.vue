@@ -160,7 +160,8 @@
                         </div>
                       </v-expansion-panel-title>
                       <v-expansion-panel-text>
-                        <SignupForm @created="handleCreated" />
+                        <!-- <SignupForm @created="handleCreated" /> -->
+                        <LecturerFormCreate @created="handleCreated" />
                       </v-expansion-panel-text>
                     </v-expansion-panel>
 
@@ -178,7 +179,7 @@
                         </div>
                       </v-expansion-panel-title>
                       <v-expansion-panel-text class="pb-2">
-                        <StudentFormImport />
+                        <LecturerFormImport />
                       </v-expansion-panel-text>
                     </v-expansion-panel>
                   </v-expansion-panels>
@@ -195,6 +196,7 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { StudentDetails } from "@/apis/models/StudentDetails";
+import { LecturerDetails } from "@/apis/models/LecturerDetails";
 
 import { LECTURER_TAB } from "@/constants/tab";
 
@@ -204,7 +206,6 @@ import { userRoleOptions } from "@/components/form/data/userRoleOptions";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { LecturerDetails } from "@/apis/models/LecturerDetails";
 
 useTitle("QLĐT - Quản lý cán bộ");
 
@@ -315,8 +316,8 @@ const handleUpdated = () => {
 };
 
 const handleCreated = () => {
-  getLecturers();
   toast.success("Thêm mới cán bộ thành công");
+  getLecturers();
   model.accountTab = "list";
 };
 

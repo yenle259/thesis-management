@@ -7,6 +7,7 @@
       prepend-icon="mdi-export-variant"
       variant="tonal"
       color="blue"
+      @click="handleExport(props.lecturers)"
       >Xuất danh sách</v-btn
     >
   </div>
@@ -44,6 +45,7 @@
           </td>
           <td>
             <v-chip
+              v-if="lecturer.role"
               class="me-1"
               size="small"
               :variant="
@@ -52,6 +54,7 @@
             >
               {{ getUserRoleName(lecturer.role) }}
             </v-chip>
+            <div v-else class="text-caption font-italic">Chưa có</div>
           </td>
           <td class="text-center">
             <v-row>
@@ -125,44 +128,60 @@
 <script setup lang="ts">
 import { LecturerDetails } from "@/apis/models/LecturerDetails";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+import { utils, writeFileXLSX } from "xlsx";
 
 const emit = defineEmits(["edit", "deactive", "deleted", "refetch"]);
 
 const props = defineProps<{ lecturers: LecturerDetails[] }>();
 
-const model = reactive({
-  search: "",
-  type: "",
-});
-
 const isShowDeleteModal = ref(false);
 
 const selectedStudent = ref<LecturerDetails>();
-
-// const filterStudents = computed(() => {
-//   return props.students?.filter(
-//     (student) =>
-//       student.userId
-//         .toLocaleLowerCase()
-//         .includes(model.search.toLocaleLowerCase()) ||
-//       student.name
-//         .toLocaleLowerCase()
-//         .includes(model.search.toLocaleLowerCase()) ||
-//       student.registerModule[0].moduleType === model.type
-//   );
-// });
 
 const handleEdit = (student: LecturerDetails) => {
   emit("edit", student);
 };
 
-const handleDeleteStudent = (student: LecturerDetails) => {
-  isShowDeleteModal.value = true;
-  selectedStudent.value = student;
-};
-
 const handleDeleted = () => {
   isShowDeleteModal.value = false;
   emit("deleted");
+};
+
+const createDataToExport = (lecturers: LecturerDetails[]) => {
+  const data = lecturers.map(({ userId, name, email, role }) => {
+    return {
+      userId,
+      name,
+      email,
+      role: role ? getUserRoleName(role) : "Chưa có",
+    };
+  });
+  return data;
+};
+
+const handleExport = (lecturers: LecturerDetails[]) => {
+  const data = createDataToExport(lecturers);
+  data.unshift({
+    userId: "MSSV",
+    name: "Họ tên cán bộ",
+    email: "Email",
+    role: "Vai trò",
+  });
+
+  const ws = utils.json_to_sheet(data, {
+    skipHeader: true,
+  });
+
+  const wscols = [{ wch: 10 }, { wch: 30 }, { wch: 20 }, { wch: 20 }];
+
+  ws["!cols"] = wscols;
+
+  /* create workbook and append worksheet */
+  const wb = utils.book_new();
+  utils.book_append_sheet(wb, ws, "Data");
+  /* export to XLSX */
+  writeFileXLSX(wb, "Danh sach can bo.xlsx", {
+    cellStyles: true,
+  });
 };
 </script>

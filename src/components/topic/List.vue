@@ -11,9 +11,6 @@
             Danh sách đề tài học kì I (2023 -2024)
           </p>
         </div>
-        <div v-if="user?.role === UserRoleEnum.Admin">
-          <ManagePublishTopicButton />
-        </div>
         <slot name="action"></slot>
       </div>
       <slot name="filter"></slot>

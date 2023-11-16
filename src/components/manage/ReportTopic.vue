@@ -61,6 +61,9 @@
     <div v-if="reports.length === 0" class="text-body-2 text-center my-4">
       Không có đề tài
     </div>
+    <div v-if="reports.length !== 0">
+      <slot name="pagination"></slot>
+    </div>
   </v-card>
 </template>
 
