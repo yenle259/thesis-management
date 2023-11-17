@@ -26,8 +26,7 @@ export const ACCOUNT_TAB: OptionTab[] = [
 export const LECTURER_TAB: OptionTab[] = [
   {
     label: "Danh sách chung",
-    title:
-      "Danh sách tài khoản cán bộ giảng viên",
+    title: "Danh sách tài khoản cán bộ giảng viên",
     value: "list",
     icon: "mdi-format-list-bulleted",
   },
@@ -57,5 +56,18 @@ export const TOPIC_STATUS: OptionTab[] = [
     title: "Danh sách đề tài đã duyệt và nhận hướng dẫn với sinh viên",
     value: "approved",
     icon: "mdi-check-circle-outline",
+  },
+];
+
+export const REPORT_TOPIC = [
+  {
+    label: "Tất cả",
+    title: "Tất cả đề tài đã được duyệt",
+    value: "all",
+  },
+  {
+    label: "Báo cáo",
+    title: "Đề tài Luận văn và Tiểu luận",
+    value: "report",
   },
 ];

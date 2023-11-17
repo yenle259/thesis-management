@@ -170,7 +170,7 @@ const routeByRole = [
       },
       {
         icon: "mdi-account-school",
-        label: "Giảng viên",
+        label: "Cán bộ",
         url: "/manage/lecturer",
       },
     ],

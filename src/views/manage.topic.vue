@@ -12,7 +12,7 @@
         <div class="d-flex flex-row justify-between">
           <v-tabs v-model="model.tab" class="mt-2">
             <v-tab
-              v-for="({ title, label, value }, index) in tabItem"
+              v-for="({ title, label, value }, index) in REPORT_TOPIC"
               :key="index"
               :value="value"
               :title="title"
@@ -89,26 +89,13 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ReportTopic } from "@/apis/models/ReportTopic";
 import { PAGINATION_OPTIONS } from "@/constant";
-
+import { REPORT_TOPIC } from "@/constants/tab";
 import { utils, writeFileXLSX } from "xlsx";
 
 useTitle("QLĐT - Quản lý đề tài được duyệt");
 
-const tabItem = ref([
-  {
-    label: "Tất cả",
-    title: "Tất cả đề tài đã được duyệt",
-    value: "all",
-  },
-  {
-    label: "Báo cáo",
-    title: "Đề tài Luận văn và Tiểu luận",
-    value: "report",
-  },
-]);
-
 const model = reactive({
-  tab: "all",
+  tab: REPORT_TOPIC[0].value,
   isReport: false,
   page: 1,
   count: 0,
