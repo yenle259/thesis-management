@@ -107,7 +107,7 @@
                     </div>
                   </div>
                   <div
-                    class="mt-2 text-center align-baseline text-body-2"
+                    class="mt-2 text-center align-baseline text-caption"
                     v-else
                   >
                     Chưa có sinh viên đăng ký

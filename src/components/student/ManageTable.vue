@@ -116,15 +116,16 @@
         </tr>
       </tbody>
     </v-table>
+
     <hr />
-    <div v-if="props.students">
-      <slot name="pagination"></slot>
-    </div>
     <div
       v-if="props.students.length === 0"
       class="text-body-2 text-center my-4 font-italic"
     >
       Không có sinh viên
+    </div>
+    <div v-if="props.students">
+      <slot name="pagination"></slot>
     </div>
   </v-card>
 

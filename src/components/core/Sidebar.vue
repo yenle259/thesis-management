@@ -4,15 +4,14 @@
       <v-navigation-drawer
         class="bg-indigo font-bevn"
         v-model="drawer"
-        :rail="rail"
-        :permanent="true"
-        @click="rail = false"
+        permanent
+        rail-width="65"
       >
         <div class="h-16 text-center flex content-center justify-center">
           <a
-            href="/"
             class="font-semibold text-2xl text-white flex content-center self-center"
-            >QUẢN LÝ ĐỀ TÀI
+            ><span>QUẢN LÝ ĐỀ TÀI</span>
+            <!-- <v-icon v-else size="md">mdi-menu</v-icon> -->
           </a>
         </div>
         <v-divider></v-divider>
@@ -44,7 +43,7 @@
             </div>
           </div>
 
-          <div v-if="!isAdmin">
+          <div>
             <div
               v-for="({ subheader, list }, index) in publicRoutes"
               :key="index"
@@ -105,23 +104,21 @@ const student = useStudentStore();
 
 const drawer = ref(true);
 
-const rail = ref(false);
-
-const isAdmin = ref(user.value?.role === UserRoleEnum.Admin);
+const rail = ref(true);
 
 const publicRoutes = ref([
   {
     subheader: "Thông tin chung",
     list: [
       {
-        icon: "mdi-account-school",
-        label: "Danh sách giảng viên",
-        url: "/lecturers",
-      },
-      {
         icon: "mdi-format-list-bulleted",
         label: "Danh sách đề tài",
         url: "/topic-list",
+      },
+      {
+        icon: "mdi-account-school",
+        label: "Danh sách giảng viên",
+        url: "/lecturers",
       },
     ],
   },
@@ -133,7 +130,7 @@ const routeByRole = [
     list: [
       {
         icon: "mdi-account",
-        label: "Thông tin của tôi",
+        label: "Đề tài",
         url: "/user",
       },
     ],
@@ -154,11 +151,6 @@ const routeByRole = [
     subheader: "Quản lí",
     list: [
       {
-        icon: "mdi-calendar-range",
-        label: "Học kì - Niên khóa",
-        url: "/semester",
-      },
-      {
         icon: "mdi-format-list-bulleted",
         label: "Đề tài",
         url: "/manage/topic",
@@ -172,6 +164,11 @@ const routeByRole = [
         icon: "mdi-account-school",
         label: "Cán bộ",
         url: "/manage/lecturer",
+      },
+      {
+        icon: "mdi-calendar-range",
+        label: "Học kì - Niên khóa",
+        url: "/semester",
       },
     ],
   },

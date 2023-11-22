@@ -113,7 +113,9 @@
         <div v-if="topics.length == 0">
           <p class="py-3 italic text-center">Không có đề tài</p>
         </div>
+
         <div v-if="topics.length !== 0">
+          <hr>
           <slot name="pagination"></slot>
         </div>
       </v-card>

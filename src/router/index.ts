@@ -21,14 +21,14 @@ const routes = [
     component: () => import("@/layouts/default/LoginLayout.vue"),
     children: [
       {
-        path: "/unauthorized",
-        name: "Unauthorized",
-        component: () => import("@/views/error.vue"),
-      },
-      {
         path: "/notfound",
         name: "Page Not Found",
         component: () => import("@/views/error.not.found.vue"),
+      },
+      {
+        path: "/unauthorized",
+        name: "Unauthorized",
+        component: () => import("@/views/error.vue"),
       },
     ],
   },
@@ -51,6 +51,12 @@ const routes = [
         path: "/user",
         name: "User Profile",
         component: () => import("@/views/user.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/me/profile",
+        name: "Profile",
+        component: () => import("@/views/account.vue"),
         meta: { requiresAuth: true },
       },
       {
@@ -89,7 +95,7 @@ const routes = [
         component: () => import("@/views/manage.semester.vue"),
         meta: {
           requiresAuth: true,
-          allowRoles: [UserRoleEnum.Admin, UserRoleEnum.Lecturer],
+          allowRoles: [UserRoleEnum.Admin],
         },
       },
       // admin route
@@ -124,7 +130,8 @@ const routes = [
     ],
   },
   {
-    path: "/:notfound",
+    // path: "/:notfound",
+    path: "/:pathMatch(.*)*",
     component: () => import("@/layouts/default/LoginLayout.vue"),
     children: [
       {

@@ -79,13 +79,13 @@ const { user } = storeToRefs(auth);
 const profileRoutes = ref([
   {
     icon: "mdi-account-circle-outline",
-    label: "Hồ sơ",
+    label: "Cá nhân",
     url: "/",
   },
   {
     icon: "mdi-cog-outline",
     label: "Cài đặt",
-    url: "/manage/lecturer",
+    url: "/me/profile",
   },
 ]);
 

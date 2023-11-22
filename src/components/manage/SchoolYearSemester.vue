@@ -2,7 +2,7 @@
   <CustomCard :title="'Học kì - Niên khóa'">
     <template v-slot:action
       ><v-btn
-        color="info"
+        color="indigo"
         variant="tonal"
         class="ma-2"
         @click="isShow = !isShow"

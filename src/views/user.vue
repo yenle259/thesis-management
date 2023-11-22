@@ -20,6 +20,7 @@
       :topics="topics ?? []"
       :module="module || {}"
       :reports="reports ?? []"
+      :modules="modules ?? []"
     />
   </div>
 </template>
@@ -35,6 +36,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 useTitle("QLĐT - Thông tin cá nhân");
 
@@ -45,6 +47,8 @@ const { user } = storeToRefs(auth);
 const topics = ref<TopicDetails[]>();
 
 const reports = ref<ReportTopic[]>();
+
+const modules = ref<ModuleDetails[]>();
 
 const module = ref<RegisterModule>();
 
@@ -61,6 +65,19 @@ const getTopicList = async () => {
 };
 
 getTopicList();
+
+const getModules = async () => {
+  try {
+    const { data: response } = await API.get(`/module`);
+    modules.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getModules();
 
 const getReportTopics = async () => {
   try {
@@ -92,7 +109,6 @@ const getRecentRegisterModule = async () => {
 if (!user.value?.role) {
   getRecentRegisterModule();
 }
-
 </script>
 
 <script lang="ts">
