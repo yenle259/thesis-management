@@ -2,12 +2,17 @@
   <div>
     <ManageSchoolYearSemester />
   </div>
-  <CustomCard :title="'Học phần'" :subTitle="'Danh sách phân loại học phần'">
+  <CustomCard
+    :title="'Học phần'"
+    :subTitle="'Danh sách phân loại học phần'"
+    width="700px"
+  >
     <template v-slot:action>
       <v-btn color="indigo">Thêm mới học phần</v-btn>
     </template>
+
     <template v-slot:content>
-      <v-card class="rounded-lg">
+      <v-card class="rounded-lg" width="500px">
         <ManageModule :modules="modules || []" />
       </v-card>
     </template>

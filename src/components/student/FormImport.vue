@@ -124,6 +124,7 @@
               <span v-if="STUDENT_IMPORT.password">
                 <v-text-field
                   variant="plain"
+                  density="compact"
                   :value="STUDENT_IMPORT.password"
                   type="password"
                 >

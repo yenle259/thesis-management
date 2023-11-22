@@ -44,6 +44,14 @@
                       )
                     "
                   >
+                    <div
+                      v-if="
+                        topicRegistered(moduleId)?.status ===
+                        TopicStatusEnum.SUGGESTED
+                      "
+                    >
+                      <v-chip size="small" color="blue">Đề xuất</v-chip>
+                    </div>
                     <div class="text-button text-right">
                       {{ topicRegistered(moduleId)?.name }}
                     </div>
@@ -140,8 +148,7 @@ import { ReportTopic } from "@/apis/models/ReportTopic";
 
 import { getStatusLabel } from "@/utils/getStatusName";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
-
-const { user } = storeToRefs(useAuthStore());
+import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 
 const router = useRouter();
 

@@ -132,7 +132,6 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -140,8 +139,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 const router = useRouter();
 
 const { registeredTopic } = storeToRefs(useStudentStore());
-
-const { user } = storeToRefs(useAuthStore());
 
 const props = defineProps<{
   topics: TopicDetails[];

@@ -128,7 +128,6 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { useAuthStore } from "@/stores/useAuthStore";
-import { RECENT_SEMESTER_ID } from "@/constant";
 
 const router = useRouter();
 

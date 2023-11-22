@@ -31,9 +31,6 @@
     <div v-if="modules.length === 0" class="text-body-2 text-center my-4">
       Không có học phần
     </div>
-    <!-- <div v-if="modules.length !== 0">
-      <slot name="pagination"></slot>
-    </div> -->
   </v-card>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" width="550px">
+    <v-dialog v-model="dialog" width="520px">
       <v-card
         v-if="status === RegisterStatusEnum.Approve"
         class="rounded-lg pt-2 pb-2 px-2"

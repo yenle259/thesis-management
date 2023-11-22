@@ -36,6 +36,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 useTitle("QLĐT - Thông tin cá nhân");
