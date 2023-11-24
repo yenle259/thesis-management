@@ -2,7 +2,7 @@
   <div>
     <v-btn
       id="menu"
-      appendIcon="mdi-chevron-down"
+      append-icon="mdi-chevron-down"
       class="self-center me-2 rounded-lg bg-white"
       variant="flat"
       :color="actions?.color"
@@ -64,25 +64,28 @@ const actionList = ref([
     status: RegisterStatusEnum.Approve,
     color: "success",
     label: "Đã được duyệt",
-    // actions: [
-    //   {
-    //     icon: "mdi-mail",
-    //     color: "orange",
-    //     title: "Xin điểm I",
-    //     click: "handleCancelModal",
-    //   },
-    //   {
-    //     icon: "mdi-check-circle-outline",
-    //     color: "green",
-    //     title: "Xác nhận báo cáo",
-    //     click: "handleCancelModal",
-    //   },
-    // ],
+    actions: [
+      {
+        icon: "mdi-mail",
+        color: "orange",
+        title: "Xin điểm I",
+        click: "handleCancelModal",
+      },
+      {
+        icon: "mdi-check-circle-outline",
+        color: "green",
+        title: "Xác nhận báo cáo",
+        click: "handleCancelModal",
+      },
+    ],
   },
 ]);
 
 const actions = computed(() => {
   return actionList.value.find((item) => item.status === props.status);
+});
+const isApproved = computed(() => {
+  return props.status === RegisterStatusEnum.Approve;
 });
 
 const handleCancelModal = () => {

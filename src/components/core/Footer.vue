@@ -7,7 +7,7 @@
             <v-img src="@img/cit.png" alt="Logo"></v-img>
           </v-avatar>
           <p class="font-sans text-xl italic font-bold text-white">
-            Trường Công nghệ Thông tin & Truyền thông - Trường Đại học Cần Thơ
+            Trường Công nghệ Thông tin & Truyền thông - Đại học Cần Thơ
           </p>
           <p class="text-blue-50 font-light">
             Khu 2, đường 3/2, Phường Xuân Khánh, <br />Quận Ninh Kiều, Thành phố

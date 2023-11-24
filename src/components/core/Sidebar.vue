@@ -78,7 +78,7 @@
               @click="handleLogout"
               block
             >
-              Logout
+              Đăng xuất
             </v-btn>
           </div>
         </template>

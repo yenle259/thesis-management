@@ -17,10 +17,10 @@
             </template>
           </v-tooltip>
         </div>
-        <div class="flex flex-row gap-x-2">
-          <v-badge :content="2" color="red">
-            <v-btn variant="text" size="small" icon="mdi-bell-outline"></v-btn>
-          </v-badge>
+        <div class="flex flex-row">
+          <v-list-item :key="user?._id" v-if="user">
+            <p class="text-right">{{ user.name }}</p>
+          </v-list-item>
           <profile-avatar />
         </div>
       </div>
@@ -30,11 +30,8 @@
 
 <script setup lang="ts">
 import ProfileAvatar from "./ProfileAvatar.vue";
+
+const auth = useAuthStore();
+
+const { user } = storeToRefs(auth);
 </script>
-
-<style scoped>
-.bg-basil {
-  background-color: #fffbe6 !important;
-}
-
-</style>

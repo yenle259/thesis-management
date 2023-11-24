@@ -83,11 +83,11 @@
                   <div>
                     <p
                       class="text-caption leading-relaxed indent-3 pe-2"
-                      v-if="topic.description !== ''"
+                      v-if="topic.description !== null"
                     >
                       {{ topic.description }}
                     </p>
-                    <p v-else class="text-center text-body-2">
+                    <p v-else class="text-center text-caption">
                       Chưa có mô tả đề tài
                     </p>
                   </div>

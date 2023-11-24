@@ -12,7 +12,7 @@
           :error-messages="errorMessage.userId"
           class="mb-2"
           clearable
-          label="Mã số định danh"
+          label="Mã số người dùng*"
           prepend-inner-icon="mdi-account-outline"
         ></v-text-field>
 
@@ -21,7 +21,7 @@
           :readonly="loading"
           :rules="rules.password"
           :error-messages="errorMessage.password"
-          label="Mật khẩu"
+          label="Mật khẩu*"
           prepend-inner-icon="mdi-key-outline"
           :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show ? 'text' : 'password'"
@@ -81,13 +81,13 @@ const model = ref({
 const rules = ref({
   userId: [
     (value: any) => {
-      if (value?.length == 0) return "Nhập mã số định danh";
+      if (value?.length == 0) return "Hãy nhập mã số người dùng";
       return true;
     },
   ],
   password: [
     (value: any) => {
-      if (value?.length == 0) return "Nhập mật khẩu";
+      if (value?.length == 0) return "Hãy nhập mật khẩu";
       if (value?.length >= 8) return true;
       return "Mật khẩu phải dài hơn 8 kí tự";
     },
