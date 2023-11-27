@@ -19,8 +19,8 @@
         <v-table>
           <thead class="font-bold text-overline">
             <tr>
-              <th class="text-left">Họ tên</th>
               <th class="text-left">MSCB</th>
+              <th class="text-left">Họ tên</th>
               <th class="text-left">Email</th>
               <th class="text-center">
                 NLCS
@@ -48,11 +48,10 @@
               class="hover:text-blue-800 cursor-pointer text-sm"
               @click="router.push('/lecturers/' + lecturer.userId)"
             >
+              <td>{{ lecturer.userId }}</td>
               <td>
                 {{ lecturer.name }}
               </td>
-              <td>{{ lecturer.userId }}</td>
-              <!-- <td>0706758958</td> -->
               <td>{{ lecturer.email }}</td>
               <td class="text-center">1</td>
               <td class="text-center">1</td>
@@ -81,5 +80,4 @@ const props = defineProps<{
 const model = reactive({
   total: 0,
 });
-
 </script>

@@ -222,11 +222,7 @@ getRegisteredTopic();
 
 const getLecturers = async () => {
   try {
-    const { data: response } = await API.get("/user/lecturers", {
-      params: {
-        role: UserRoleEnum.Lecturer,
-      },
-    });
+    const { data: response } = await API.get("/user/lecturers");
     lecturers.value = response.lecturers;
   } catch (error) {
     console.log(error);

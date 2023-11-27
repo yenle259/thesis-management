@@ -1,7 +1,7 @@
 <template>
   <div :v-if="props.editTopic">
     <v-dialog v-model="dialog" persistent width="700px">
-      <v-card class="pt-4 pb-2 px-2">
+      <v-card class="pt-3 pb-2 px-2 rounded-lg">
         <v-form v-model="form">
           <v-card-title class="d-flex text-h5 text-indigo justify-between">
             <div>

@@ -17,25 +17,20 @@
     <template v-slot:content>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-3">
         <div class="col-span-2">
-          <div v-if="false">
-            <v-timeline direction="horizontal" truncate-line="both">
-              <v-timeline-item size="small" dot-color="indigo">
-                <p class="text-subtitle-2 text-indigo">Đã đăng ký</p>
-                <!-- <p class="text-caption"> Đã đăng ký </p> -->
-              </v-timeline-item>
-
-              <v-timeline-item size="small" dot-color="grey">
-                <template v-slot:opposite> Được duyệt </template>
-              </v-timeline-item>
-
-              <v-timeline-item size="small" dot-color="grey">
-                Xác nhận báo cáo
-              </v-timeline-item>
-
-              <v-timeline-item size="small" dot-color="grey">
-                <template v-slot:opposite> Nhập điểm </template>
-              </v-timeline-item>
-            </v-timeline>
+          <div
+            class="mb-2"
+            v-if="
+              topic.student.find((item) => item.studentInfo._id === user?._id)
+                ?.reason
+            "
+          >
+            <v-alert variant="tonal" type="warning">
+              <span class="font-bold"> Lí do không phê duyệt: </span>
+              {{
+                topic.student.find((item) => item.studentInfo._id === user?._id)
+                  ?.reason
+              }}
+            </v-alert>
           </div>
           <v-card class="px-4 py-3 rounded-lg">
             <p
@@ -51,7 +46,7 @@
                 v-if="topic.module"
                 :color="getTopicModuleColor(topic.module.moduleId)"
               >
-                {{ topic.module.moduleId + ' | ' + topic.module.name}}
+                {{ topic.module.moduleId + " | " + topic.module.name }}
               </v-chip>
               <v-chip v-else :color="getTopicTypeColor(topic?.type)">
                 {{ getTopicTypeName(topic?.type) }}
@@ -172,6 +167,8 @@ import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
 useTitle("QLĐT - Đề tài đăng ký");
 
 const auth = useAuthStore();
+
+const { user } = storeToRefs(auth);
 
 const emit = defineEmits(["approved", "reject"]);
 

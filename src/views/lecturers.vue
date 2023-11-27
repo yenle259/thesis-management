@@ -7,7 +7,6 @@
 <script lang="ts" setup>
 import API from "@/apis/helpers/axiosBaseConfig";
 import { LecturerDetails } from "@/apis/models/LecturerDetails";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 useTitle("QLĐT - Danh sách giảng viên");
 
@@ -19,11 +18,7 @@ const lecturers = ref<LecturerDetails[]>();
 
 const getLecturers = async () => {
   try {
-    const { data: response } = await API.get("/user/lecturers", {
-      params: {
-        role: UserRoleEnum.Lecturer,
-      },
-    });
+    const { data: response } = await API.get("/user/lecturers");
     lecturers.value = response.lecturers;
     model.total = response.count;
   } catch (error) {
