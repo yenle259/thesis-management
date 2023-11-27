@@ -6,7 +6,10 @@
     >
       <template v-slot:action
         ><div>
-          <ManagePublishTopicButton /></div
+          <ManagePublishTopicButton
+            :manage="manageRegisterTime || {}"
+            @updated="handleUpdated()"
+          /></div
       ></template>
       <template v-slot:content>
         <div class="d-flex flex-row justify-between">
@@ -87,6 +90,7 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ReportTopic } from "@/apis/models/ReportTopic";
 import { PAGINATION_OPTIONS } from "@/constant";
 import { REPORT_TOPIC } from "@/constants/tab";
@@ -104,6 +108,8 @@ const model = reactive({
 });
 
 const reports = ref<ReportTopic[]>();
+
+const manageRegisterTime = ref<ManageRegisterTime>();
 
 const getReports = async () => {
   try {
@@ -126,6 +132,20 @@ const getReports = async () => {
 };
 
 getReports();
+
+const getRegisterTopicTime = async () => {
+  try {
+    const { data: response } = await API.get(`/register-time`);
+
+    manageRegisterTime.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getRegisterTopicTime();
 
 watch(
   () => model.tab,
@@ -183,5 +203,10 @@ const handleExportReports = (reports: ReportTopic[]) => {
   utils.book_append_sheet(wb, ws, "Data");
   /* export to XLSX */
   writeFileXLSX(wb, "Danh sach huong dan de tai.xlsx", { cellStyles: true });
+};
+
+//refetch after change register time
+const handleUpdated = () => {
+  getRegisterTopicTime();
 };
 </script>

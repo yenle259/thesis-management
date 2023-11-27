@@ -12,7 +12,7 @@
           :error-messages="errorMessage.userId"
           class="mb-2"
           clearable
-          label="Mã số người dùng*"
+          label="Mã số người dùng *"
           prepend-inner-icon="mdi-account-outline"
         ></v-text-field>
 
@@ -21,7 +21,7 @@
           :readonly="loading"
           :rules="rules.password"
           :error-messages="errorMessage.password"
-          label="Mật khẩu*"
+          label="Mật khẩu *"
           prepend-inner-icon="mdi-key-outline"
           :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show ? 'text' : 'password'"

@@ -5,7 +5,7 @@
   >
     <template v-slot:content>
       <div v-if="module" class="mb-5">
-        <v-card class="bg-white rounded-lg c-shadow" max-width="700px">
+        <v-card class="bg-white rounded-lg c-shadow" max-width="750px">
           <v-table>
             <thead class="text-overline">
               <tr>
@@ -33,7 +33,6 @@
                     </v-chip>
                   </div>
                 </th>
-                <!-- <th class="text-caption text-right">Chưa có đề tài</th> -->
                 <th>
                   <v-list-item
                     v-if="topicRegistered(moduleId)"
@@ -61,7 +60,7 @@
                     </div>
                   </v-list-item>
                   <div v-else class="text-caption text-right">
-                    Chưa đăng ký đề tài
+                    <v-list-item> Chưa đăng ký đề tài</v-list-item>
                   </div>
                 </th>
               </tr>

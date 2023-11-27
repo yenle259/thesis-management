@@ -1,31 +1,27 @@
 <template>
-  <div v-if="publishDate">
+  <div v-if="manage">
     <v-alert
-      v-if="!isShow"
+      v-if="!manage?.isRegisterTopicTime"
       class="mx-6 my-1 py-2"
       closable
-      close-label="Close Alert"
+      close-label="Đóng thông báo"
       variant="tonal"
       type="warning"
       prominent
     >
-      Chưa đến thời điểm đăng ký đề tài. Danh sách đề tài sẽ được
-      <span class="font-bold">mở đăng ký</span> vào thời gian:
-      <span class="font-bold">{{
-        getFormatDate(new Date(publishDate.publishDate))
-      }}</span>
+      Chưa đến thời điểm đăng ký đề tài.
+      <span v-if="manage"
+        >Danh sách đề tài sẽ được <span class="font-bold">mở đăng ký</span> vào
+        thời gian:
+        <p class="text-body-2">
+          {{ `Từ: ${dateViFormat(manage.registerTopicTime.beginAt, true)}` }}
+        </p>
+        <p class="text-body-2">
+          {{ `Đến: ${dateViFormat(manage.registerTopicTime.endAt, true)}` }}
+        </p></span
+      >
     </v-alert>
-    <AnnounceModal
-      :publishDate="publishDate || {}"
-      @is-published="handlePublish"
-    >
-      <template v-slot:title> Thông báo </template>
-      <template v-slot:content>
-        Chưa đến thời điểm đăng ký đề tài. Danh sách đề tài sẽ được mở đăng ký
-        vào thời gian:
-        {{ getFormatDate(new Date(publishDate.publishDate)) }}
-      </template>
-    </AnnounceModal>
+    <TopicAlertRegisterTopicTime :manage="manage || {}" />
   </div>
   <div class="h-screen">
     <TopicList
@@ -33,7 +29,7 @@
       :topics="currentSemesterTopics ?? []"
       :modules="modules ?? []"
       :moduleSelected="model.module || ''"
-      :is-publish="isShow"
+      :is-publish="manage?.isRegisterTopicTime"
       :register-module="registerModule ? registerModule[0].moduleType : ''"
       :registered="registeredTopicModuleId || []"
       @create="isOpenSuggestModal = true"
@@ -137,14 +133,13 @@
 <script lang="ts" setup>
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { PublishDate } from "@/apis/models/PublishDate";
 import { UserDetails } from "@/apis/models/UserDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { RegisterModule } from "@/apis/models/RegisterModule";
-
-import { usePublishTopicList } from "@/stores/usePublishTopicList";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+
+import { useAuthStore } from "@/stores/useAuthStore";
 import { PAGINATION_OPTIONS } from "@/constant";
 
 import { toast } from "vue3-toastify";
@@ -169,19 +164,15 @@ const module = ref<RegisterModule>();
 
 const topics = ref<TopicDetails[]>();
 
+const manage = ref<ManageRegisterTime>();
+
 const lecturers = ref<UserDetails[]>();
 
 const modules = ref<ModuleDetails[]>();
 
 const registeredTopics = ref<TopicDetails[]>();
 
-const isShow = ref(false);
-
 const isOpenSuggestModal = ref(false);
-
-const { change } = usePublishTopicList();
-
-const publishDate = ref<PublishDate>();
 
 const getTopicList = async () => {
   try {
@@ -204,6 +195,20 @@ const getTopicList = async () => {
 };
 
 getTopicList();
+
+const getRegisterTopicTime = async () => {
+  try {
+    const { data: response } = await API.get(`/register-time`);
+
+    manage.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getRegisterTopicTime();
 
 const getRecentRegisterModule = async () => {
   try {
@@ -235,18 +240,6 @@ const getRegisteredTopic = async () => {
 };
 
 getRegisteredTopic();
-
-const getPublishDate = async () => {
-  try {
-    const { data: response } = await API.get(`/publish`);
-    publishDate.value = response;
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getPublishDate();
 
 const getLecturers = async () => {
   try {
@@ -312,17 +305,9 @@ const isDisabledSuggested = computed(() => {
   );
 });
 
-const handlePublish = (isPublish: boolean) => {
-  change(isPublish);
-  if (isPublish) {
-    isShow.value = isPublish;
-  }
-};
-
 const handleSuggestedTopic = () => {
   isOpenSuggestModal.value = false;
   toast.success(`Đã đề xuất đề tài với giảng viên`);
-  // getTopicList();
   getRegisteredTopic();
 };
 </script>

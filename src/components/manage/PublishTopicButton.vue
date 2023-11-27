@@ -1,5 +1,5 @@
 <template>
-  <v-menu>
+  <v-menu :close-on-content-click="false" width="280px">
     <template v-slot:activator="{ props }">
       <v-btn
         append-icon="mdi-chevron-down"
@@ -9,40 +9,181 @@
         >Thời gian đăng ký</v-btn
       >
     </template>
-    <v-list density="compact" class="rounded-lg">
-      <v-list-item class="mb-2">
-        <span> Cho phép đăng ký </span>
-        <template v-slot:append>
-          <v-switch
-            v-model="model.isPublish"
-            true-value="true"
-            false-value="false"
-            hide-details
-            inset
-            color="primary"
-            class="mx-auto ml-2"
-          ></v-switch>
-        </template>
-      </v-list-item>
-      <hr />
-      <v-list-item @click="model.publishModal = !model.publishModal" class="mt-2 mx-2 rounded-lg"
-        >Cho phép đăng ký
-      </v-list-item>
-      <v-list-item @click="model.setTimeModal = true" class="mx-2 rounded-lg"
-        >Đặt thời gian
-      </v-list-item>
-    </v-list>
+
+    <v-card class="rounded-lg">
+      <v-tabs v-model="model.tab" color="indigo" fixed-tabs>
+        <v-tab value="TOPIC">Đề tài</v-tab>
+        <v-tab value="REPORT">Báo cáo</v-tab>
+      </v-tabs>
+      <v-window v-model="model.tab" class="mb-4 px-3">
+        <v-window-item key="TOPIC" value="TOPIC">
+          <div class="mt-2" v-if="isSetTopicTime || model.isRegisterTopicTime">
+            <v-alert
+              :color="isSetTopicTime ? 'warning' : 'info'"
+              variant="tonal"
+              density="compact"
+              class="text-caption"
+            >
+              <p class="text-sm font-bold">
+                Thời gian đăng ký <span v-if="isSetTopicTime">đã lên lịch</span>
+              </p>
+              <p class="text-caption">
+                {{ `Từ: ${dateViFormat(manage.registerTopicTime.beginAt)}` }}
+              </p>
+              <p class="text-caption">
+                {{ `Đến: ${dateViFormat(manage.registerTopicTime.endAt)}` }}
+              </p>
+            </v-alert>
+          </div>
+          <v-list-item
+            class="py-4"
+            density="compact"
+            v-if="manage.isRegisterTopicTime || isSetTopicTime"
+          >
+            <p>Trạng thái</p>
+            <template v-slot:append>
+              <v-btn
+                size="small"
+                variant="tonal"
+                class="text-button"
+                :color="
+                  model.isRegisterTopicTime
+                    ? 'info'
+                    : isSetTopicTime
+                    ? 'warning'
+                    : 'grey'
+                "
+              >
+                {{
+                  model.isRegisterTopicTime
+                    ? "Đã mở"
+                    : isSetTopicTime
+                    ? "Đã lên lịch"
+                    : "Chưa có"
+                }}
+              </v-btn>
+            </template>
+          </v-list-item>
+          <hr />
+          <v-list-item
+            v-if="model.isRegisterTopicTime"
+            @click="model.destroyModal = true"
+            class="rounded-lg mt-2"
+            >Ngừng mở đăng ký
+          </v-list-item>
+          <v-list-item
+            v-else
+            @click="model.publishModal = true"
+            class="rounded-lg mt-2"
+            >Mở đăng ký
+          </v-list-item>
+          <v-list-item @click="model.setTimeModal = true" class="rounded-lg"
+            >Đặt thời gian
+          </v-list-item>
+        </v-window-item>
+
+        <v-window-item key="REPORT" value="REPORT">
+          <div class="mt-2" v-if="isSetReportTime || model.isReportTime">
+            <v-alert
+              :color="isSetReportTime ? 'warning' : 'info'"
+              variant="tonal"
+              density="compact"
+              class="text-caption"
+            >
+              <p class="text-sm font-bold">
+                Thời gian đăng ký
+                <span v-if="isSetReportTime">đã lên lịch</span>
+              </p>
+
+              <p class="text-caption">
+                {{ `Từ: ${dateViFormat(manage.registerReportTime.beginAt)}` }}
+              </p>
+              <p class="text-caption">
+                {{ `Đến: ${dateViFormat(manage.registerReportTime.endAt)}` }}
+              </p>
+            </v-alert>
+          </div>
+          <v-list-item
+            class="py-4"
+            density="compact"
+            v-if="manage.isReportTime || isSetReportTime"
+          >
+            <p>Trạng thái</p>
+            <template v-slot:append>
+              <v-btn
+                size="small"
+                variant="tonal"
+                class="text-button"
+                :color="
+                  model.isReportTime
+                    ? 'info'
+                    : isSetReportTime
+                    ? 'warning'
+                    : 'grey'
+                "
+              >
+                {{
+                  model.isReportTime
+                    ? "Đã mở"
+                    : isSetReportTime
+                    ? "Đã lên lịch"
+                    : "Chưa có"
+                }}
+              </v-btn>
+            </template>
+          </v-list-item>
+          <hr />
+          <v-list-item
+            v-if="model.isReportTime"
+            @click="model.destroyModal = true"
+            class="rounded-lg mt-2"
+            >Ngừng mở đăng ký
+          </v-list-item>
+          <v-list-item
+            v-else
+            @click="model.publishModal = true"
+            class="rounded-lg mt-2"
+            >Mở đăng ký
+          </v-list-item>
+          <v-list-item @click="model.setTimeModal = true" class="rounded-lg"
+            >Đặt thời gian
+          </v-list-item>
+        </v-window-item>
+      </v-window>
+    </v-card>
   </v-menu>
 
   <!-- dialog to publish topic -->
-  <v-dialog v-model="model.publishModal" persistent width="520px" closeable>
-    <v-card class="pt-4 pb-2 px-2">
-      <v-card-title class="text-h5 text-indigo">
-        <span class="mb-1"> Công bố đề tài</span>
+  <v-dialog v-model="model.publishModal" persistent width="500px" closeable>
+    <v-card class="pt-3 rounded-lg pb-2 px-2">
+      <v-card-title class="d-flex text-h5 text-indigo justify-between">
+        <div>
+          <span class="mb-1"
+            >Mở đăng ký
+            {{ model.tab === "REPORT" ? "báo cáo" : "đề tài" }}</span
+          >
+          <p class="font-light text-caption text-black">
+            Mở thời gian đăng ký
+            {{ model.tab === "REPORT" ? "báo cáo" : "danh sách đề tài" }} cho
+            học kỳ hiện tại. <br />
+            Hãy chọn thời gian kết thúc đăng ký.
+          </p>
+        </div>
+        <v-btn icon @click="handleCancel" variant="flat"
+          ><v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <p>Xác nhận công bố danh sách đề tài ở thời điểm hiện tại?</p>
+        <v-text-field
+          v-model="model.endAt"
+          :rules="rules.endAt"
+          type="datetime-local"
+          class="mt-2"
+          label="Thời gian kết thúc đăng ký"
+          hint="Giá trị mặc định là 7 ngày sau thời điểm mở đăng ký"
+          variant="outlined"
+        ></v-text-field>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -51,7 +192,58 @@
         <v-btn
           color="green-darken-1"
           variant="tonal"
-          @click="handleSubmit(Date.now())"
+          @click="
+            handleSetRegisTerTime(
+              model.tab,
+              getFormatDatetime(new Date(Date.now())),
+              model.endAt
+            )
+          "
+        >
+          Xác nhận
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- dialog to cancel publish topic -->
+
+  <v-dialog v-model="model.destroyModal" persistent width="500px" closeable>
+    <v-card class="pt-3 rounded-lg pb-2 px-2">
+      <v-card-title class="d-flex text-h5 text-indigo justify-between">
+        <div>
+          <span class="mb-1"
+            >Kết thúc đăng ký
+            {{ model.tab === "REPORT" ? "báo cáo" : "đề tài" }}</span
+          >
+          <p class="font-light text-caption text-black">
+            Kết thúc thời gian đăng ký
+            {{ model.tab === "REPORT" ? "báo cáo" : "danh sách đề tài" }}
+          </p>
+        </div>
+        <v-btn icon @click="handleCancel" variant="flat"
+          ><v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-card-text>
+        <p>Xác nhận kết thúc thời gian đăng ký.</p>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red" variant="text" @click="handleCancel()"> Hủy </v-btn>
+        <v-btn
+          color="green-darken-1"
+          variant="tonal"
+          @click="
+            handleSetRegisTerTime(
+              model.tab,
+              getFormatDatetime(new Date(Date.now())),
+              getFormatDatetime(new Date(Date.now())),
+              true
+            )
+          "
         >
           Xác nhận
         </v-btn>
@@ -61,36 +253,52 @@
 
   <!-- dialog to setup publish date -->
   <v-dialog v-model="model.setTimeModal" persistent width="500px">
-    <v-card class="pt-4 pb-2 px-2">
+    <v-card class="pt-3 pb-2 px-2 rounded-lg">
       <v-form v-model="model.form">
-        <v-card-title class="text-h5 text-indigo">
-          <span class="mb-1"> Đặt thời gian</span>
-          <p class="font-light text-sm text-black text-caption">
-            Đặt thời gian để công bố danh sách đề tài
-          </p>
+        <v-card-title class="d-flex text-h5 text-indigo justify-between">
+          <div>
+            <span class="mb-1">Đặt thời gian</span>
+            <p class="font-light text-caption text-black">
+              Đặt thời gian để mở đăng ký danh sách đề tài cho học kỳ hiện tại
+            </p>
+          </div>
+          <v-btn icon @click="handleCancel" variant="flat"
+            ><v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
           <v-text-field
-            :rules="rules.publishDate"
+            v-model="model.beginAt"
+            :rules="rules.beginAt"
             :min="Date.now()"
             type="datetime-local"
-            v-model="model.scheduleTime"
-            label="Thời gian công bố"
+            class="mt-2"
+            label="Thời gian mở đăng ký"
+            variant="outlined"
+          ></v-text-field>
+
+          <v-text-field
+            v-model="model.endAt"
+            :rules="rules.endAt"
+            type="datetime-local"
+            class="mt-2"
+            label="Thời gian kết thúc đăng ký"
+            hint="Giá trị mặc định là 7 ngày sau thời điểm mở đăng ký"
             variant="outlined"
           ></v-text-field>
         </v-card-text>
         <v-spacer> </v-spacer>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" variant="text" @click="handleCancel()">
-            Hủy
-          </v-btn>
+          <v-btn color="red" variant="text" @click="handleCancel"> Hủy </v-btn>
           <v-btn
             :disabled="!model.form"
             color="green-darken-1"
             variant="tonal"
-            @click="handleSetPublishDate(model.scheduleTime)"
+            @click="
+              handleSetRegisTerTime(model.tab, model.beginAt, model.endAt)
+            "
           >
             Xác nhận
           </v-btn>
@@ -102,20 +310,28 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
-import { parseISO } from "date-fns";
-import { usePublishTopicList } from "@/stores/usePublishTopicList";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
+import { parseISO, isBefore } from "date-fns";
+
+import { dateViFormat } from "@/utils/getFormatDate";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-const publish = usePublishTopicList();
+const emit = defineEmits(["updated"]);
+
+const props = defineProps<{ manage: ManageRegisterTime }>();
 
 const model = reactive({
+  tab: "TOPIC",
   form: false,
-  isPublish: false,
+  isRegisterTopicTime: false,
+  isReportTime: false,
   publishModal: false,
+  destroyModal: false,
   setTimeModal: false,
-  scheduleTime: "",
+  beginAt: getFormatDatetime(new Date(Date.now())),
+  endAt: getFormatDatetime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
 });
 
 const rules = ref({
@@ -123,57 +339,92 @@ const rules = ref({
     (value: any) => {
       const recentDate = new Date(Date.now());
       if (parseISO(value) >= recentDate) return true;
+      if (value === "") return "Hãy chọn thời điểm công bố";
       return "Thời gian công bố phải sau thời điểm hiện tại";
+    },
+  ],
+  beginAt: [
+    (value: any) => {
+      const recentDate = new Date(Date.now());
+      if (parseISO(value) >= recentDate) return true;
+      if (value === "") return "Hãy chọn thời điểm mở đăng ký";
+      return "Thời điểm mở đăng ký phải sau thời điểm hiện tại";
+    },
+  ],
+  endAt: [
+    (value: any) => {
+      const beginDate = new Date(model.beginAt);
+      if (parseISO(value) >= beginDate) return true;
+      return "Thời điểm kết thúc đăng ký phải sau thời điểm mở đăng ký";
     },
   ],
 });
 
+const isSetTopicTime = computed(() => {
+  return isBefore(
+    new Date(Date.now()),
+    new Date(props.manage.registerTopicTime.beginAt)
+  );
+});
+
+const isSetReportTime = computed(() => {
+  return isBefore(
+    new Date(Date.now()),
+    new Date(props.manage.registerReportTime.beginAt)
+  );
+});
+
 watch(
-  () => model.isPublish,
+  () => props.manage,
   () => {
-    // publish.change(model.isPublish);
-    model.publishModal = !model.publishModal;
+    model.isRegisterTopicTime = props.manage.isRegisterTopicTime;
+    model.isReportTime = props.manage.isReportTime;
+  }
+);
+
+watch(
+  () => model.beginAt,
+  () => {
+    model.endAt = model.beginAt;
+    model.endAt = getFormatDatetime(
+      new Date(
+        parseISO(model.endAt).setDate(parseISO(model.beginAt).getDate() + 7)
+      )
+    );
   }
 );
 
 const handleCancel = () => {
   model.publishModal = false;
+  model.destroyModal = false;
   model.setTimeModal = false;
 };
 
-const handleSubmit = async (scheduleTime: any) => {
-  const date = new Date(scheduleTime);
-
+const handleSetRegisTerTime = async (
+  type: string,
+  beginAt: any,
+  endAt: any,
+  isEnd?: boolean
+) => {
+  const urlByType = type === "REPORT" ? "/report-time" : `/register-time`;
+  const toastMsg = type === "REPORT" ? " báo cáo" : ` đề tài`;
   try {
-    const { data: response } = await API.put(`/publish/set`, {
-      publishDate: date,
-      id: "6526f1c4ac0072dcd9517532",
+    const { data: response } = await API.patch(urlByType, {
+      beginAt,
+      endAt,
     });
 
-    toast.success("Mở đăng ký đề tài thành công");
-
+    if (isEnd) {
+      toast.success(`Đã đóng thời gian đăng ký ${toastMsg}`);
+    } else {
+      toast.success(
+        `Thời gian mở đăng ký ${toastMsg} bắt đầu từ ${getFormatDate(
+          parseISO(beginAt)
+        )} đến ${getFormatDate(parseISO(endAt))}`
+      );
+    }
     handleCancel();
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-//scheduleTime
-const handleSetPublishDate = async (scheduleTime: any) => {
-  const date = new Date(scheduleTime);
-
-  try {
-    const { data: response } = await API.put(`/publish/set`, {
-      publishDate: date,
-      id: "6526f1c4ac0072dcd9517532",
-    });
-
-    toast.success(
-      "Đặt thời gian mở đăng ký danh sách đề tài: " +
-        getFormatDate(parseISO(scheduleTime))
-    );
-    handleCancel();
+    emit("updated");
     return response;
   } catch (error) {
     console.log(error);

@@ -107,6 +107,8 @@
     "topicTypeOptionsCustom": true,
     "useModuleOptions": true,
     "userRoleOptions": true,
-    "getModule": true
+    "getModule": true,
+    "getFormatDatetime": true,
+    "dateViFormat": true
   }
 }
