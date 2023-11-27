@@ -125,7 +125,10 @@ const routes = [
         path: "/my-topic",
         name: "Đề tài của tôi",
         component: () => import("@/views/my.topic.vue"),
-        meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Lecturer] },
+        meta: {
+          requiresAuth: true,
+          allowRoles: [UserRoleEnum.Lecturer, UserRoleEnum.Admin],
+        },
       },
     ],
   },

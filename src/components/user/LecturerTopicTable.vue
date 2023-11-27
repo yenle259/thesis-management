@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody v-if="topics">
-            <tr class="text-sm" v-for="topic in topics" :key="topic.slug">
+            <tr class="text-sm" v-for="topic in topics" :key="topic._id">
               <td
                 width="400px"
                 @click="router.push('/user/topic/' + topic.slug)"
@@ -85,6 +85,7 @@
                           variant="text"
                           icon="mdi-pencil"
                           color="indigo"
+                          :disabled="manage?.isRegisterTopicTime"
                           @click="handleOpenEditForm(topic)"
                         ></v-btn>
                       </template>
@@ -94,7 +95,10 @@
                     <v-tooltip text="Xóa đề tài" location="top">
                       <template v-slot:activator="{ props }">
                         <v-btn
-                          :disabled="topic.student.length !== 0"
+                          :disabled="
+                            topic.student.length !== 0 ||
+                            manage?.isRegisterTopicTime
+                          "
                           v-bind="props"
                           size="small"
                           variant="text"
@@ -115,7 +119,7 @@
         </div>
 
         <div v-if="topics.length !== 0">
-          <hr>
+          <hr />
           <slot name="pagination"></slot>
         </div>
       </v-card>
@@ -128,6 +132,7 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 
 const router = useRouter();
 
@@ -138,12 +143,15 @@ const emit = defineEmits(["updatedStatus", "open", "delete"]);
 const props = defineProps<{
   topics: TopicDetails[];
   modules: ModuleDetails[];
+  manage?: ManageRegisterTime;
 }>();
 
-const model = reactive({
-  //recent semester
-  tab: "",
-});
+watch(
+  () => props.topics,
+  () => {
+    console.log(props.topics.length);
+  }
+);
 
 const disabledDeleted = (topic: TopicDetails) => {
   topic.student.map(({ status }) => console.log(status));

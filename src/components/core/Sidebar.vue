@@ -1,89 +1,92 @@
 <template>
   <div>
     <v-layout>
-      <v-navigation-drawer
-        class="bg-indigo font-bevn"
-        v-model="drawer"
-        permanent
-        rail-width="65"
-      >
-        <div class="h-16 text-center flex content-center justify-center">
-          <a
-            class="font-semibold text-2xl text-white flex content-center self-center"
-            ><span>QUẢN LÝ ĐỀ TÀI</span>
-            <!-- <v-icon v-else size="md">mdi-menu</v-icon> -->
-          </a>
-        </div>
-        <v-divider></v-divider>
-
-        <v-list nav density="compact">
-          <!-- public route for student and lecturer -->
-
-          <div
-            v-for="({ role, subheader, list }, index) in routeByRole"
-            :key="index"
-          >
-            <div v-if="role === user?.role">
-              <v-list-subheader v-if="subheader" color="white"
-                ><span class="uppercase">
-                  {{ subheader }}
-                </span>
-              </v-list-subheader>
-              <div class="px-1">
-                <v-list-item
-                  v-for="{ url, label, icon } in list"
-                  :key="url"
-                  :title="label"
-                  :value="url"
-                  :prepend-icon="icon"
-                  @click="router.push(url)"
-                  active-class="rounded-lg bg-white text-indigo"
-                ></v-list-item>
-              </div>
-            </div>
+      <div class="h-screen flex flex-grow">
+        <v-navigation-drawer
+          class="bg-indigo font-bevn h-screen"
+          v-model="drawer"
+          permanent
+          rail-width="65"
+        >
+          <div class="h-16 text-center flex content-center justify-center">
+            <a
+              class="font-semibold text-2xl text-white flex content-center self-center"
+              ><span>QUẢN LÝ ĐỀ TÀI</span>
+              <!-- <v-icon v-else size="md">mdi-menu</v-icon> -->
+            </a>
           </div>
+          <v-divider></v-divider>
 
-          <div>
+          <v-list nav density="compact">
+            <!-- public route for student and lecturer -->
+
             <div
-              v-for="({ subheader, list }, index) in publicRoutes"
+              v-for="({ role, subheader, list }, index) in routeByRole"
               :key="index"
             >
-              <v-list-subheader v-if="subheader" color="white"
-                ><span class="uppercase">
-                  {{ subheader }}
-                </span>
-              </v-list-subheader>
-              <div class="px-1">
-                <v-list-item
-                  v-for="{ url, label, icon } in list"
-                  :key="url"
-                  :title="label"
-                  :value="url"
-                  :prepend-icon="icon"
-                  @click="router.push(url)"
-                  active-class="rounded-lg bg-white text-indigo"
-                ></v-list-item>
+              <div v-if="role === user?.role">
+                <v-list-subheader v-if="subheader" color="white"
+                  ><span class="uppercase">
+                    {{ subheader }}
+                  </span>
+                </v-list-subheader>
+                <div class="px-1">
+                  <v-list-item
+                    v-for="{ url, label, icon } in list"
+                    :key="url"
+                    :title="label"
+                    :value="url"
+                    :prepend-icon="icon"
+                    @click="router.push(url)"
+                    active-class="rounded-lg bg-white text-indigo"
+                  ></v-list-item>
+                </div>
               </div>
             </div>
-          </div>
-        </v-list>
 
-        <template v-slot:append>
-          <div class="pa-2">
-            <v-btn
-              class="text-red"
-              append-icon="mdi-logout-variant"
-              rounded="lg"
-              variant="flat"
-              @click="handleLogout"
-              block
-            >
-              Đăng xuất
-            </v-btn>
-          </div>
-        </template>
-      </v-navigation-drawer>
-      <v-main class="h-screen"> </v-main>
+            <div>
+              <div
+                v-for="({ subheader, list }, index) in publicRoutes"
+                :key="index"
+              >
+                <v-list-subheader v-if="subheader" color="white"
+                  ><span class="uppercase">
+                    {{ subheader }}
+                  </span>
+                </v-list-subheader>
+                <div class="px-1">
+                  <v-list-item
+                    v-for="{ url, label, icon } in list"
+                    :key="url"
+                    :title="label"
+                    :value="url"
+                    :prepend-icon="icon"
+                    @click="router.push(url)"
+                    active-class="rounded-lg bg-white text-indigo"
+                  ></v-list-item>
+                </div>
+              </div>
+            </div>
+          </v-list>
+
+          <template v-slot:append>
+            <div class="pa-2">
+              <v-btn
+                class="text-red"
+                append-icon="mdi-logout-variant"
+                rounded="lg"
+                variant="flat"
+                @click="handleLogout"
+                block
+              >
+                Đăng xuất
+              </v-btn>
+            </div>
+          </template>
+        </v-navigation-drawer>
+      </div>
+
+      <v-main> </v-main>
     </v-layout>
   </div>
 </template>
@@ -103,8 +106,6 @@ const { user } = storeToRefs(auth);
 const student = useStudentStore();
 
 const drawer = ref(true);
-
-const rail = ref(true);
 
 const publicRoutes = ref([
   {
@@ -137,6 +138,17 @@ const routeByRole = [
   },
   {
     role: UserRoleEnum.Lecturer,
+    subheader: "Cá nhân",
+    list: [
+      {
+        icon: "mdi-account",
+        label: "Đề tài của tôi",
+        url: "/my-topic",
+      },
+    ],
+  },
+  {
+    role: UserRoleEnum.Admin,
     subheader: "Cá nhân",
     list: [
       {

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="fixed z-50">
+  <div class="bg-indigo text-black">
+    <div class="fixed z-50 bg-indigo">
       <Sidebar />
       <Navbar />
     </div>

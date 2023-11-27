@@ -1,6 +1,9 @@
 <template>
   <!-- Topic Table of Lecturer -->
-  <div v-if="user?.role === UserRoleEnum.Lecturer" class="min-h-full">
+  <div v-if="manage">
+    <TopicAlertRegisterTopicTime :manage="manage || {}" :isLecturer="true" />
+  </div>
+  <div v-if="user?.role" class="min-h-full">
     <div>
       <div class="px-4 pb-6">
         <div variant="flat" class="py-6 px-4">
@@ -42,8 +45,10 @@
             <v-window-item key="pending" value="pending">
               <UserLecturerTopicTable
                 :topics="topics ?? []"
+                :count="model.count"
                 :modules="modules || []"
                 :sys-options="sysOptions ?? []"
+                :manage="manage || {}"
                 @updated-status="handleUpdated"
                 @open="handleEditForm"
                 @delete="handleDeleteModal"
@@ -169,11 +174,11 @@
 
 <script lang="ts" setup>
 import API from "@/apis/helpers/axiosBaseConfig";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { PAGINATION_OPTIONS } from "@/constant";
 import { TOPIC_STATUS } from "@/constants/tab";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -192,6 +197,8 @@ const topics = ref<TopicDetails[]>();
 const semesters = ref<SchoolYearSemester[]>();
 
 const modules = ref<ModuleDetails[]>();
+
+const manage = ref<ManageRegisterTime[]>();
 
 const reportTopics = ref<TopicDetails[]>();
 
@@ -245,6 +252,20 @@ const getTopicList = async () => {
 };
 
 getTopicList();
+
+const getRegisterTopicTime = async () => {
+  try {
+    const { data: response } = await API.get(`/register-time`);
+
+    manage.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getRegisterTopicTime();
 
 // get data for semester options
 const getSemesters = async () => {
@@ -302,6 +323,10 @@ const moduleOptions = computed(() => {
   }));
 });
 
+const topicsData = computed(() => {
+  return topics.value;
+});
+
 watch(
   () => model.topicStatusTab,
   () => {
@@ -315,6 +340,13 @@ watch(
     } else {
       getTopicList();
     }
+  }
+);
+
+watch(
+  () => topicsData,
+  () => {
+    console.log(topicsData);
   }
 );
 
@@ -346,6 +378,8 @@ const handleOpenCreateModal = () => {
 const handleCreatedTopic = () => {
   toast.success("Thêm mới đề tài thành công");
   isShowCreateModal.value = !isShowCreateModal.value;
+  model.numberOfItemsPerPage = 10;
+  model.numberOfItemsPerPage = 7;
   getTopicList();
 };
 
@@ -371,6 +405,6 @@ const handleDeleteModal = (selectedTopic: TopicDetails) => {
 const handleDeletedTopic = () => {
   toast.success("Xóa đề tài thành công");
   isShowDeleteModal.value = !isShowDeleteModal.value;
-  getTopicList();
+  setTimeout(() => getTopicList(), 1000);
 };
 </script>

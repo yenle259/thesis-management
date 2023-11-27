@@ -6,10 +6,15 @@
       closable
       close-label="Đóng thông báo"
       type="info"
+      icon="mdi-check-circle"
       variant="tonal"
-      prominent
       >Danh sách đề tài đang được mở đăng ký. Thời gian đăng ký sẽ kết thúc vào
       lúc: {{ `${dateViFormat(manage.registerTopicTime.endAt, true)}` }}
+      <div v-if="isLecturer" class="text-orange-accent-4">
+        <span class="font-bold uppercase">Chú ý: </span>
+        Trong thời gian mở đăng ký, <strong>Giảng viên</strong> không thể thay đổi các thông tin
+        đề tài.
+      </div>
     </v-alert>
     <v-alert
       v-if="isSetRegisterTopicTime"
@@ -18,12 +23,11 @@
       close-label="Đóng thông báo"
       variant="tonal"
       type="warning"
-      prominent
     >
-      Chưa đến thời điểm đăng ký đề tài.
+      Chưa đến thời điểm đăng ký đề tài,
       <span
-        >Danh sách đề tài sẽ được <span class="font-bold">mở đăng ký</span> vào
-        thời gian:
+        >danh sách đề tài sẽ được <span class="font-bold">mở đăng ký</span> vào
+        khoảng thời gian:
         <p class="text-body-2">
           {{ `Từ: ${dateViFormat(manage.registerTopicTime.beginAt, true)}` }}
         </p>
@@ -39,7 +43,10 @@
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { isBefore } from "date-fns";
 
-const props = defineProps<{ manage: ManageRegisterTime }>();
+const props = defineProps<{
+  manage: ManageRegisterTime;
+  isLecturer: boolean;
+}>();
 
 const isSetRegisterTopicTime = computed(() => {
   return isBefore(
