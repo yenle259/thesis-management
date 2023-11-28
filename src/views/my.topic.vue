@@ -378,9 +378,9 @@ const handleOpenCreateModal = () => {
 const handleCreatedTopic = () => {
   toast.success("Thêm mới đề tài thành công");
   isShowCreateModal.value = !isShowCreateModal.value;
+  getTopicList();
   model.numberOfItemsPerPage = 10;
   model.numberOfItemsPerPage = 7;
-  getTopicList();
 };
 
 //handle edit topic
@@ -397,7 +397,6 @@ const handleEditedTopic = () => {
 
 //handle delete topic
 const handleDeleteModal = (selectedTopic: TopicDetails) => {
-  console.log(selectedTopic);
   deleteTopic.value = selectedTopic;
   isShowDeleteModal.value = !isShowDeleteModal.value;
 };

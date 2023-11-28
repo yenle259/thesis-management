@@ -2,6 +2,7 @@
   <TopicDetail
     v-if="topic && user"
     :topic="topic || {}"
+    :report-status="reportStatus || {}"
     @approved="handleApproveModal"
     @reject="handleRejectModal"
   >
@@ -20,8 +21,10 @@
             topic.student.find((item) => item.studentInfo._id === user?._id)
               ?.status
           "
+          :report-status="reportStatus || {}"
           class="self-center"
           @open="handleCancelModal"
+          @register="handleRegisterReport"
         />
       </div>
     </template>
@@ -38,19 +41,25 @@
     @cancel="isShowApproveModal = false"
     @updated="handleUpdated"
   />
+  <TopicRegisterReportModal
+    :isShow="model.isShowRegisterModal"
+    :topic="topic || {}"
+    :status="model.status || ''"
+    @cancel="model.isShowRegisterModal = false"
+    @registered="handleUpdated"
+  />
 </template>
 
 <script lang="ts" setup>
+import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
+import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
+
 import { useAuthStore } from "@/stores/useAuthStore";
-
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
-
 import { useRoute } from "vue-router";
-import API from "@/apis/helpers/axiosBaseConfig";
+import { ReportStatus } from "@/apis/models/ReportTopic";
 
 useTitle("QLĐT - Thông tin đề tài");
 
@@ -62,6 +71,8 @@ const topicSlug = route.params.slug;
 
 const topic = ref<TopicDetails>();
 
+const reportStatus = ref<ReportStatus>();
+
 const students = ref<RegisterStudent[]>();
 
 const studentInfo = ref<RegisterStudent>();
@@ -72,12 +83,15 @@ const isShowApproveModal = ref(false);
 
 const model = reactive({
   modalType: "Approve",
+  status: RegisterReportEnum.Postpone,
+  isShowRegisterModal: false,
 });
 
 const getTopicDetails = async () => {
   try {
     const { data: response } = await API.get(`/topic/${topicSlug}`);
-    topic.value = response[0];
+    topic.value = response.topic;
+    reportStatus.value = response.reportStatus;
     students.value = topic.value?.student;
   } catch (error) {
     console.log(error);
@@ -85,8 +99,9 @@ const getTopicDetails = async () => {
 };
 
 getTopicDetails();
-
+console.log(reportStatus.value);
 const handleUpdated = () => {
+  model.isShowRegisterModal = false;
   getTopicDetails();
 };
 
@@ -105,4 +120,24 @@ const handleRejectModal = (student: RegisterStudent) => {
   studentInfo.value = student;
   model.modalType = RegisterStatusEnum.Reject;
 };
+
+const handleRegisterReport = (status: RegisterReportEnum) => {
+  console.log(status);
+  model.status = status;
+  model.isShowRegisterModal = true;
+};
 </script>
+
+<!-- <script lang="ts">
+export default {
+  beforeRouteEnter(to, from, next) {
+    const auth = useAuthStore();
+
+    if (auth.user?._id === UserRoleEnum.Lecturer) {
+      next("/my-topic");
+    } else {
+      next(true);
+    }
+  },
+};
+</script> -->

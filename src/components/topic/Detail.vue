@@ -77,6 +77,34 @@
           </v-card>
         </div>
         <div class="col-span-1 columns-1 gap-y-3">
+          <div class="rounded-lg" v-if="reportStatus && isRegisterStudent">
+            <v-card-text class="text-gray-700">
+              <p
+                class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
+              >
+                Đăng ký báo cáo
+              </p>
+              <hr />
+              <div class="mt-2">
+                <span>Trạng thái:</span>
+                <v-chip
+                  variant="tonal"
+                  label
+                  class="mb-2 ml-2"
+                  :color="getRegisterReportColor(reportStatus.studentRegister)"
+                  >Đã đăng ký
+                  {{ getRegisterReportName(reportStatus.studentRegister) }}
+                </v-chip>
+
+                <div>
+                  <span
+                    >Giảng viên phê duyệt:
+                    {{ reportStatus.piConfirm ? "Đã phê duyệt" : "Chưa" }}</span
+                  >
+                </div>
+              </div>
+            </v-card-text>
+          </div>
           <div class="rounded-lg">
             <v-card-text class="text-gray-700">
               <p
@@ -160,6 +188,7 @@
 <script lang="ts" setup>
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
+import { ReportStatus } from "@/apis/models/ReportTopic";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 
 import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
@@ -174,7 +203,21 @@ const emit = defineEmits(["approved", "reject"]);
 
 const props = defineProps<{
   topic: TopicDetails;
+  reportStatus: ReportStatus;
 }>();
+
+watch(
+  () => props.reportStatus,
+  () => {
+    console.log(props.reportStatus);
+  }
+);
+
+const isRegisterStudent = computed(() => {
+  return props.topic.student.find(
+    (item) => item.studentInfo._id === user?.value?._id
+  );
+});
 
 const handleApprove = (user: RegisterStudent) => {
   emit("approved", user);

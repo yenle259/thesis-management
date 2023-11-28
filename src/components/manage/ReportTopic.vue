@@ -13,7 +13,7 @@
       <tbody>
         <tr
           class="text-sm"
-          v-for="({ pi, student, topic, isReport }, index) in reports"
+          v-for="({ pi, student, topic }, index) in reports"
           :key="index"
         >
           <td>
@@ -51,9 +51,7 @@
             </v-chip>
           </td>
           <td class="text-center">
-            <v-icon>
-              {{ isReport ? "mdi-check" : "mdi-cancel" }}
-            </v-icon>
+            <v-icon> mdi-cancel </v-icon>
           </td>
         </tr>
       </tbody>

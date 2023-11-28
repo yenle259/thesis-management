@@ -77,7 +77,4 @@ const props = defineProps<{
   lecturers: LecturerDetails[];
 }>();
 
-const model = reactive({
-  total: 0,
-});
 </script>

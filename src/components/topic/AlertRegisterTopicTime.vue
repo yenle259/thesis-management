@@ -45,7 +45,7 @@ import { isBefore } from "date-fns";
 
 const props = defineProps<{
   manage: ManageRegisterTime;
-  isLecturer: boolean;
+  isLecturer?: boolean;
 }>();
 
 const isSetRegisterTopicTime = computed(() => {

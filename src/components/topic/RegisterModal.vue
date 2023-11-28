@@ -93,9 +93,8 @@ const handleRegisterTopic = async (topicId: string) => {
   } catch (error: any) {
     if (error.response) {
       const { errors } = error.response.data;
-      if (errors.publishDate) {
-        toast.error(errors.publishDate);
-      }
+      console.log(errors);
+      toast.error(errors);
     }
   }
 };

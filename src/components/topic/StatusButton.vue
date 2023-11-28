@@ -13,10 +13,15 @@
         <v-list-item
           v-for="item in actions?.actions"
           :key="item.title"
+          :disabled="reportStatus.studentRegister === item.value"
           :append-icon="item.icon"
           :title="item.title"
           class="rounded-lg"
-          @click="handleCancelModal"
+          @click="
+            actions?.status === RegisterStatusEnum.Approve && item.value
+              ? handleRegisterReport(item.value)
+              : handleCancelModal()
+          "
         >
         </v-list-item>
       </v-list>
@@ -26,14 +31,17 @@
 
 <script lang="ts" setup>
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
+import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
+import { ReportStatus } from "@/apis/models/ReportTopic";
 
-const emit = defineEmits(["cancel", "open"]);
+const emit = defineEmits(["cancel", "open", "register"]);
 
 const props = defineProps<{
   status: RegisterStatusEnum;
+  reportStatus: ReportStatus;
 }>();
 
-const actionList = ref([
+const actionList = [
   {
     status: RegisterStatusEnum.Pending,
     color: "warning",
@@ -44,6 +52,7 @@ const actionList = ref([
         color: "red",
         title: "Hủy đăng ký",
         click: "handleCancelModal",
+        value: null,
       },
     ],
   },
@@ -56,7 +65,7 @@ const actionList = ref([
         icon: "mdi-minus-circle-outline",
         color: "red",
         title: "Hủy đăng ký",
-        click: "handleCancelModal",
+        value: null,
       },
     ],
   },
@@ -69,26 +78,27 @@ const actionList = ref([
         icon: "mdi-mail",
         color: "orange",
         title: "Xin điểm I",
-        click: "handleCancelModal",
+        value: RegisterReportEnum.Postpone,
       },
       {
         icon: "mdi-check-circle-outline",
         color: "green",
         title: "Xác nhận báo cáo",
-        click: "handleCancelModal",
+        value: RegisterReportEnum.Report,
       },
     ],
   },
-]);
+];
 
 const actions = computed(() => {
-  return actionList.value.find((item) => item.status === props.status);
-});
-const isApproved = computed(() => {
-  return props.status === RegisterStatusEnum.Approve;
+  return actionList.find((item) => item.status === props.status);
 });
 
 const handleCancelModal = () => {
   emit("open");
+};
+
+const handleRegisterReport = (status: RegisterReportEnum) => {
+  emit("register", status);
 };
 </script>

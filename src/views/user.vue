@@ -1,7 +1,7 @@
 <template>
   <!-- Common User Info -->
   <v-card
-    class="mx-8 mt-6 rounded-lg"
+    class="mx-8 mt-4 rounded-lg"
     width="350px"
     v-if="user?.role !== UserRoleEnum.Lecturer"
   >
@@ -15,8 +15,8 @@
 
   <!-- Topic Table of Student -->
 
-  <div v-if="!user?.role">
-    <StudentTopic
+  <div v-if="!user?.role" class="mt-4">
+    <StudentTopicItem
       :topics="topics ?? []"
       :module="module || {}"
       :reports="reports ?? []"
@@ -33,9 +33,6 @@ import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { ReportTopic } from "@/apis/models/ReportTopic";
 
 import { useAuthStore } from "@/stores/useAuthStore";
-
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 

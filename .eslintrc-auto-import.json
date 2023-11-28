@@ -109,6 +109,8 @@
     "userRoleOptions": true,
     "getModule": true,
     "getFormatDatetime": true,
-    "dateViFormat": true
+    "dateViFormat": true,
+    "getRegisterReportColor": true,
+    "getRegisterReportName": true
   }
 }

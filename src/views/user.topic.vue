@@ -116,7 +116,6 @@ import { UserDetails } from "@/apis/models/UserDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { RegisterModule } from "@/apis/models/RegisterModule";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { PAGINATION_OPTIONS } from "@/constant";
@@ -276,7 +275,8 @@ const registeredTopicModuleId = computed(() => {
 const isDisabledSuggested = computed(() => {
   return (
     registeredTopics.value?.length ===
-    module.value?.moduleType.split("-").length
+      module.value?.moduleType.split("-").length ||
+    !manage.value?.isRegisterTopicTime
   );
 });
 

@@ -7,13 +7,13 @@
       <div v-if="module" class="mb-5">
         <v-card class="rounded-lg" max-width="870px">
           <v-table>
-            <thead class="text-overline">
+            <thead class="text-overline font-bold">
               <tr>
-                <th class="w-96">
-                  Học phần đăng ký /
-                  <span v-if="module.semester">{{
-                    getSchoolYearSemester(module.semester, true)
-                  }}</span>
+                <th class="w-96 text-center">
+                  <span>Học phần đăng ký </span>
+                  <!-- <span class="text-caption" v-if="module.semester">
+                    {{ getSchoolYearSemester(module.semester, true) }}
+                  </span> -->
                 </th>
                 <th class="text-center">Đề tài đăng ký tương ứng</th>
               </tr>
@@ -24,7 +24,7 @@
                 :key="index"
               >
                 <th class="w-96">
-                  <v-list-item v-if="moduleId">
+                  <v-list-item v-if="moduleId" class="py-2">
                     <div class="mb-1">
                       <span class="text-body-2">Mã học phần: </span>
                       <v-chip
@@ -58,7 +58,7 @@
                           label
                           size="small"
                           color="primary"
-                          class="me-1"
+                          class="me-2="
                           >Đề xuất</v-chip
                         >{{ topicRegistered(moduleId)?.name }}
                       </div>

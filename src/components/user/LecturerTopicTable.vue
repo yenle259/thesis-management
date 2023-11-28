@@ -9,7 +9,7 @@
         </div>
       </div>
       <v-divider> </v-divider>
-      <v-card class="overflow-hidden rounded-lg">
+      <v-card class="overflow-hidden rounded-lg mx-1">
         <v-table>
           <thead class="font-bold text-overline">
             <tr>
@@ -34,6 +34,14 @@
                 @click="router.push('/user/topic/' + topic.slug)"
                 class="hover:text-blue-800 cursor-pointer"
               >
+                <v-chip
+                  v-if="topic.status === TopicStatusEnum.SUGGESTED"
+                  label
+                  size="small"
+                  color="primary"
+                  class="me-1"
+                  >Đề xuất</v-chip
+                >
                 {{ topic.name }}
               </td>
               <td>
@@ -133,6 +141,7 @@ import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
+import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 
 const router = useRouter();
 
@@ -145,18 +154,6 @@ const props = defineProps<{
   modules: ModuleDetails[];
   manage?: ManageRegisterTime;
 }>();
-
-watch(
-  () => props.topics,
-  () => {
-    console.log(props.topics.length);
-  }
-);
-
-const disabledDeleted = (topic: TopicDetails) => {
-  topic.student.map(({ status }) => console.log(status));
-  return false;
-};
 
 const handleUpdated = () => {
   emit("updatedStatus");

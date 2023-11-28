@@ -31,6 +31,7 @@
               <div class="w-3/5 me-2">
                 <v-autocomplete
                   v-model="model.module"
+                  :disabled="editTopic.student.length != 0"
                   :rules="rules.module"
                   :items="moduleOptions"
                   hint="Học phần của đề tài"
@@ -72,6 +73,7 @@
                 v-model="model.semesterId"
                 :rules="rules.semester"
                 :items="sysOptions"
+                :disabled="editTopic.student.length != 0"
                 hint="Chọn Học kì - Niên khóa của đề tài"
                 label="Học kì - Năm học"
                 placeholder="Học kì - Năm học"
@@ -107,12 +109,9 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
-import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { Option } from "@/apis/models/Option";
 
 const form = ref();
-
-const semesters = ref<SchoolYearSemester[]>();
 
 const emit = defineEmits(["cancel", "edited"]);
 
@@ -160,13 +159,6 @@ const rules = ref({
     },
   ],
 });
-
-// const sysOptions = computed(() => {
-//   return semesters.value?.map((item: any) => ({
-//     title: getSchoolYearSemester(item),
-//     value: item._id,
-//   }));
-// });
 
 const dialog = computed(() => {
   return props.isShow;
