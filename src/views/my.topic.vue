@@ -145,6 +145,7 @@
               <TopicReportTable
                 :topics="reportTopics || []"
                 @open="handleEditForm"
+                @review="handleReportReview"
               />
             </v-window-item>
           </v-window>
@@ -163,6 +164,13 @@
             @cancel="isShow = !isShow"
             @edited="handleEditedTopic"
           />
+          <TopicReviewReportModal
+            :isShow="isShowReviewReportModal"
+            :report="selectedReportTopic || {}"
+            :status="reportReviewStatus || ''"
+            @reviewed="handleUpdateReview()"
+            @cancel="isShowReviewReportModal = false"
+          />
           <TopicDeleteModal
             :isShow="isShowDeleteModal"
             :delete-topic="deleteTopic || {}"
@@ -179,6 +187,8 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
+import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
+import { ReportTopic } from "@/apis/models/ReportTopic";
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
@@ -207,6 +217,10 @@ const reportTopics = ref<TopicDetails[]>();
 
 const editTopic = ref<TopicDetails>();
 
+const selectedReportTopic = ref<ReportTopic>();
+
+const reportReviewStatus = ref<RegisterStatusEnum>(RegisterStatusEnum.Pending);
+
 const deleteTopic = ref<TopicDetails>();
 
 const isShow = ref(false);
@@ -214,6 +228,8 @@ const isShow = ref(false);
 const isShowCreateModal = ref(false);
 
 const isShowDeleteModal = ref(false);
+
+const isShowReviewReportModal = ref(false);
 
 const model = reactive({
   topicStatusTab: TOPIC_STATUS[0].value,
@@ -396,6 +412,21 @@ const handleEditedTopic = () => {
   toast.success("Cập nhật đề tài thành công");
   isShow.value = !isShow.value;
   getTopicList();
+};
+
+//open report review modal
+const handleReportReview = (
+  selectedReport: ReportTopic,
+  status: RegisterStatusEnum
+) => {
+  selectedReportTopic.value = selectedReport;
+  reportReviewStatus.value = status;
+  isShowReviewReportModal.value = !isShowReviewReportModal.value;
+};
+
+const handleUpdateReview = () => {
+  isShowReviewReportModal.value = false;
+  getReportTopics();
 };
 
 //handle delete topic

@@ -100,6 +100,7 @@
                         <span class="">Báo cáo: </span>
                         <span v-if="reports(moduleId)">
                           <v-chip
+                            v-if="reports(moduleId)?.reportStatus"
                             size="small"
                             class="mb-1"
                             :color="

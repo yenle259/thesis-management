@@ -53,17 +53,17 @@
                   min="1"
                   ref="input"
                   label="Số lượng sinh viên"
-                  hint="Số sinh viên mặc định là 1"
                   variant="outlined"
                   class="mb-2"
                 ></v-text-field>
               </div>
             </div>
             <v-textarea
+              auto-grow
               class="mb-2"
               v-model="model.description"
               clearable
-              counter="500"
+              counter
               label="Mô tả đề tài"
               variant="outlined"
               hint="Mô tả đề tài với các nội dung liên quan (công nghệ, phạm vi...)"
@@ -155,6 +155,8 @@ const rules = ref({
   numberOfStudent: [
     (value: any) => {
       if (value <= 0) return "Số sinh viên ít nhất là 1";
+      if (value < props.editTopic.student.length)
+        return "Số lượng không được nhỏ hơn số lượng sinh viên đã đăng ký";
       return true;
     },
   ],

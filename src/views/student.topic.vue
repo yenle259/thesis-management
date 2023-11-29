@@ -127,17 +127,3 @@ const handleRegisterReport = (status: RegisterReportEnum) => {
   model.isShowRegisterModal = true;
 };
 </script>
-
-<!-- <script lang="ts">
-export default {
-  beforeRouteEnter(to, from, next) {
-    const auth = useAuthStore();
-
-    if (auth.user?._id === UserRoleEnum.Lecturer) {
-      next("/my-topic");
-    } else {
-      next(true);
-    }
-  },
-};
-</script> -->

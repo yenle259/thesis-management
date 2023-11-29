@@ -69,7 +69,7 @@
             v-if="model.isRegisterTopicTime"
             @click="model.destroyModal = true"
             class="rounded-lg mt-2"
-            >Ngừng mở đăng ký
+            >Đóng đăng ký
           </v-list-item>
           <v-list-item
             v-else
@@ -77,7 +77,10 @@
             class="rounded-lg mt-2"
             >Mở đăng ký
           </v-list-item>
-          <v-list-item @click="model.setTimeModal = true" class="rounded-lg"
+          <v-list-item
+            :disabled="model.isRegisterTopicTime"
+            @click="model.setTimeModal = true"
+            class="rounded-lg"
             >Đặt thời gian
           </v-list-item>
         </v-window-item>
@@ -137,7 +140,7 @@
             v-if="model.isReportTime"
             @click="model.destroyModal = true"
             class="rounded-lg mt-2"
-            >Ngừng mở đăng ký
+            >Đóng đăng ký
           </v-list-item>
           <v-list-item
             v-else
@@ -145,7 +148,10 @@
             class="rounded-lg mt-2"
             >Mở đăng ký
           </v-list-item>
-          <v-list-item @click="model.setTimeModal = true" class="rounded-lg"
+          <v-list-item
+            :disabled="model.isReportTime"
+            @click="model.setTimeModal = true"
+            class="rounded-lg"
             >Đặt thời gian
           </v-list-item>
         </v-window-item>

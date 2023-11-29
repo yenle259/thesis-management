@@ -77,13 +77,7 @@
           </v-card>
         </div>
         <div class="col-span-1 columns-1 gap-y-3">
-          <div
-            class="rounded-lg"
-            v-if="
-              topic.status === RegisterStatusEnum.Approve &&
-              isDisplayReportStatus
-            "
-          >
+          <div class="rounded-lg" v-if="isDisplayReportStatus">
             <v-card-text class="text-gray-700">
               <p
                 class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
@@ -94,18 +88,32 @@
               <div class="mt-2">
                 <span>Trạng thái:</span>
                 <v-chip
-                  variant="tonal"
+                  v-if="reportStatus.studentRegister"
+                  variant="text"
                   label
-                  class="mb-2 ml-2"
+                  class="mb-2 ml-2 uppercase"
                   :color="getRegisterReportColor(reportStatus.studentRegister)"
                   >Đã đăng ký
                   {{ getRegisterReportName(reportStatus.studentRegister) }}
                 </v-chip>
-
-                <div>
+                <span v-else class="mx-2 text-sm text-grey">Chưa đăng ký</span>
+                <div v-if="reportStatus.studentRegister">
                   <span class="me-2">Giảng viên phê duyệt:</span>
-                  <span class="font-bold uppercase">
-                    {{ getStatusLabel(reportStatus.piConfirm) }}
+                  <span>
+                    <v-chip
+                      variant="tonal"
+                      label
+                      :color="getStatusColor(reportStatus.piConfirm)"
+                    >
+                      {{ getStatusLabel(reportStatus.piConfirm) }}
+                      <v-icon
+                        end
+                        v-if="
+                          reportStatus.piConfirm !== RegisterStatusEnum.Pending
+                        "
+                        >{{ getPiConfirmIcon(reportStatus.piConfirm) }}</v-icon
+                      >
+                    </v-chip>
                   </span>
                 </div>
               </div>
@@ -196,6 +204,7 @@ import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
 import { ReportStatus } from "@/apis/models/ReportTopic";
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { getPiConfirmIcon } from "@/utils/getRegisterStatusName";
 
 import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
 
@@ -227,8 +236,16 @@ const isRegisterStudent = computed(() => {
   );
 });
 
+const isRegisterStatusBeApproved = computed(() => {
+  return (
+    props.topic.student.find(
+      (item) => item.studentInfo._id === user?.value?._id
+    )?.status === RegisterStatusEnum.Approve
+  );
+});
+
 const isDisplayReportStatus = computed(() => {
-  return reportStatus && isRegisterStudent;
+  return props.reportStatus && isRegisterStudent;
 });
 
 const handleApprove = (user: RegisterStudent) => {

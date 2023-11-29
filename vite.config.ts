@@ -86,6 +86,7 @@ export default defineConfig(async ({ command, mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         "@img": path.resolve(__dirname, "./src/assets/images"),
         "@data": path.resolve(__dirname, "./src/components/form/data"),
+        "@rules": path.resolve(__dirname, "./src/components/form/rules"),
       },
       extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
     },

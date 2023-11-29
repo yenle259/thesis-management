@@ -111,6 +111,7 @@
     "getFormatDatetime": true,
     "dateViFormat": true,
     "getRegisterReportColor": true,
-    "getRegisterReportName": true
+    "getRegisterReportName": true,
+    "getRegisterReportShortName": true
   }
 }

@@ -5,6 +5,7 @@
       append-icon="mdi-chevron-down"
       class="self-center me-2 rounded-lg bg-white"
       variant="flat"
+      :disabled="isDisabled"
       :color="actions?.color"
       >{{ actions?.label }}</v-btn
     >
@@ -75,7 +76,7 @@ const actionList = [
     label: "Đã được duyệt",
     actions: [
       {
-        icon: "mdi-mail",
+        icon: "mdi-minus-circle-outline",
         color: "orange",
         title: "Xin điểm I",
         value: RegisterReportEnum.Postpone,
@@ -92,6 +93,16 @@ const actionList = [
 
 const actions = computed(() => {
   return actionList.find((item) => item.status === props.status);
+});
+
+const isDisabled = computed(() => {
+  const {
+    reportStatus: { piConfirm, studentRegister },
+  } = { ...props };
+  return (
+    studentRegister === RegisterReportEnum.Report &&
+    piConfirm === RegisterStatusEnum.Approve
+  );
 });
 
 const handleCancelModal = () => {

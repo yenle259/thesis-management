@@ -73,6 +73,8 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
 
+const { user } = storeToRefs(useAuthStore());
+
 const emit = defineEmits(["registered", "cancel"]);
 
 const props = defineProps<{
@@ -94,6 +96,7 @@ const handleRegisterReport = async () => {
     await API.put(`/report/register`, {
       status: props.status,
       topicId: props.topic._id,
+      studentId: user.value?._id,
     });
 
     toast.success(
