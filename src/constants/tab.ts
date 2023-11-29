@@ -66,13 +66,18 @@ export const REPORT_TOPIC = [
     value: "all",
   },
   {
-    label: "Báo cáo",
+    label: "Luận văn và tiểu luận",
     title: "Đề tài Luận văn và Tiểu luận",
     value: "report",
   },
   {
+    label: "Báo cáo",
+    title: "Đề tài đăng ký báo cáo đã được phê duyệt ",
+    value: "REPORT",
+  },
+  {
     label: "Điểm I",
-    title: "Đề tài có đăng ký xin điểm I",
-    value: "postpone",
+    title: "Đề tài đăng ký điểm I đã được phê duyệt ",
+    value: "POSTPONE",
   },
 ];

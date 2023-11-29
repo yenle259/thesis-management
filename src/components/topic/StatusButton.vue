@@ -5,7 +5,7 @@
       append-icon="mdi-chevron-down"
       class="self-center me-2 rounded-lg bg-white"
       variant="flat"
-      :disabled="isDisabled"
+      :disabled="!manage.isReportTime || isDisabled"
       :color="actions?.color"
       >{{ actions?.label }}</v-btn
     >
@@ -33,6 +33,7 @@
 <script lang="ts" setup>
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ReportStatus } from "@/apis/models/ReportTopic";
 
 const emit = defineEmits(["cancel", "open", "register"]);
@@ -40,6 +41,7 @@ const emit = defineEmits(["cancel", "open", "register"]);
 const props = defineProps<{
   status: RegisterStatusEnum;
   reportStatus: ReportStatus;
+  manage: ManageRegisterTime;
 }>();
 
 const actionList = [
@@ -78,13 +80,13 @@ const actionList = [
       {
         icon: "mdi-minus-circle-outline",
         color: "orange",
-        title: "Xin điểm I",
+        title: "Đăng ký điểm I",
         value: RegisterReportEnum.Postpone,
       },
       {
         icon: "mdi-check-circle-outline",
         color: "green",
-        title: "Xác nhận báo cáo",
+        title: "Đăng ký báo cáo",
         value: RegisterReportEnum.Report,
       },
     ],

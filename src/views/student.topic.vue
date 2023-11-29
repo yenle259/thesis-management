@@ -23,6 +23,7 @@
               ?.status
           "
           :report-status="reportStatus || {}"
+          :manage="manage || {}"
           class="self-center"
           @open="handleCancelModal"
           @register="handleRegisterReport"
@@ -69,6 +70,7 @@ import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRoute } from "vue-router";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 
 useTitle("QLĐT - Thông tin đề tài");
 
@@ -83,6 +85,8 @@ const topic = ref<TopicDetails>();
 const reports = ref<ReportTopic[]>();
 
 const reportStatus = ref<ReportStatus>();
+
+const manage = ref<ManageRegisterTime[]>();
 
 const students = ref<RegisterStudent[]>();
 
@@ -119,6 +123,18 @@ const getTopicDetails = async () => {
 };
 
 getTopicDetails();
+
+const getRegisterTopicTime = async () => {
+  try {
+    const { data: response } = await API.get(`/register-time`);
+    manage.value = response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getRegisterTopicTime();
 
 const handleUpdated = () => {
   model.isShowRegisterModal = false;

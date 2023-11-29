@@ -101,7 +101,7 @@
             </span>
             <span v-else class="text-caption">Chưa đăng ký</span>
           </td>
-          <td>{{ reportStatusLabel(reportStatus) }}</td>
+          <td class="text-body-2">{{ reportStatusLabel(reportStatus) }}</td>
         </tr>
       </tbody>
     </v-table>

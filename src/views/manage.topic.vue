@@ -154,7 +154,9 @@ watch(
   () => model.tab,
   () => {
     model.isReport = model.tab === "report" ?? false;
-    model.reportStatus = model.tab === "postpone" ? "POSTPONE" : "";
+    model.reportStatus = ["REPORT", "POSTPONE"].includes(model.tab)
+      ? model.tab
+      : "";
     getReports();
   }
 );
