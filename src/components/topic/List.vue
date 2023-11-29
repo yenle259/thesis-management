@@ -134,8 +134,6 @@
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
-import { useAuthStore } from "@/stores/useAuthStore";
-
 const router = useRouter();
 
 const { registeredTopic } = storeToRefs(useStudentStore());
@@ -185,26 +183,26 @@ const isRegister = computed(() => {
   }
 });
 
-const topics = computed(() => {
-  return props.topics.filter(
-    ({ module }) => module.moduleId === model.commonModuleType
-  );
-});
+// const topics = computed(() => {
+//   return props.topics.filter(
+//     ({ module }) => module.moduleId === model.commonModuleType
+//   );
+// });
 
-const lecturerOptions = computed(() => {
-  return topics.value.map(({ pi }) => ({
-    label: pi.name,
-    value: pi._id,
-  }));
-});
+// const lecturerOptions = computed(() => {
+//   return topics.value.map(({ pi }) => ({
+//     label: pi.name,
+//     value: pi._id,
+//   }));
+// });
 
-const unique = computed(() => {
-  return [
-    ...new Map(
-      lecturerOptions.value.map((item) => [item["label"], item])
-    ).values(),
-  ];
-});
+// const unique = computed(() => {
+//   return [
+//     ...new Map(
+//       lecturerOptions.value.map((item) => [item["label"], item])
+//     ).values(),
+//   ];
+// });
 
 const openInfoModal = (topic: TopicDetails) => {
   model.info = true;

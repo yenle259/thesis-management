@@ -106,9 +106,6 @@ import { BASE_API } from "@/constant";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
 
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
-
 useTitle("QLĐT - Thông tin đề tài");
 
 const route = useRoute();

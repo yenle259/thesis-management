@@ -1,5 +1,3 @@
-import { TopicTypeEnum } from "@/apis/models/TopicTypeEnum";
-
 export const studentUpdateRules = () => {
   const rules = ref({
     userId: [

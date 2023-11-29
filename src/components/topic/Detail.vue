@@ -77,7 +77,13 @@
           </v-card>
         </div>
         <div class="col-span-1 columns-1 gap-y-3">
-          <div class="rounded-lg" v-if="reportStatus && isRegisterStudent">
+          <div
+            class="rounded-lg"
+            v-if="
+              topic.status === RegisterStatusEnum.Approve &&
+              isDisplayReportStatus
+            "
+          >
             <v-card-text class="text-gray-700">
               <p
                 class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
@@ -97,10 +103,10 @@
                 </v-chip>
 
                 <div>
-                  <span
-                    >Giảng viên phê duyệt:
-                    {{ reportStatus.piConfirm ? "Đã phê duyệt" : "Chưa" }}</span
-                  >
+                  <span class="me-2">Giảng viên phê duyệt:</span>
+                  <span class="font-bold uppercase">
+                    {{ getStatusLabel(reportStatus.piConfirm) }}
+                  </span>
                 </div>
               </div>
             </v-card-text>
@@ -214,9 +220,15 @@ watch(
 );
 
 const isRegisterStudent = computed(() => {
-  return props.topic.student.find(
-    (item) => item.studentInfo._id === user?.value?._id
+  return (
+    props.topic.student.find(
+      (item) => item.studentInfo._id === user?.value?._id
+    ) || props.topic.pi._id === user.value?._id
   );
+});
+
+const isDisplayReportStatus = computed(() => {
+  return reportStatus && isRegisterStudent;
 });
 
 const handleApprove = (user: RegisterStudent) => {

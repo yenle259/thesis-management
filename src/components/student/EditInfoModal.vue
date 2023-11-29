@@ -108,7 +108,7 @@ import { StudentDetails } from "@/apis/models/StudentDetails";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
 import { RECENT_SEMESTER_ID } from "@/constant";
-import { studentUpdateRules } from "@/components/form/rules/studentUpdateRules";
+import { studentUpdateRules } from "@rules/studentUpdateRules";
 
 const form = ref();
 
@@ -213,6 +213,7 @@ const handleEditTopic = async (e: Event) => {
     );
 
     emit("edited");
+    return response;
   } catch (error: any) {
     console.log(error.response);
   }

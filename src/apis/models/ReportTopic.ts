@@ -2,6 +2,7 @@ import { LecturerDetails } from "./LecturerDetails";
 import { TopicDetails } from "./TopicDetails";
 import { StudentDetails } from "./StudentDetails";
 import { RegisterReportEnum } from "./RegisterReportEnum";
+import { RegisterStatusEnum } from "./RegisterStatusEnum";
 
 export interface ReportTopic {
   _id: string;
@@ -11,11 +12,11 @@ export interface ReportTopic {
   numberOfStudent: number;
   reportStatus: {
     studentRegister: RegisterReportEnum;
-    piConfirm: Boolean;
+    piConfirm: RegisterStatusEnum;
   };
 }
 
 export interface ReportStatus {
   studentRegister: RegisterReportEnum;
-  piConfirm: Boolean;
+  piConfirm: RegisterStatusEnum;
 }

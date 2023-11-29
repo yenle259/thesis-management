@@ -70,5 +70,7 @@ import { ReportTopic } from "@/apis/models/ReportTopic";
 
 const router = useRouter();
 
-const props = defineProps<{ reports: ReportTopic[] }>();
+
+defineProps<{ reports: ReportTopic[] }>();
+
 </script>

@@ -51,9 +51,6 @@ import API from "@/apis/helpers/axiosBaseConfig";
 
 import { TopicDetails } from "@/apis/models/TopicDetails";
 
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
-
 const emit = defineEmits(["cancel", "deleted"]);
 
 const props = defineProps<{ isShow: boolean; deleteTopic: TopicDetails }>();

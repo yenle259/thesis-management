@@ -124,12 +124,6 @@
 
 <script setup lang="ts">
 import { TopicDetails } from "@/apis/models/TopicDetails";
-import { useAuthStore } from "@/stores/useAuthStore";
-
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
-
-import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
 
 const model = reactive({
   tab: 4,

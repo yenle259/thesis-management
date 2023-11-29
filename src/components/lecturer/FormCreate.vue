@@ -100,13 +100,11 @@
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { BASE_API, LECTURER_MAIL } from "@/constant";
 
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import { lecturerCreateRules } from "../form/rules/lecturerCreateRules";
 
 const emit = defineEmits(["created"]);
 
-const props = defineProps<{
+defineProps<{
   modules: ModuleDetails[];
 }>();
 

@@ -91,7 +91,7 @@ const handleCancel = () => {
 
 const handleRegisterReport = async () => {
   try {
-    const { data: response } = await API.put(`/report/register`, {
+    await API.put(`/report/register`, {
       status: props.status,
       topicId: props.topic._id,
     });

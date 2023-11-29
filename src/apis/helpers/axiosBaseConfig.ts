@@ -1,8 +1,6 @@
 import axios from "axios";
 import { BASE_API } from "@/constant";
 
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import { httpErrorHandler } from "./httpErrorHandler";
 
 const API = axios.create({

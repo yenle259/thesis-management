@@ -37,7 +37,7 @@ import { useClipboard } from "@vueuse/core";
 
 const router = useRouter();
 
-const props = defineProps<{ lecturer: UserDetails }>();
+defineProps<{ lecturer: UserDetails }>();
 
 const { copy, copied } = useClipboard();
 </script>

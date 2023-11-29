@@ -99,11 +99,7 @@
 
 <script setup lang="ts">
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
-import { topicTypeOptions } from "@/components/form/data/topicTypeOptions";
 import { BASE_API, STUDENT_MAIL } from "@/constant";
-
-import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 
 import { useModuleOptions } from "@/components/form/data/useModuleOptions";
 

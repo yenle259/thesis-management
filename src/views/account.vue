@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
-import { studentUpdateRules } from "@/components/form/rules/studentUpdateRules";
+import { studentUpdateRules } from "@rules/studentUpdateRules";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -93,8 +93,6 @@ import "vue3-toastify/dist/index.css";
 const { user } = storeToRefs(useAuthStore());
 
 const form = ref();
-
-const emit = defineEmits(["cancel", "edited"]);
 
 const getModules = async () => {
   try {
@@ -163,6 +161,8 @@ const handleEditTopic = async (e: Event) => {
     });
 
     toast.success("Cập nhật thông tin thành công");
+
+    return response;
   } catch (error: any) {
     console.log(error.response);
   }

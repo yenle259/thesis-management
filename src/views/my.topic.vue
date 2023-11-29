@@ -129,9 +129,6 @@
                 </template>
               </UserLecturerTopicTable>
             </v-window-item>
-            <v-window-item key="approved" value="approved">
-              <TopicReportTable :topics="reportTopics || []" />
-            </v-window-item>
             <v-window-item
               :key="TopicStatusEnum.SUGGESTED"
               :value="TopicStatusEnum.SUGGESTED"
@@ -142,6 +139,12 @@
                 @updated-status="handleUpdated"
                 @open="handleEditForm"
                 @delete="handleDeleteModal"
+              />
+            </v-window-item>
+            <v-window-item key="approved" value="approved">
+              <TopicReportTable
+                :topics="reportTopics || []"
+                @open="handleEditForm"
               />
             </v-window-item>
           </v-window>

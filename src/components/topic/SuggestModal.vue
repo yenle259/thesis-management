@@ -205,6 +205,8 @@ const handleSuggestTopic = async (e: Event) => {
     model.lecturerId = null;
 
     emit("suggested");
+
+    return response;
   } catch (error) {
     console.log(error);
   }

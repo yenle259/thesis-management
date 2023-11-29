@@ -43,7 +43,7 @@
           <v-btn
             color="red"
             variant="tonal"
-            @click="handleUnregisterTopic(topic._id)"
+            @click="handleUnregisterTopic()"
           >
             Hủy đăng ký
           </v-btn>
@@ -63,8 +63,6 @@ import router from "@/router";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-const register = useStudentStore();
-
 const { registeredTopic } = storeToRefs(useStudentStore());
 
 const { user } = storeToRefs(useAuthStore());
@@ -77,7 +75,7 @@ const dialog = computed(() => {
   return props.isShow;
 });
 
-const handleUnregisterTopic = async (topicId: string) => {
+const handleUnregisterTopic = async () => {
   try {
     const { data: response } = await API.put(
       `/topic/unregister/${props.topic.slug}`,
@@ -88,6 +86,8 @@ const handleUnregisterTopic = async (topicId: string) => {
     emit("cancel");
     setTimeout(() => router.push("/topic-list"), TIME_OUT);
     registeredTopic.value = "";
+
+    return response;
   } catch (error: any) {
     toast.error(error.message);
   }

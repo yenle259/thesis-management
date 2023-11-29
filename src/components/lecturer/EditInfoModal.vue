@@ -158,17 +158,16 @@ const handleEditTopic = async (e: Event) => {
 
   const { userId, name, role, email } = model;
   try {
-    const { data: response } = await API.put(
-      `/user/update/${props.user._id}`,
-      {
-        userId,
-        name,
-        email,
-        role,
-      }
-    );
+    const { data: response } = await API.put(`/user/update/${props.user._id}`, {
+      userId,
+      name,
+      email,
+      role,
+    });
 
     emit("edited");
+
+    return response;
   } catch (error: any) {
     console.log(error.response);
   }

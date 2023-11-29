@@ -37,5 +37,5 @@
 <script setup lang="ts">
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 
-const props = defineProps<{ modules: ModuleDetails[] }>();
+defineProps<{ modules: ModuleDetails[] }>();
 </script>

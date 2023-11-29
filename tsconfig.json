@@ -22,7 +22,10 @@
       ],
       "@img/*": [
         "./src/assets/images/*"
-      ]
+      ],
+      "@rules/*": [
+        "./src/components/form/rules/*"
+      ],
     },
     "typeRoots": [
       "node_modules/@types",

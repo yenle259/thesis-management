@@ -9,7 +9,7 @@
           <v-table>
             <thead class="text-overline font-bold">
               <tr>
-                <th class="w-96 text-center">
+                <th class="w-96 indent-3">
                   <span>Học phần đăng ký </span>
                   <!-- <span class="text-caption" v-if="module.semester">
                     {{ getSchoolYearSemester(module.semester, true) }}
@@ -43,7 +43,6 @@
                 </th>
                 <th>
                   <div v-if="topicRegistered(moduleId)" class="my-2">
-                    <v-card v-if="isApproved(moduleId)"> </v-card>
                     <v-list-item
                       class="text-left py-3 rounded-lg hover:bg-white"
                       @click="
@@ -58,7 +57,7 @@
                           label
                           size="small"
                           color="primary"
-                          class="me-2="
+                          class="me-2"
                           >Đề xuất</v-chip
                         >{{ topicRegistered(moduleId)?.name }}
                       </div>

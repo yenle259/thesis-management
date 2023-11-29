@@ -94,7 +94,7 @@ const handleLogout = () => {
     url: BASE_API + `/auth/logout`,
     withCredentials: true,
   })
-    .then(function (res) {
+    .then(function () {
       //reset value of auth user and redirect user
       auth.reset();
       student.reset();

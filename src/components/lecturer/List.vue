@@ -72,8 +72,7 @@ import { LecturerDetails } from "@/apis/models/LecturerDetails";
 
 const router = useRouter();
 
-const props = defineProps<{
-  // isShow: boolean;
+defineProps<{
   lecturers: LecturerDetails[];
 }>();
 

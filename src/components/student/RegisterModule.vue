@@ -43,8 +43,6 @@
 <script setup lang="ts">
 const { registerModule } = storeToRefs(useStudentStore());
 
-const { user } = storeToRefs(useAuthStore());
-
 const recentSemesterId = "6526d24c7547ab02d497a7a4";
 
 const recentModule = computed(() => {

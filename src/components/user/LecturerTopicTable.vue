@@ -149,7 +149,7 @@ const { user } = storeToRefs(useAuthStore());
 
 const emit = defineEmits(["updatedStatus", "open", "delete"]);
 
-const props = defineProps<{
+defineProps<{
   topics: TopicDetails[];
   modules: ModuleDetails[];
   manage?: ManageRegisterTime;
