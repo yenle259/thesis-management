@@ -97,28 +97,77 @@
                         </span>
                       </div>
                       <div class="text-body-2">
-                        <span class="">Báo cáo: </span>
-                        <span v-if="reports(moduleId)">
-                          <v-chip
-                            v-if="reports(moduleId)?.reportStatus"
-                            size="small"
-                            class="mb-1"
-                            :color="
-                              getRegisterReportColor(
-                                reports(moduleId)?.reportStatus
-                                  .studentRegister ||
-                                  RegisterReportEnum.Postpone
-                              )
+                        <span class="">Đăng ký báo cáo: </span>
+                        <span v-if="getReports(moduleId)">
+                          <span
+                            v-if="
+                              getReports(moduleId)?.reportStatus.studentRegister
                             "
-                            >Đăng ký
-                            {{
-                              getRegisterReportName(
-                                reports(moduleId)?.reportStatus
-                                  .studentRegister ||
-                                  RegisterReportEnum.Postpone
-                              )
-                            }}
-                          </v-chip>
+                          >
+                            <v-btn
+                              size="small"
+                              width="80px"
+                              variant="tonal"
+                              label
+                              class="rounded-e-0 rounded-s-pill"
+                              :ripple="false"
+                              :color="
+                                getRegisterReportColor(
+                                  getReports(moduleId)?.reportStatus
+                                    .studentRegister ||
+                                    RegisterReportEnum.Postpone
+                                )
+                              "
+                            >
+                              {{
+                                getRegisterReportShortName(
+                                  getReports(moduleId)?.reportStatus
+                                    .studentRegister ||
+                                    RegisterReportEnum.Postpone
+                                )
+                              }}
+                            </v-btn>
+                            <v-divider vertical thickness="3"></v-divider>
+                            <v-btn
+                              :id="`review-menu-${index}`"
+                              :color="
+                                getStatusColor(
+                                  getReportStatus(moduleId)?.piConfirm ||
+                                    RegisterStatusEnum.Pending
+                                )
+                              "
+                              variant="tonal"
+                              class="rounded-s-0 ps-1 rounded-e-pill"
+                              min-width="30px"
+                              size="small"
+                              ><span class="text-caption"
+                                >{{
+                                  getStatusLabel(
+                                    getReportStatus(moduleId)?.piConfirm ||
+                                      RegisterStatusEnum.Pending
+                                  )
+                                }}
+                              </span>
+                              <span
+                                v-if="
+                                  getReportStatus(moduleId)?.piConfirm ===
+                                  RegisterStatusEnum.Pending
+                                "
+                              ></span>
+                              <v-icon
+                                v-else
+                                :ripple="false"
+                                end
+                                size="22"
+                                :icon="
+                                  getPiConfirmIcon(
+                                    getReportStatus(moduleId)?.piConfirm ||
+                                      RegisterStatusEnum.Pending
+                                  )
+                                "
+                              ></v-icon>
+                            </v-btn>
+                          </span>
                         </span>
                       </div>
                     </v-list-item>
@@ -148,11 +197,13 @@ import { TopicDetails } from "@/apis/models/TopicDetails";
 import { RegisterModule } from "@/apis/models/RegisterModule";
 import { ReportTopic } from "@/apis/models/ReportTopic";
 
-import { getStatusLabel } from "@/utils/getStatusName";
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
+
+import { getStatusLabel } from "@/utils/getStatusName";
+import { getPiConfirmIcon } from "@/utils/getRegisterStatusName";
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -172,8 +223,13 @@ watch(
   }
 );
 
-const reports = (moduleId: string) => {
+const getReports = (moduleId: string) => {
   return props.reports.find(({ topic }) => topic.module.moduleId === moduleId);
+};
+
+const getReportStatus = (moduleId: string) => {
+  return props.reports.find(({ topic }) => topic.module.moduleId === moduleId)
+    ?.reportStatus;
 };
 
 const topicRegistered = (moduleId: string) => {

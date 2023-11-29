@@ -112,6 +112,8 @@
     "dateViFormat": true,
     "getRegisterReportColor": true,
     "getRegisterReportName": true,
-    "getRegisterReportShortName": true
+    "getRegisterReportShortName": true,
+    "getPiConfirmIcon": true,
+    "getPiConfirmLabel": true
   }
 }

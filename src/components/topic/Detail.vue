@@ -77,7 +77,7 @@
           </v-card>
         </div>
         <div class="col-span-1 columns-1 gap-y-3">
-          <div class="rounded-lg" v-if="isDisplayReportStatus">
+          <div class="rounded-lg" v-if="reports.length !== 0">
             <v-card-text class="text-gray-700">
               <p
                 class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
@@ -85,36 +85,118 @@
                 Đăng ký báo cáo
               </p>
               <hr />
-              <div class="mt-2">
-                <span>Trạng thái:</span>
-                <v-chip
-                  v-if="reportStatus.studentRegister"
-                  variant="text"
-                  label
-                  class="mb-2 ml-2 uppercase"
-                  :color="getRegisterReportColor(reportStatus.studentRegister)"
-                  >Đã đăng ký
-                  {{ getRegisterReportName(reportStatus.studentRegister) }}
-                </v-chip>
-                <span v-else class="mx-2 text-sm text-grey">Chưa đăng ký</span>
-                <div v-if="reportStatus.studentRegister">
-                  <span class="me-2">Giảng viên phê duyệt:</span>
-                  <span>
+              <div class="divide-y-2 divide-dashed divide-slate-150">
+                <div
+                  variant="flat"
+                  class="my-2 p-2"
+                  v-for="({ reportStatus, student }, index) in reports"
+                  :key="index"
+                >
+                  <div class="my-1 gap-2">
+                    <span>Sinh viên:</span>
+                    <span class="ml-3 text-md font-bold">
+                      {{ student.name }}
+                    </span>
+                  </div>
+                  <div>
+                    <span>Trạng thái:</span>
                     <v-chip
-                      variant="tonal"
+                      v-if="reportStatus.studentRegister"
+                      variant="text"
                       label
-                      :color="getStatusColor(reportStatus.piConfirm)"
-                    >
-                      {{ getStatusLabel(reportStatus.piConfirm) }}
-                      <v-icon
-                        end
-                        v-if="
-                          reportStatus.piConfirm !== RegisterStatusEnum.Pending
-                        "
-                        >{{ getPiConfirmIcon(reportStatus.piConfirm) }}</v-icon
-                      >
+                      class="m1-2 ml-2 uppercase"
+                      :color="
+                        getRegisterReportColor(reportStatus.studentRegister)
+                      "
+                      >Đã đăng ký
+                      {{ getRegisterReportName(reportStatus.studentRegister) }}
                     </v-chip>
-                  </span>
+                    <span v-else class="mx-2 text-sm text-grey"
+                      >Chưa đăng ký</span
+                    >
+                  </div>
+                  <div>
+                    <span class="me-2">Giảng viên phê duyệt:</span>
+                    <span v-if="reportStatus.studentRegister">
+                      <v-btn
+                        v-if="!user?.role"
+                        size="small"
+                        class="non-click"
+                        :ripple="false"
+                        variant="tonal"
+                        label
+                        :color="getStatusColor(reportStatus.piConfirm)"
+                      >
+                        {{ getStatusLabel(reportStatus.piConfirm) }}
+                        <v-icon
+                          end
+                          v-if="
+                            reportStatus.piConfirm !==
+                            RegisterStatusEnum.Pending
+                          "
+                          >{{
+                            getPiConfirmIcon(reportStatus.piConfirm)
+                          }}</v-icon
+                        > </v-btn
+                      ><v-btn
+                        v-if="
+                          user?._id === topic.pi._id &&
+                          reportStatus.studentRegister
+                        "
+                        :id="`review-menu-${index}`"
+                        size="small"
+                        variant="tonal"
+                        label
+                        :color="getStatusColor(reportStatus.piConfirm)"
+                      >
+                        {{ getStatusLabel(reportStatus.piConfirm) }}
+                        <v-icon end>{{
+                          getPiConfirmIcon(reportStatus.piConfirm)
+                        }}</v-icon>
+                      </v-btn>
+                    </span>
+                    <span v-else class="mx-2 text-sm text-grey"
+                      >Không có dữ liệu</span
+                    >
+                    <v-menu
+                      :activator="`#review-menu-${index}`"
+                      location="bottom end"
+                    >
+                      <v-list density="compact" class="rounded-lg">
+                        <v-list-item
+                          class="rounded-lg mx-2"
+                          :disabled="
+                            reportStatus.piConfirm ===
+                            RegisterStatusEnum.Approve
+                          "
+                          @click="
+                            handleReviewReport(
+                              reports[index],
+                              RegisterStatusEnum.Approve,
+                              topic
+                            )
+                          "
+                        >
+                          <v-list-item-title>Phê duyệt</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                          class="rounded-lg mx-2"
+                          :disabled="
+                            reportStatus.piConfirm === RegisterStatusEnum.Reject
+                          "
+                          @click="
+                            handleReviewReport(
+                              reports[index],
+                              RegisterStatusEnum.Reject,
+                              topic
+                            )
+                          "
+                        >
+                          <v-list-item-title>Từ chối</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </div>
                 </div>
               </div>
             </v-card-text>
@@ -202,8 +284,8 @@
 <script lang="ts" setup>
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { RegisterStudent } from "@/apis/models/RegisterStudent";
-import { ReportStatus } from "@/apis/models/ReportTopic";
 import { TopicDetails } from "@/apis/models/TopicDetails";
+import { ReportTopic } from "@/apis/models/ReportTopic";
 import { getPiConfirmIcon } from "@/utils/getRegisterStatusName";
 
 import { getTopicModuleColor } from "@/utils/getTopicModuleColor";
@@ -214,39 +296,12 @@ const auth = useAuthStore();
 
 const { user } = storeToRefs(auth);
 
-const emit = defineEmits(["approved", "reject"]);
+const emit = defineEmits(["approved", "reject", "review"]);
 
 const props = defineProps<{
   topic: TopicDetails;
-  reportStatus: ReportStatus;
+  reports: ReportTopic[];
 }>();
-
-watch(
-  () => props.reportStatus,
-  () => {
-    console.log(props.reportStatus);
-  }
-);
-
-const isRegisterStudent = computed(() => {
-  return (
-    props.topic.student.find(
-      (item) => item.studentInfo._id === user?.value?._id
-    ) || props.topic.pi._id === user.value?._id
-  );
-});
-
-const isRegisterStatusBeApproved = computed(() => {
-  return (
-    props.topic.student.find(
-      (item) => item.studentInfo._id === user?.value?._id
-    )?.status === RegisterStatusEnum.Approve
-  );
-});
-
-const isDisplayReportStatus = computed(() => {
-  return props.reportStatus && isRegisterStudent;
-});
 
 const handleApprove = (user: RegisterStudent) => {
   emit("approved", user);
@@ -254,4 +309,18 @@ const handleApprove = (user: RegisterStudent) => {
 const handleReject = (user: RegisterStudent) => {
   emit("reject", user);
 };
+
+const handleReviewReport = (
+  selectedReport: ReportTopic,
+  status: RegisterStatusEnum,
+  topicInfo: TopicDetails
+) => {
+  emit("review", selectedReport, status, topicInfo);
+};
 </script>
+
+<style scoped>
+.non-click {
+  pointer-events: none;
+}
+</style>

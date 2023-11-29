@@ -92,6 +92,7 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ReportTopic } from "@/apis/models/ReportTopic";
+import { reportStatusLabel } from "@/utils/getRegisterStatusName";
 import { PAGINATION_OPTIONS } from "@/constant";
 import { REPORT_TOPIC } from "@/constants/tab";
 import { utils, writeFileXLSX } from "xlsx";
@@ -101,6 +102,7 @@ useTitle("QLĐT - Quản lý đề tài được duyệt");
 const model = reactive({
   tab: REPORT_TOPIC[0].value,
   isReport: false,
+  reportStatus: "",
   page: 1,
   count: 0,
   totalsPage: 1,
@@ -113,12 +115,13 @@ const manageRegisterTime = ref<ManageRegisterTime>();
 
 const getReports = async () => {
   try {
-    const { page, numberOfItemsPerPage, isReport } = model;
+    const { page, numberOfItemsPerPage, isReport, reportStatus } = model;
     const { data: response } = await API.get(`/report`, {
       params: {
         page: page,
         limit: numberOfItemsPerPage,
         isReport: !isReport ? null : isReport,
+        reportStatus: reportStatus !== "" ? reportStatus : null,
       },
     });
     reports.value = response.topics;
@@ -150,25 +153,22 @@ getRegisterTopicTime();
 watch(
   () => model.tab,
   () => {
-    if (model.tab !== "all") {
-      model.isReport = true;
-      getReports();
-    } else {
-      model.isReport = false;
-      getReports();
-    }
+    model.isReport = model.tab === "report" ?? false;
+    model.reportStatus = model.tab === "postpone" ? "POSTPONE" : "";
+    getReports();
   }
 );
 
 const createDataToExport = (reports: ReportTopic[]) => {
-  return reports.map(({ pi, topic, student }) => ({
+  return reports.map(({ pi, topic, student, reportStatus }) => ({
     lecturerId: pi.userId,
     lecturerName: pi.name,
     studentId: student.userId,
     studentName: student.name,
     topicName: topic.name,
-    topicType: getTopicTypeName(topic.type),
-    // "Xác nhận báo cáo": isReport ? "Có" : "Chưa",
+    moduleId: topic.module.moduleId,
+    moduleName: topic.module.name,
+    reportStatus: reportStatusLabel(reportStatus),
   }));
 };
 
@@ -180,7 +180,9 @@ const handleExportReports = (reports: ReportTopic[]) => {
     studentId: "MSSV",
     studentName: "Tên sinh viên",
     topicName: "Tên đề tài",
-    topicType: "Phân loại đề tài",
+    moduleId: "Mã học phần",
+    moduleName: "Học phần",
+    reportStatus: "Trạng thái báo cáo",
   });
 
   const ws = utils.json_to_sheet(data, {
@@ -193,6 +195,8 @@ const handleExportReports = (reports: ReportTopic[]) => {
     { wch: 10 },
     { wch: 20 },
     { wch: 70 },
+    { wch: 15 },
+    { wch: 20 },
     { wch: 20 },
   ];
 

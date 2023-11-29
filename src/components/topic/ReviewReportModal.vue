@@ -28,7 +28,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <div class="px-4 py-2">
-          <p class="mb-1">
+          <p class="mb-1" v-if="report.student.userId">
             <span class="text-subtitle-2">Mã số sinh viên: </span
             ><span class="uppercase">
               {{ report.student.userId }}
@@ -42,14 +42,18 @@
           </p>
           <p class="mb-1">
             <span class="text-subtitle-2">Đề tài: </span
-            ><span>
+            ><span v-if="report.topic.name">
               {{ report.topic.name }}
             </span>
+            <span v-else>{{ topicInfo?.name }}</span>
           </p>
           <p class="mb-1">
             <span class="text-subtitle-2">Học phần: </span
-            ><span>
+            ><span v-if="report.topic.module">
               {{ report.topic.module.name }}
+            </span>
+            <span v-else>
+              {{ topicInfo?.module.name }}
             </span>
           </p>
         </div>
@@ -69,6 +73,7 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { ReportTopic } from "@/apis/models/ReportTopic";
+import { TopicDetails } from "@/apis/models/TopicDetails";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -79,6 +84,7 @@ const props = defineProps<{
   isShow: boolean;
   report: ReportTopic;
   status: RegisterStatusEnum;
+  topicInfo?: TopicDetails;
 }>();
 
 const dialog = computed(() => {

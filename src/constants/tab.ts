@@ -70,4 +70,9 @@ export const REPORT_TOPIC = [
     title: "Đề tài Luận văn và Tiểu luận",
     value: "report",
   },
+  {
+    label: "Điểm I",
+    title: "Đề tài có đăng ký xin điểm I",
+    value: "postpone",
+  },
 ];

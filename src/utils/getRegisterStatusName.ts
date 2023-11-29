@@ -1,5 +1,6 @@
 import { RegisterReportEnum } from "@/apis/models/RegisterReportEnum";
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
+import { ReportStatus } from "@/apis/models/ReportTopic";
 
 type Status = RegisterReportEnum;
 
@@ -45,4 +46,11 @@ export function getPiConfirmLabel(status: PiConfirm): string {
     [RegisterStatusEnum.Reject]: "Đã từ chối",
   };
   return iconString[status];
+}
+
+export function reportStatusLabel(reportStatus: ReportStatus): string {
+  const { piConfirm, studentRegister } = reportStatus;
+  return piConfirm === RegisterStatusEnum.Approve
+    ? getRegisterReportShortName(studentRegister)
+    : "Chưa có";
 }

@@ -1,13 +1,16 @@
 <template>
   <v-card v-if="reports" class="rounded-lg">
     <v-table>
-      <thead class="font-bold text-overline">
+      <thead class="font-bold">
         <tr>
-          <th class="text-left">Giảng viên</th>
-          <th class="text-left">Sinh viên</th>
-          <th class="text-left">Tên đề tài</th>
-          <th class="text-left">Phân loại đề tài</th>
-          <th class="text-center">Đăng ký Báo cáo</th>
+          <th class="text-left text-overline">Giảng viên</th>
+          <th class="text-left text-overline">Sinh viên</th>
+          <th class="text-left text-overline">Tên đề tài</th>
+          <th class="text-center">
+            <span class="text-overline"> Đăng ký Báo cáo </span>
+            <p class="text-xs">SV đăng ký | Trạng thái phê duyệt</p>
+          </th>
+          <th class="text-left text-overline">Báo cáo</th>
         </tr>
       </thead>
       <tbody>
@@ -37,15 +40,19 @@
             </v-list-item>
           </td>
           <td>
-            {{ topic.name }}
-          </td>
-          <td>
-            <v-chip
-              :color="getTopicModuleColor(topic.module.moduleId)"
+            <p
               size="small"
+              variant="text"
+              class="text-xs py-1"
+              label
+              :class="`text-${getTopicModuleColor(topic.module.moduleId)}`"
             >
-              {{ topic.module.name }}
-            </v-chip>
+              {{ topic.module.moduleId + " | " + topic.module.name }}
+            </p>
+
+            <p class="text-body-2">
+              {{ topic.name }}
+            </p>
           </td>
           <td class="text-center">
             <span v-if="reportStatus">
@@ -60,24 +67,41 @@
               >
                 {{ getRegisterReportShortName(reportStatus.studentRegister) }}
               </v-btn>
-              <v-divider vertical thickness="2"></v-divider>
-              <v-btn
-                :id="`review-menu-${index}`"
-                :color="getStatusColor(reportStatus.piConfirm)"
-                variant="tonal"
-                class="rounded-s-0 ps-1"
-                min-width="34px"
-                size="small"
-              >
-                <v-icon
-                  end
-                  size="26"
-                  :icon="getPiConfirmIcon(reportStatus.piConfirm)"
-                ></v-icon>
-              </v-btn>
+              <v-divider vertical thickness="3"></v-divider>
+              <v-tooltip text="Click vào để cập nhật thông tin" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    :id="`review-menu-${index}`"
+                    :color="getStatusColor(reportStatus.piConfirm)"
+                    variant="tonal"
+                    class="rounded-s-0 ps-1"
+                    min-width="34px"
+                    size="small"
+                    v-bind="props"
+                  >
+                    <v-icon
+                      end
+                      size="22"
+                      :icon="reportStatusIcon(reportStatus.piConfirm)"
+                    ></v-icon>
+                  </v-btn>
+                </template>
+                <div>
+                  <p>
+                    SV đăng ký:
+                    {{
+                      getRegisterReportShortName(reportStatus.studentRegister)
+                    }}
+                  </p>
+                  <p>
+                    GV phê duyệt: {{ getStatusLabel(reportStatus.piConfirm) }}
+                  </p>
+                </div>
+              </v-tooltip>
             </span>
             <span v-else class="text-caption">Chưa đăng ký</span>
           </td>
+          <td>{{ reportStatusLabel(reportStatus) }}</td>
         </tr>
       </tbody>
     </v-table>
@@ -92,11 +116,24 @@
 
 <script setup lang="ts">
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
-import { ReportTopic } from "@/apis/models/ReportTopic";
+import { ReportStatus, ReportTopic } from "@/apis/models/ReportTopic";
 import {
   getRegisterReportShortName,
   getPiConfirmIcon,
 } from "@/utils/getRegisterStatusName";
 
 defineProps<{ reports: ReportTopic[] }>();
+
+const reportStatusIcon = (piConfirm: RegisterStatusEnum) => {
+  return piConfirm === RegisterStatusEnum.Pending
+    ? "mdi-progress-helper"
+    : getPiConfirmIcon(piConfirm);
+};
+
+const reportStatusLabel = (reportStatus: ReportStatus) => {
+  const { piConfirm, studentRegister } = reportStatus;
+  return piConfirm === RegisterStatusEnum.Approve
+    ? getRegisterReportShortName(studentRegister)
+    : "Chưa có";
+};
 </script>
