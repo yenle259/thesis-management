@@ -187,6 +187,11 @@ const routeByRole = [
         label: "Học kì - Niên khóa",
         url: "/semester",
       },
+      {
+        icon: "mdi-account-key",
+        label: "Đặt lại mật khẩu",
+        url: "/manage/account",
+      },
     ],
   },
 ];

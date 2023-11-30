@@ -126,6 +126,12 @@ const routes = [
         component: () => import("@/views/manage.lecturer.vue"),
         meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Admin] },
       },
+      {
+        path: "/manage/account",
+        name: "Đặt lại mật khẩu người dùng",
+        component: () => import("@/views/manage.account.vue"),
+        meta: { requiresAuth: true, allowRoles: [UserRoleEnum.Admin] },
+      },
       //
       {
         path: "/my-topic",

@@ -8,7 +8,7 @@
           </span>
           <span> </span>
           <p class="font-light text-sm text-black text-caption">
-            Danh sách đề tài học kì ở các học kì trước
+            Danh sách các đề tài đã báo cáo
           </p>
         </div>
         <slot name="action"></slot>

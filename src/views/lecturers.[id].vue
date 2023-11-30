@@ -15,15 +15,64 @@
       </v-card>
     </div>
     <div>
-      <TopicList :topics="topics ?? []" :title="'Danh sách đề tài của GV'" />
+      <TopicList :topics="topics ?? []" :title="'Đề tài của giảng viên'">
+        <template v-slot:action>
+          <div class="h-16"></div>
+        </template>
+        <template v-slot:pagination>
+          <div class="d-flex justify-between px-2 py-3">
+            <div class="d-flex flex-row gap-x-3">
+              <p class="self-center indent-4 text-body-2">Hiển thị</p>
+              <v-btn
+                id="number-per-page"
+                variant="tonal"
+                append-icon="mdi-menu-down"
+                >{{ model.numberOfItemsPerPage }}</v-btn
+              >
+              <v-menu activator="#number-per-page">
+                <v-list density="compact">
+                  <v-list-item
+                    density="compact"
+                    v-for="(value, index) in PAGINATION_OPTIONS"
+                    :key="index"
+                    :value="value"
+                    @click="model.numberOfItemsPerPage = value"
+                  >
+                    {{ value }}
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-divider vertical thickness="2"></v-divider>
+              <p class="self-center text-body-2">
+                {{
+                  getPaginationText(
+                    model.count,
+                    model.numberOfItemsPerPage,
+                    model.page
+                  )
+                }}
+              </p>
+            </div>
+            <v-pagination
+              v-model="model.page"
+              :length="model.totalsPage"
+              :total-visible="5"
+              active-color="blue"
+              variant="text"
+              density="compact"
+            ></v-pagination>
+          </div>
+        </template>
+      </TopicList>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import API from "@/apis/helpers/axiosBaseConfig";
 import { TopicDetails } from "@/apis/models/TopicDetails";
 import { UserDetails } from "@/apis/models/UserDetails";
-import { BASE_API } from "@/constant";
+import { BASE_API, PAGINATION_OPTIONS } from "@/constant";
 
 useTitle("QLĐT - Thông tin giảng viên");
 
@@ -34,6 +83,13 @@ const lecturerId = route.params.id;
 const lecturer = ref<UserDetails>();
 
 const topics = ref<TopicDetails[]>();
+
+const model = reactive({
+  page: 1,
+  count: 0,
+  totalsPage: 1,
+  numberOfItemsPerPage: PAGINATION_OPTIONS[0],
+});
 
 axios({
   url: BASE_API + `/user/lecturers/${lecturerId}`,
@@ -49,15 +105,27 @@ axios({
     console.log(error);
   });
 
-axios({
-  url: BASE_API + `/topic/lecturerUserId/${route.params.id}`,
-  withCredentials: true,
-})
-  .then(function (res) {
-    topics.value = res.data;
-    console.log(topics.value?.length);
-  })
-  .catch(function (error) {
+const getTopics = async () => {
+  try {
+    const { page, numberOfItemsPerPage } = model;
+    const { data: response } = await API.get(
+      `/topic/lecturerUserId/${route.params.id}`,
+      {
+        params: {
+          page: page,
+          limit: numberOfItemsPerPage,
+        },
+      }
+    );
+    topics.value = response.topics;
+    model.page = response.currentPage;
+    model.totalsPage = response.totalPages;
+    model.count = response.count;
+    return response;
+  } catch (error) {
     console.log(error);
-  });
+  }
+};
+
+getTopics();
 </script>
