@@ -123,7 +123,7 @@ import { PAGINATION_OPTIONS } from "@/constant";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-useTitle("QLĐT - Danh sách đề tài");
+useTitle("QLĐT - Danh sách đề tài đăng ký");
 
 const { user } = storeToRefs(useAuthStore());
 
@@ -244,7 +244,7 @@ const getModules = async () => {
 getModules();
 
 watch(
-  () => model.module,
+  () => [model.module, model.numberOfItemsPerPage, model.page],
   () => {
     if (model.module) {
       getTopicList();

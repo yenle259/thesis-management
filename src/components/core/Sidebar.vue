@@ -117,6 +117,11 @@ const publicRoutes = ref([
         url: "/topic-list",
       },
       {
+        icon: "mdi-view-list-outline",
+        label: "Đề tài chung",
+        url: "/topics",
+      },
+      {
         icon: "mdi-account-school",
         label: "Danh sách giảng viên",
         url: "/lecturers",

@@ -90,6 +90,12 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/topics",
+        name: "Đề tài chung",
+        component: () => import("@/views/topics.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "/semester",
         name: "Quản lí học kì niên khóa",
         component: () => import("@/views/manage.semester.vue"),
