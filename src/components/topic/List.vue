@@ -7,7 +7,7 @@
             {{ props.title }}
           </span>
           <span> </span>
-          <p class="font-light text-sm text-black text-caption">
+          <p class="font-light text-sm text-black text-caption mb-2">
             Danh sách đề tài học kì I (2023 -2024)
           </p>
         </div>
@@ -182,6 +182,13 @@ const isRegister = computed(() => {
     return false;
   }
 });
+
+watch(
+  () => props.topics,
+  () => {
+    console.log(props.topics.length);
+  }
+);
 
 // const topics = computed(() => {
 //   return props.topics.filter(

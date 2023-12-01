@@ -5,7 +5,7 @@
   <div class="h-screen">
     <TopicList
       :title="'Danh sách đề tài'"
-      :topics="currentSemesterTopics ?? []"
+      :topics="topics ?? []"
       :modules="modules ?? []"
       :moduleSelected="model.module || ''"
       :is-publish="manage?.isRegisterTopicTime"
@@ -259,13 +259,6 @@ const moduleOptions = computed(() => {
     value: _id,
     subvalue: moduleId,
   }));
-});
-
-//all topic at recent semester
-const currentSemesterTopics = computed(() => {
-  return topics.value?.filter(
-    ({ semester }) => semester.sysId === model.currentSemester
-  );
 });
 
 const registeredTopicModuleId = computed(() => {

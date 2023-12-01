@@ -13,7 +13,6 @@
         <div>
           <v-text-field
             v-model="model.userId"
-            :loading="model.isLoading"
             :rules="rules.userId"
             density="comfortable"
             clearable

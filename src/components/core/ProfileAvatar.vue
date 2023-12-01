@@ -41,11 +41,17 @@
               <div class="p-2">
                 <v-list-item
                   class="rounded-lg"
-                  v-for="({ label, icon, url }, index) in profileRoutes"
+                  v-for="({ label, icon, url, update }, index) in profileRoutes"
                   :key="index"
                   :prepend-icon="icon"
                   :title="label"
-                  :href="url"
+                  @click="
+                    () =>
+                      router.push({
+                        path: url,
+                        query: { update },
+                      })
+                  "
                 ></v-list-item>
                 <v-divider></v-divider>
                 <v-list-item
@@ -79,13 +85,15 @@ const { user } = storeToRefs(auth);
 const profileRoutes = ref([
   {
     icon: "mdi-account-circle-outline",
-    label: "Cá nhân",
-    url: "/",
+    label: "Cập nhật thông tin",
+    url: "/me/profile",
+    update: "info",
   },
   {
     icon: "mdi-cog-outline",
-    label: "Cài đặt",
+    label: "Đổi mật khẩu",
     url: "/me/profile",
+    update: "password",
   },
 ]);
 

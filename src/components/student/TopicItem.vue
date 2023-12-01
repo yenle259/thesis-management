@@ -97,8 +97,8 @@
                         </span>
                       </div>
                       <div class="text-body-2">
-                        <span class="">Đăng ký báo cáo: </span>
                         <span v-if="getReports(moduleId)">
+                          <span >Đăng ký báo cáo: </span>
                           <span
                             v-if="
                               getReports(moduleId)?.reportStatus.studentRegister
@@ -173,7 +173,9 @@
                     </v-list-item>
                   </div>
                   <div v-else class="text-body-2 text-center">
-                    <v-list-item> Chưa đăng ký đề tài</v-list-item>
+                    <v-list-item>
+                      <span class="text-caption"> Chưa đăng ký đề tài </span>
+                    </v-list-item>
                   </div>
                 </th>
               </tr>
@@ -215,13 +217,6 @@ const props = defineProps<{
   reports: ReportTopic[];
   modules: ModuleDetails[];
 }>();
-
-watch(
-  () => props.reports,
-  () => {
-    console.log(props.reports);
-  }
-);
 
 const getReports = (moduleId: string) => {
   return props.reports.find(({ topic }) => topic.module.moduleId === moduleId);

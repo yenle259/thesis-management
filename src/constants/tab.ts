@@ -15,12 +15,12 @@ export const ACCOUNT_TAB: OptionTab[] = [
     value: "file",
     icon: "mdi-account-multiple-plus",
   },
-  {
-    label: "Học phần",
-    title: "Cập nhật học phần đăng ký của sinh viên",
-    value: "account",
-    icon: "mdi-file-document-outline",
-  },
+  // {
+  //   label: "Học phần",
+  //   title: "Cập nhật học phần đăng ký của sinh viên",
+  //   value: "account",
+  //   icon: "mdi-file-document-outline",
+  // },
 ];
 
 export const LECTURER_TAB: OptionTab[] = [

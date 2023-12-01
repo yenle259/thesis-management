@@ -112,12 +112,12 @@ const publicRoutes = ref([
     subheader: "Thông tin chung",
     list: [
       {
-        icon: "mdi-format-list-bulleted",
+        icon: "mdi-format-list-checks",
         label: "Danh sách đề tài",
         url: "/topic-list",
       },
       {
-        icon: "mdi-view-list-outline",
+        icon: "mdi-format-list-bulleted-square",
         label: "Đề tài chung",
         url: "/topics",
       },
@@ -136,7 +136,7 @@ const routeByRole = [
     list: [
       {
         icon: "mdi-account",
-        label: "Đề tài",
+        label: "Thông tin đăng ký",
         url: "/user",
       },
     ],

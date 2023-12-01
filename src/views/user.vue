@@ -113,7 +113,7 @@ if (!user.value?.role) {
 export default {
   beforeRouteEnter(to, from, next) {
     const auth = useAuthStore();
-    if (auth.user?.role === UserRoleEnum.Lecturer) {
+    if (auth.user?.role) {
       next("/my-topic");
     } else {
       next(true);

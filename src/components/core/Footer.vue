@@ -2,10 +2,20 @@
   <div class="px-12 py-6 bg-blue-500 font-bevn">
     <div class="grid grid-cols-5 gap-6 border-y-2 py-2">
       <div class="col-span-3">
-        <v-col class="grid gap-y-2">
-          <v-avatar>
-            <v-img src="@img/cit.png" alt="Logo"></v-img>
+        <v-col class="grid gap-y-1">
+          <v-avatar size="large">
+            <img
+              src="@img/ctu.png"
+              width="60"
+              class="rounded-full"
+              alt="logo"
+            />
           </v-avatar>
+          <p
+            class="mt-2 font-sans text-xl italic font-bold text-white uppercase"
+          >
+            Khoa Truyền thông đa phương tiện
+          </p>
           <p class="font-sans text-xl italic font-bold text-white">
             Trường Công nghệ Thông tin & Truyền thông - Đại học Cần Thơ
           </p>
@@ -15,15 +25,17 @@
           </p>
         </v-col>
       </div>
-      <div class="col-span-2 pt-4">
-        <div
-          class="py-2 grid grid-cols-3 text-white font-light"
-          v-for="item in firstList"
-          :key="item.id"
-        >
-          <div class="font-bold">{{ item.name }}</div>
-          <div class="col-span-2">
-            {{ item.content }}
+      <div class="col-span-2 pt-4 flex items-center">
+        <div>
+          <div
+            class="py-2 grid grid-cols-3 text-white font-light"
+            v-for="item in firstList"
+            :key="item.id"
+          >
+            <div class="font-bold">{{ item.name }}</div>
+            <div class="col-span-2">
+              {{ item.content }}
+            </div>
           </div>
         </div>
       </div>
@@ -32,7 +44,6 @@
 </template>
 
 <script setup lang="ts">
-
 const firstList = ref();
 const linkedList = ref();
 

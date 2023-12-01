@@ -29,7 +29,7 @@
             </p>
             <v-btn
               class="my-1"
-              append-icon="mdi-arrow-right"
+              prepend-icon="mdi-arrow-left"
               color="primary"
               variant="tonal"
               href="/user"

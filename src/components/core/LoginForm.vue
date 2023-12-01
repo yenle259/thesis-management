@@ -1,8 +1,8 @@
 <template>
   <div class="w-full font-bevn">
-    <v-card class="px-6 py-8 hover:shadow-md rounded-lg" variant="flat">
+    <v-card class="px-6 pt-8 pb-10 mx-4 rounded-xl"  color="white">
       <v-form v-model="form">
-        <p class="text-center font-bold text-2xl pb-4 text-blue-500">
+        <p class="text-center font-bold text-2xl pb-4 text-indigo">
           ĐĂNG NHẬP
         </p>
         <v-text-field
@@ -29,13 +29,13 @@
         ></v-text-field>
 
         <v-btn
-          class="mt-2"
+          class="mt-3 rounded-lg"
           :disabled="!form"
           :loading="loading"
           block
-          color="primary"
+          color="indigo"
           type="submit"
-          variant="elevated"
+          variant="flat"
           :onclick="handleSubmit"
         >
           ĐĂNG NHẬP
