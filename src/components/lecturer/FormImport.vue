@@ -116,6 +116,8 @@
             >
               <span v-if="LECTURER_IMPORT.password">
                 <v-text-field
+                  disabled
+                  class="w-14"
                   variant="plain"
                   :value="LECTURER_IMPORT.password"
                   type="password"
@@ -217,7 +219,8 @@ const handleSubmit = async () => {
     emit("created");
     return response;
   } catch (error) {
-    toast.error("" + error);
+    // toast.error("" + error);
+    console.log(error);
   }
 };
 </script>

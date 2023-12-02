@@ -2,7 +2,7 @@
   <div>
     <v-form v-model="form">
       <v-card-text class="pt-8 px-8">
-        <div class="grid grid-cols-2 gap-x-6">
+        <div class="gap-x-6 grid grid-cols-2">
           <v-text-field
             v-model="model.userId"
             :required="true"
@@ -10,7 +10,7 @@
             :error-messages="errorMessage.userId"
             class="mb-2"
             clearable
-            label="Mã số cán bộ"
+            label="Mã số sinh viên"
             counter
             prepend-inner-icon="mdi-at"
             density="compact"
@@ -20,10 +20,10 @@
             :required="true"
             :rules="rules.name"
             :error-messages="errorMessage.name"
+            prepend-inner-icon="mdi-account-circle-outline"
             class="mb-2"
             clearable
             label="Họ tên"
-            prepend-inner-icon="mdi-account-circle-outline"
             density="compact"
           ></v-text-field>
           <v-text-field
@@ -38,13 +38,15 @@
             density="compact"
           ></v-text-field>
           <v-autocomplete
-            v-model="model.role"
-            :rules="rules.role"
-            :items="userRoleOptions"
+            v-model="model.moduleType"
+            :rules="rules.moduleType"
+            :items="moduleOptions"
+            item-value="subvalue"
+            label="Học phần đăng ký"
+            placeholder="Học phần đăng ký"
             prepend-inner-icon="mdi-view-list-outline"
-            label="Vai trò"
-            placeholder="Vai trò"
             class="mb-2"
+            multiple
             chips
             clearable
             density="compact"
@@ -77,16 +79,17 @@
 
 <script setup lang="ts">
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
-import { BASE_API, LECTURER_MAIL } from "@/constant";
+import { BASE_API, STUDENT_MAIL } from "@/constant";
 
-import { lecturerCreateRules } from "../form/rules/lecturerCreateRules";
-import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
+import { useModuleOptions } from "@/components/form/data/useModuleOptions";
 
 const emit = defineEmits(["created"]);
 
-defineProps<{
+const props = defineProps<{
   modules: ModuleDetails[];
 }>();
+
+const moduleOptions = useModuleOptions(props.modules);
 
 const show = ref(false);
 
@@ -99,7 +102,7 @@ const errorMessage = ref({
   name: "",
   email: "",
   password: "",
-  role: "",
+  moduleType: "",
 });
 
 const model = reactive({
@@ -107,23 +110,54 @@ const model = reactive({
   name: "",
   email: "",
   password: "",
-  role: UserRoleEnum.Lecturer,
+  moduleType: [],
 });
 
-const rules = lecturerCreateRules();
+const rules = ref({
+  userId: [
+    (value: any) => {
+      if (value?.length == 0) return "Hãy nhập vào mã số sinh viên";
+      if (value?.length == 8) return true;
+      return "Mã số sinh viên phải có 8 kí tự";
+    },
+  ],
+  name: [
+    (value: any) => {
+      if (value?.length == 0) return "Hãy nhập vào họ tên sinh viên";
+      return true;
+    },
+  ],
+  email: [
+    (value: any) => {
+      if (value?.length == 0) return "Hãy nhập vào email";
+      return true;
+    },
+  ],
+  password: [
+    (value: any) => {
+      if (value?.length == 0) return "Hãy nhập vào mật khẩu";
+      if (value?.length >= 8) return true;
+      return "Mật khẩu phải hơn 8 kí tự";
+    },
+  ],
+  moduleType: [
+    () => {
+      if (model.moduleType === null) return "Hãy chọn phân loại đề tài";
+      return true;
+    },
+  ],
+});
 
-const handleEmail = (name: String) => {
+const handleEmail = (userId: String, name: String) => {
   const stdName = name
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d")
     .replace(/Đ/g, "D");
   return (
-    stdName
-      .split(" ")
-      .map((item) => item[0])
-      .join("")
-      .toLocaleLowerCase() + LECTURER_MAIL
+    (
+      stdName.split(" ")[stdName.split(" ").length - 1] + userId
+    ).toLocaleLowerCase() + STUDENT_MAIL
   );
 };
 
@@ -144,7 +178,7 @@ watch(
 watch(
   () => model.userId && model.name,
   () => {
-    model.email = handleEmail(model.name);
+    model.email = handleEmail(model.userId, model.name);
   }
 );
 
@@ -153,7 +187,7 @@ const handleResetForm = () => {
     (model.name = ""),
     (model.email = ""),
     (model.password = ""),
-    (model.role = UserRoleEnum.Lecturer);
+    (model.moduleType = []);
 };
 
 const handleSubmit = async (e: Event) => {
@@ -161,17 +195,17 @@ const handleSubmit = async (e: Event) => {
 
   axios({
     method: "post",
-    url: BASE_API + `/auth/lecturer/signup`,
+    url: BASE_API + `/auth/student/signup`,
     withCredentials: true,
     data: {
       userId: model.userId,
+      password: model.password,
       name: model.name,
       email: model.email,
-      role: model.role,
+      moduleType: model.moduleType.join("-"),
     },
   })
     .then(function () {
-      handleResetForm();
       emit("created");
     })
     .catch(function (error) {

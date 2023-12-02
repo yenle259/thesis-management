@@ -184,7 +184,7 @@ const routeByRole = [
       },
       {
         icon: "mdi-calendar-range",
-        label: "Học kì - Niên khóa",
+        label: "Danh mục",
         url: "/semester",
       },
       {

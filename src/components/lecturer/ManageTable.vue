@@ -1,18 +1,24 @@
 <template>
-  <hr />
-  <div class="d-flex flex-row justify-end my-4">
-    <v-btn
-      v-if="lecturers"
-      class="hover:shadow-sm"
-      prepend-icon="mdi-export-variant"
-      variant="tonal"
-      color="blue"
-      @click="handleExport(props.lecturers)"
-      >Xuất danh sách</v-btn
-    >
-  </div>
-  <v-card v-if="lecturers" class="rounded-lg">
-    <slot name="action"></slot>
+  <v-card v-if="lecturers" class="rounded-lg mt-4">
+    <div class="px-4 mt-4 d-flex justify-between">
+      <div class="d-flex flex-row">
+        <slot name="action"></slot>
+      </div>
+      <div class="d-flex flex-row">
+        <slot name="action-end"></slot>
+        <v-btn
+          v-if="props.lecturers"
+          height="47"
+          class="ml-3"
+          prepend-icon="mdi-export-variant"
+          variant="tonal"
+          color="blue"
+          @click="handleExport(props.lecturers)"
+          >Xuất danh sách</v-btn
+        >
+      </div>
+    </div>
+
     <v-divider inset />
     <v-table>
       <thead>

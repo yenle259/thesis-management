@@ -18,13 +18,6 @@
           variant="plain"
           @click="model.fileImport = undefined"
         ></v-btn>
-        <!-- <v-btn
-          variant="tonal"
-          color="info"
-          @click="handleSubmit"
-          :disabled="!students"
-          >Thiết lập data</v-btn
-        > -->
       </div>
     </div>
     <div class="flex items-center justify-center w-full">
@@ -123,6 +116,8 @@
             >
               <span v-if="STUDENT_IMPORT.password">
                 <v-text-field
+                  disabled
+                  class="w-14"
                   variant="plain"
                   density="compact"
                   :value="STUDENT_IMPORT.password"

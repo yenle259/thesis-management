@@ -3,11 +3,11 @@ import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
 
 export const ACCOUNT_TAB: OptionTab[] = [
   {
-    label: "Danh sách chung",
+    label: "Danh sách",
     title:
       "Danh sách tài khoản sinh viên và học phần đăng ký ở học kì hiện tại",
     value: "list",
-    icon: "mdi-format-list-bulleted",
+    icon: "mdi-account-multiple",
   },
   {
     label: "Thêm Tài khoản",
@@ -25,10 +25,10 @@ export const ACCOUNT_TAB: OptionTab[] = [
 
 export const LECTURER_TAB: OptionTab[] = [
   {
-    label: "Danh sách chung",
+    label: "Danh sách",
     title: "Danh sách tài khoản cán bộ giảng viên",
     value: "list",
-    icon: "mdi-format-list-bulleted",
+    icon: "mdi-account-multiple",
   },
   {
     label: "Thêm Tài khoản",

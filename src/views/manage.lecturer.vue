@@ -9,7 +9,7 @@
         <div class="d-flex flex-row justify-between">
           <div></div>
           <v-tabs v-model="model.accountTab" class="mt-2">
-            <div class="d-flex flex-row justify-end">
+            <div class="d-flex flex-row">
               <div>
                 <v-tab
                   v-for="({ title, label, value, icon }, index) in LECTURER_TAB"
@@ -17,17 +17,15 @@
                   :value="value"
                   :title="title"
                   :append-icon="icon"
-                  hide-slider
-                  density="compact"
-                  class="rounded-lg me-1"
                   color="indigo"
-                  :variant="model.accountTab === value ? 'elevated' : 'text'"
+                  :variant="model.accountTab === value ? 'tonal' : 'text'"
                   >{{ label }}
                 </v-tab>
               </div>
             </div>
           </v-tabs>
         </div>
+        <hr />
         <div class="gap-x-2">
           <v-window v-model="model.accountTab">
             <div class="p-1">
@@ -39,48 +37,46 @@
                   @refetch="useStudent"
                 >
                   <template v-slot:action>
-                    <div class="px-4 mt-4 d-flex justify-between">
-                      <div class="d-flex flex-row">
-                        <v-text-field
-                          v-model="model.search"
-                          clearable
-                          clear-icon="mdi-close-circle"
-                          @click:clear="model.search = ''"
-                          label="Tìm kiếm cán bộ"
-                          placeholder="Mã số cán bộ, Họ tên"
-                          prepend-inner-icon="mdi-magnify"
-                          density="comfortable"
-                          class="w-96"
-                          max-width="400px"
-                          variant="filled"
-                        ></v-text-field>
-                        <v-btn
-                          class="ml-2"
-                          selected-class="text-blue"
-                          icon="mdi-restore"
-                          title="Restore"
-                          variant="plain"
-                          @click="handleReset"
-                        ></v-btn>
+                    <v-text-field
+                      v-model="model.search"
+                      clearable
+                      clear-icon="mdi-close-circle"
+                      @click:clear="model.search = ''"
+                      label="Tìm kiếm cán bộ"
+                      placeholder="Mã số cán bộ, Họ tên"
+                      prepend-inner-icon="mdi-magnify"
+                      density="comfortable"
+                      class="w-96"
+                      max-width="400px"
+                      variant="filled"
+                    ></v-text-field>
+                    <v-btn
+                      class="ml-2"
+                      selected-class="text-blue"
+                      icon="mdi-restore"
+                      title="Restore"
+                      variant="plain"
+                      @click="handleReset"
+                    ></v-btn>
+                  </template>
+                  <template v-slot:action-end>
+                    <div class="d-flex gap-x-2">
+                      <div class="flex flex-row content-center p-2">
+                        <p>
+                          <v-icon>mdi-filter-variant</v-icon>
+                        </p>
                       </div>
-                      <div class="d-flex gap-x-2">
-                        <div class="flex flex-row content-center p-2">
-                          <p>
-                            <v-icon>mdi-filter-variant</v-icon>
-                          </p>
-                        </div>
-                        <div class="w-48">
-                          <v-select
-                            v-model="model.role"
-                            :items="userRoleOptions"
-                            clearable
-                            chips
-                            label="Vai trò"
-                            variant="filled"
-                            density="compact"
-                            class="rounded-lg"
-                          ></v-select>
-                        </div>
+                      <div class="w-48">
+                        <v-select
+                          v-model="model.role"
+                          :items="userRoleOptions"
+                          clearable
+                          chips
+                          label="Vai trò"
+                          variant="filled"
+                          density="compact"
+                          class="rounded-lg"
+                        ></v-select>
                       </div>
                     </div>
                   </template>
@@ -142,7 +138,7 @@
               </v-window-item>
 
               <v-window-item key="file" value="file"
-                ><div class="p-2 min-h-screen">
+                ><div class="pt-4 min-h-screen">
                   <v-expansion-panels v-model="model.panel" multiple>
                     <v-expansion-panel
                       key="account-form"
@@ -160,7 +156,6 @@
                         </div>
                       </v-expansion-panel-title>
                       <v-expansion-panel-text>
-                        <!-- <SignupForm @created="handleCreated" /> -->
                         <LecturerFormCreate @created="handleCreated" />
                       </v-expansion-panel-text>
                     </v-expansion-panel>
@@ -179,7 +174,7 @@
                         </div>
                       </v-expansion-panel-title>
                       <v-expansion-panel-text class="pb-2">
-                        <LecturerFormImport />
+                        <LecturerFormImport @created="handleCreated" />
                       </v-expansion-panel-text>
                     </v-expansion-panel>
                   </v-expansion-panels>
