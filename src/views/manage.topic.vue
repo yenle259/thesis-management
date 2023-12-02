@@ -170,7 +170,7 @@ const createDataToExport = (reports: ReportTopic[]) => {
     topicName: topic.name,
     moduleId: topic.module.moduleId,
     moduleName: topic.module.name,
-    reportStatus: reportStatusLabel(reportStatus),
+    reportStatus: reportStatus?reportStatusLabel(reportStatus):'Chưa đăng ký',
   }));
 };
 

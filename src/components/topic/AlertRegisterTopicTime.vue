@@ -13,8 +13,8 @@
       lúc: {{ `${dateViFormat(manage.registerTopicTime.endAt, true)}` }}
       <div v-if="isLecturer" class="text-orange-accent-4">
         <span class="font-bold uppercase">Chú ý: </span>
-        Trong thời gian mở đăng ký đề tài, <strong>Giảng viên</strong> không thể thay
-        đổi các thông tin đề tài.
+        Trong thời gian mở đăng ký đề tài, <strong>Giảng viên</strong> không thể
+        thay đổi các thông tin đề tài.
       </div>
     </v-alert>
 
@@ -54,7 +54,12 @@
       {{ `${dateViFormat(manage.registerReportTime.endAt, true)}` }}
       <div v-if="isLecturer">
         <!-- <span class="font-bold uppercase">Chú ý: </span> -->
-        Trong thời gian đăng ký báo cáo, Giảng viên có thể thực hiện phê duyệt các đăng ký báo cáo của sinh viên.
+        Trong thời gian đăng ký báo cáo, Giảng viên có thể thực hiện phê duyệt
+        các đăng ký báo cáo của sinh viên.
+      </div>
+      <div v-if="isStudent">
+        <!-- <span class="font-bold uppercase">Chú ý: </span> -->
+        Sinh viên có thể thực hiện đăng ký báo cáo cho các đề tài đang thực hiện.
       </div>
     </v-alert>
   </div>
@@ -67,6 +72,7 @@ import { isBefore } from "date-fns";
 const props = defineProps<{
   manage: ManageRegisterTime;
   isLecturer?: boolean;
+  isStudent?: boolean;
 }>();
 
 const isSetRegisterTopicTime = computed(() => {

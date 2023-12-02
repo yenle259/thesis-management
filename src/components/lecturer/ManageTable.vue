@@ -73,19 +73,6 @@
                 </v-tooltip>
               </div>
               <div>
-                <v-tooltip text="Khóa tài khoản" location="top">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      v-bind="props"
-                      size="small"
-                      variant="plain"
-                      icon="mdi-account-lock"
-                      color="grey"
-                    ></v-btn>
-                  </template>
-                </v-tooltip>
-              </div>
-              <!-- <div>
                 <v-tooltip text="Xóa tài khoản" location="top">
                   <template v-slot:activator="{ props }">
                     <v-btn
@@ -94,11 +81,10 @@
                       variant="plain"
                       icon="mdi-delete-outline"
                       color="red-accent-1"
-                      @click="handleDeleteStudent(lecturer)"
                     ></v-btn>
                   </template>
                 </v-tooltip>
-              </div> -->
+              </div>
             </v-row>
           </td>
         </tr>

@@ -68,14 +68,15 @@
                 {{ getRegisterReportShortName(reportStatus.studentRegister) }}
               </v-btn>
               <v-divider vertical thickness="3"></v-divider>
-              <v-tooltip text="Click vào để cập nhật thông tin" location="top">
+              <v-tooltip location="top">
                 <template v-slot:activator="{ props }">
                   <v-btn
                     :id="`review-menu-${index}`"
                     :color="getStatusColor(reportStatus.piConfirm)"
                     variant="tonal"
-                    class="rounded-s-0 ps-1"
+                    class="rounded-s-0 ps-1 "
                     min-width="34px"
+                    :ripple="false"
                     size="small"
                     v-bind="props"
                   >
@@ -101,7 +102,12 @@
             </span>
             <span v-else class="text-caption">Chưa đăng ký</span>
           </td>
-          <td class="text-body-2">{{ reportStatusLabel(reportStatus) }}</td>
+          <td class="text-body-2">
+            <span v-if="reportStatus">{{
+              reportStatusLabel(reportStatus)
+            }}</span>
+            <span v-else class="text-caption text-grey"> Chưa đăng ký </span>
+          </td>
         </tr>
       </tbody>
     </v-table>
@@ -134,6 +140,6 @@ const reportStatusLabel = (reportStatus: ReportStatus) => {
   const { piConfirm, studentRegister } = reportStatus;
   return piConfirm === RegisterStatusEnum.Approve
     ? getRegisterReportShortName(studentRegister)
-    : "Chưa có";
+    : "Chưa được duyệt";
 };
 </script>

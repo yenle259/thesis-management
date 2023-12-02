@@ -181,22 +181,26 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <v-text-field
-          v-model="model.endAt"
-          :rules="rules.endAt"
-          type="datetime-local"
-          class="mt-2"
-          label="Thời gian kết thúc đăng ký"
-          hint="Giá trị mặc định là 7 ngày sau thời điểm mở đăng ký"
-          variant="outlined"
-        ></v-text-field>
+        <v-form v-model="model.form">
+          <v-text-field
+            v-model="model.endAt"
+            :rules="rules.endAt"
+            type="datetime-local"
+            class="mt-2"
+            label="Thời gian kết thúc đăng ký"
+            hint="Giá trị mặc định là 7 ngày sau thời điểm mở đăng ký"
+            variant="outlined"
+          ></v-text-field
+        ></v-form>
       </v-card-text>
+
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="red" variant="text" @click="handleCancel()"> Hủy </v-btn>
         <v-btn
           color="green-darken-1"
+          :disabled="!model.form"
           variant="tonal"
           @click="
             handleSetRegisTerTime(
@@ -265,7 +269,9 @@
           <div>
             <span class="mb-1">Đặt thời gian</span>
             <p class="font-light text-caption text-black">
-              Đặt thời gian để mở đăng ký danh sách đề tài cho học kỳ hiện tại
+              Đặt thời gian để mở đăng ký
+              {{ model.tab === "REPORT" ? "báo cáo" : "đề tài" }} cho học kỳ
+              hiện tại
             </p>
           </div>
           <v-btn icon @click="handleCancel" variant="flat"
@@ -341,14 +347,6 @@ const model = reactive({
 });
 
 const rules = ref({
-  publishDate: [
-    (value: any) => {
-      const recentDate = new Date(Date.now());
-      if (parseISO(value) >= recentDate) return true;
-      if (value === "") return "Hãy chọn thời điểm công bố";
-      return "Thời gian công bố phải sau thời điểm hiện tại";
-    },
-  ],
   beginAt: [
     (value: any) => {
       const recentDate = new Date(Date.now());

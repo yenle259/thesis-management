@@ -1,6 +1,6 @@
 <template>
   <div v-if="topic">
-    <v-dialog v-model="dialog" persistent width="600px">
+    <v-dialog v-model="dialog" persistent width="540px">
       <v-card class="rounded-lg pt-3 pb-2 px-2" v-click-outside="handleCancel">
         <v-card-title class="d-flex text-h5 text-indigo justify-between">
           <div>

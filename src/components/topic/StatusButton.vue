@@ -5,7 +5,7 @@
       append-icon="mdi-chevron-down"
       class="self-center me-2 rounded-lg bg-white"
       variant="flat"
-      :disabled="!manage.isReportTime || isDisabled"
+      :disabled="isDisabled"
       :color="actions?.color"
       >{{ actions?.label }}</v-btn
     >
@@ -99,12 +99,13 @@ const actions = computed(() => {
 
 const isDisabled = computed(() => {
   const {
-    reportStatus: { piConfirm, studentRegister },
+    reportStatus: { piConfirm },
   } = { ...props };
-  return (
-    studentRegister === RegisterReportEnum.Report &&
-    piConfirm === RegisterStatusEnum.Approve
-  );
+  if (!props.manage.isReportTime) {
+    return true;
+  } else {
+    return piConfirm === RegisterStatusEnum.Approve;
+  }
 });
 
 const handleCancelModal = () => {

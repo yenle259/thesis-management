@@ -1,6 +1,6 @@
 <template>
   <div v-if="props.deleteTopic">
-    <v-dialog v-model="dialog" persistent width="600px">
+    <v-dialog v-model="dialog" persistent width="550px">
       <v-card class="pt-3 pb-2 px-2 rounded-lg">
         <v-card-title class="d-flex text-h5 text-indigo justify-between">
           <div>
@@ -21,7 +21,10 @@
           </p>
           <p class="mb-1">
             <span class="text-subtitle-2">Phân loại: </span>
-            <v-chip :color="getTopicModuleColor(deleteTopic.type)" size="small">
+            <v-chip
+              :color="getTopicModuleColor(deleteTopic.module.moduleId)"
+              size="small"
+            >
               {{
                 deleteTopic.module.moduleId + " | " + deleteTopic.module.name
               }}

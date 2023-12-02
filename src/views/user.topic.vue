@@ -18,7 +18,11 @@
           <v-tooltip text="Đề xuất đề tài muốn thực hiện" location="top">
             <template v-slot:activator="{ props }">
               <v-btn
-                :disabled="!module?.moduleType || isDisabledSuggested"
+                :disabled="
+                  !manage?.isRegisterTopicTime
+                    ? true
+                    : !module?.moduleType && isDisabledSuggested
+                "
                 v-bind="props"
                 variant="elevated"
                 append-icon="mdi-plus"
@@ -268,8 +272,7 @@ const registeredTopicModuleId = computed(() => {
 const isDisabledSuggested = computed(() => {
   return (
     registeredTopics.value?.length ===
-      module.value?.moduleType.split("-").length ||
-    !manage.value?.isRegisterTopicTime
+    module.value?.moduleType.split("-").length
   );
 });
 

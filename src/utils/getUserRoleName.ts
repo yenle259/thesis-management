@@ -6,7 +6,7 @@ export function getUserRoleName(userRole: UserRoleName): string | undefined {
   const userRoleName: Record<UserRoleName, string> = {
     [UserRoleEnum.Student]: "Sinh viên",
     [UserRoleEnum.Lecturer]: "Giảng viên",
-    [UserRoleEnum.Admin]: "Cán bộ quản lý",
+    [UserRoleEnum.Admin]: "Quản trị viên",
   };
   return userRoleName[userRole];
 }

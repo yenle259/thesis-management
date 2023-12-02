@@ -1,6 +1,6 @@
 <template>
   <div :v-if="props.student">
-    <v-dialog v-model="dialog" persistent width="650px">
+    <v-dialog v-model="dialog" persistent width="500px">
       <v-card class="rounded-lg pt-3 pb-2 px-2">
         <v-form v-model="form">
           <v-card-title class="d-flex text-h5 text-indigo justify-between">
@@ -30,18 +30,6 @@
                 variant="outlined"
                 density="compact"
               ></v-text-field>
-              <!-- <v-text-field
-              v-model="model.password"
-              :rules="rules.password"
-              :type="show ? 'text' : 'password'"
-              :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append-inner="show = !show"
-              class="mb-2"
-              prepend-inner-icon="mdi-key"
-              variant="outlined"
-              label="Mật khẩu"
-              density="compact"
-            ></v-text-field> -->
               <v-text-field
                 v-model="model.name"
                 :required="true"

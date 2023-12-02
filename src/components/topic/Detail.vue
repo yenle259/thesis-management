@@ -24,7 +24,14 @@
                 ?.reason
             "
           >
-            <v-alert variant="tonal" type="warning">
+            <v-alert
+              variant="tonal"
+              type="warning"
+              v-if="
+                topic.student.find((item) => item.studentInfo._id === user?._id)
+                  ?.status !== RegisterStatusEnum.Approve
+              "
+            >
               <span class="font-bold"> Lí do không phê duyệt: </span>
               {{
                 topic.student.find((item) => item.studentInfo._id === user?._id)
@@ -77,130 +84,142 @@
           </v-card>
         </div>
         <div class="col-span-1 columns-1 gap-y-3">
-          <div class="rounded-lg" v-if="reports.length !== 0">
-            <v-card-text class="text-gray-700">
-              <p
-                class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
-              >
-                Đăng ký báo cáo
-              </p>
-              <hr />
-              <div class="divide-y-2 divide-dashed divide-slate-150">
-                <div
-                  variant="flat"
-                  class="my-2 p-2"
-                  v-for="({ reportStatus, student }, index) in reports"
-                  :key="index"
+          <div v-if="reports[0]">
+            <div class="rounded-lg" v-if="reports[0].reportStatus">
+              <v-card-text class="text-gray-700">
+                <p
+                  class="mb-2 uppercase text-indigo tracking-wide font-weight-medium"
                 >
-                  <div class="my-1 gap-2">
-                    <span>Sinh viên:</span>
-                    <span class="ml-3 text-md font-bold">
-                      {{ student.name }}
-                    </span>
-                  </div>
-                  <div>
-                    <span>Trạng thái:</span>
-                    <v-chip
-                      v-if="reportStatus.studentRegister"
-                      variant="text"
-                      label
-                      class="m1-2 ml-2 uppercase"
-                      :color="
-                        getRegisterReportColor(reportStatus.studentRegister)
-                      "
-                      >Đã đăng ký
-                      {{ getRegisterReportName(reportStatus.studentRegister) }}
-                    </v-chip>
-                    <span v-else class="mx-2 text-sm text-grey"
-                      >Chưa đăng ký</span
-                    >
-                  </div>
-                  <div>
-                    <span class="me-2">Giảng viên phê duyệt:</span>
-                    <span v-if="reportStatus.studentRegister">
-                      <v-btn
-                        v-if="!user?.role"
-                        size="small"
-                        class="non-click"
-                        :ripple="false"
-                        variant="tonal"
-                        label
-                        :color="getStatusColor(reportStatus.piConfirm)"
+                  Đăng ký báo cáo
+                </p>
+                <hr />
+                <div class="divide-y-2 divide-dashed divide-slate-150">
+                  <div
+                    variant="flat"
+                    class="my-2 p-2"
+                    v-for="({ reportStatus, student }, index) in reports"
+                    :key="index"
+                  >
+                    <div class="my-1 gap-2">
+                      <span>Sinh viên:</span>
+                      <span class="ml-3 text-md font-bold">
+                        {{ student.name }}
+                      </span>
+                    </div>
+                    <div>
+                      <span>Trạng thái:</span>
+                      <span v-if="reportStatus">
+                        <v-chip
+                          v-if="reportStatus.studentRegister"
+                          variant="text"
+                          label
+                          class="m1-2 ml-2 uppercase"
+                          :color="
+                            getRegisterReportColor(reportStatus.studentRegister)
+                          "
+                          >Đã đăng ký
+                          {{
+                            getRegisterReportName(reportStatus.studentRegister)
+                          }}
+                        </v-chip>
+                      </span>
+
+                      <span v-else class="mx-2 text-sm text-grey"
+                        >Chưa đăng ký</span
                       >
-                        {{ getStatusLabel(reportStatus.piConfirm) }}
-                        <v-icon
-                          end
-                          v-if="
-                            reportStatus.piConfirm !==
-                            RegisterStatusEnum.Pending
-                          "
-                          >{{
-                            getPiConfirmIcon(reportStatus.piConfirm)
-                          }}</v-icon
-                        > </v-btn
-                      ><v-btn
-                        v-if="
-                          user?._id === topic.pi._id &&
-                          reportStatus.studentRegister
-                        "
-                        :id="`review-menu-${index}`"
-                        size="small"
-                        variant="tonal"
-                        label
-                        :color="getStatusColor(reportStatus.piConfirm)"
+                    </div>
+                    <div>
+                      <span class="me-2">Giảng viên phê duyệt:</span>
+                      <span v-if="reportStatus">
+                        <span v-if="reportStatus.studentRegister">
+                          <v-btn
+                            v-if="!user?.role"
+                            size="small"
+                            class="non-click"
+                            :ripple="false"
+                            variant="tonal"
+                            label
+                            :color="getStatusColor(reportStatus.piConfirm)"
+                          >
+                            {{ getStatusLabel(reportStatus.piConfirm) }}
+                            <v-icon
+                              end
+                              v-if="
+                                reportStatus.piConfirm !==
+                                RegisterStatusEnum.Pending
+                              "
+                              >{{
+                                getPiConfirmIcon(reportStatus.piConfirm)
+                              }}</v-icon
+                            > </v-btn
+                          ><v-btn
+                            v-if="
+                              user?._id === topic.pi._id &&
+                              reportStatus.studentRegister
+                            "
+                            :id="`review-menu-${index}`"
+                            size="small"
+                            variant="tonal"
+                            label
+                            :color="getStatusColor(reportStatus.piConfirm)"
+                          >
+                            {{ getStatusLabel(reportStatus.piConfirm) }}
+                            <v-icon end>{{
+                              getPiConfirmIcon(reportStatus.piConfirm)
+                            }}</v-icon>
+                          </v-btn>
+                          <v-menu
+                            :activator="`#review-menu-${index}`"
+                            location="bottom end"
+                          >
+                            <v-list density="compact" class="rounded-lg">
+                              <v-list-item
+                                class="rounded-lg mx-2"
+                                :disabled="
+                                  reportStatus.piConfirm ===
+                                  RegisterStatusEnum.Approve
+                                "
+                                @click="
+                                  handleReviewReport(
+                                    reports[index],
+                                    RegisterStatusEnum.Approve,
+                                    topic
+                                  )
+                                "
+                              >
+                                <v-list-item-title>Phê duyệt</v-list-item-title>
+                              </v-list-item>
+                              <v-list-item
+                                class="rounded-lg mx-2"
+                                :disabled="
+                                  reportStatus.piConfirm ===
+                                  RegisterStatusEnum.Reject
+                                "
+                                @click="
+                                  handleReviewReport(
+                                    reports[index],
+                                    RegisterStatusEnum.Reject,
+                                    topic
+                                  )
+                                "
+                              >
+                                <v-list-item-title>Từ chối</v-list-item-title>
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
+                        </span>
+                      </span>
+
+                      <span v-else class="mx-2 text-sm text-grey"
+                        >Không có dữ liệu</span
                       >
-                        {{ getStatusLabel(reportStatus.piConfirm) }}
-                        <v-icon end>{{
-                          getPiConfirmIcon(reportStatus.piConfirm)
-                        }}</v-icon>
-                      </v-btn>
-                    </span>
-                    <span v-else class="mx-2 text-sm text-grey"
-                      >Không có dữ liệu</span
-                    >
-                    <v-menu
-                      :activator="`#review-menu-${index}`"
-                      location="bottom end"
-                    >
-                      <v-list density="compact" class="rounded-lg">
-                        <v-list-item
-                          class="rounded-lg mx-2"
-                          :disabled="
-                            reportStatus.piConfirm ===
-                            RegisterStatusEnum.Approve
-                          "
-                          @click="
-                            handleReviewReport(
-                              reports[index],
-                              RegisterStatusEnum.Approve,
-                              topic
-                            )
-                          "
-                        >
-                          <v-list-item-title>Phê duyệt</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                          class="rounded-lg mx-2"
-                          :disabled="
-                            reportStatus.piConfirm === RegisterStatusEnum.Reject
-                          "
-                          @click="
-                            handleReviewReport(
-                              reports[index],
-                              RegisterStatusEnum.Reject,
-                              topic
-                            )
-                          "
-                        >
-                          <v-list-item-title>Từ chối</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </v-card-text>
+              </v-card-text>
+            </div>
           </div>
+
           <div class="rounded-lg">
             <v-card-text class="text-gray-700">
               <p

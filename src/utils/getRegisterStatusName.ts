@@ -52,5 +52,5 @@ export function reportStatusLabel(reportStatus: ReportStatus): string {
   const { piConfirm, studentRegister } = reportStatus;
   return piConfirm === RegisterStatusEnum.Approve
     ? getRegisterReportShortName(studentRegister)
-    : "Chưa có";
+    : "Chưa được duyệt";
 }

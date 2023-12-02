@@ -1,5 +1,8 @@
 <template>
   <!-- Common User Info -->
+  <div v-if="manage">
+    <TopicAlertRegisterTopicTime :manage="manage || {}" :isStudent="true" />
+  </div>
   <v-card
     class="mx-8 mt-4 rounded-lg"
     width="350px"
@@ -35,6 +38,7 @@ import { ReportTopic } from "@/apis/models/ReportTopic";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 import { ModuleDetails } from "@/apis/models/ModuleDetails";
+import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 
 useTitle("QLĐT - Thông tin cá nhân");
 
@@ -45,6 +49,8 @@ const { user } = storeToRefs(auth);
 const topics = ref<TopicDetails[]>();
 
 const reports = ref<ReportTopic[]>();
+
+const manage = ref<ManageRegisterTime[]>();
 
 const modules = ref<ModuleDetails[]>();
 
@@ -103,6 +109,19 @@ const getRecentRegisterModule = async () => {
   }
 };
 
+const getRegisterTopicTime = async () => {
+  try {
+    const { data: response } = await API.get(`/register-time`);
+
+    manage.value = response;
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getRegisterTopicTime();
 //student route
 if (!user.value?.role) {
   getRecentRegisterModule();

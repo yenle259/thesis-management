@@ -13,7 +13,7 @@
                 Đề tài của tôi
               </span>
               <p class="font-light text-sm text-black text-caption">
-                Danh sách đề tài Học kì I (Năm học 2023 - 2024)
+                Danh sách đề tài của giảng viên
               </p>
             </div>
             <div class="flex flex-row">
@@ -76,7 +76,7 @@
                         :items="sysOptions"
                         variant="outlined"
                         density="compact"
-                        label="HK - Năm học"
+                        label="Học kì - Năm học"
                         clearable
                         chips
                       ></v-autocomplete>

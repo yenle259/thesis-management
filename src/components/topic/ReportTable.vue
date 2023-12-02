@@ -5,10 +5,13 @@
       <v-divider> </v-divider>
       <v-card class="overflow-hidden rounded-lg mx-1" width="800px">
         <v-table>
-          <thead class="font-bold text-overline">
+          <thead class="font-bold">
             <tr>
-              <th class="text-left indent-4">Đề tài</th>
-              <th class="text-center">Đăng ký báo cáo</th>
+              <th class="text-left indent-4 text-overline">Đề tài</th>
+              <th class="text-center">
+                <span class="text-overline"> Đăng ký Báo cáo </span>
+                <p class="text-xs">SV đăng ký | Trạng thái phê duyệt</p>
+              </th>
             </tr>
           </thead>
           <tbody v-if="topics">
