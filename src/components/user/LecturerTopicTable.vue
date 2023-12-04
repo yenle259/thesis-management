@@ -68,12 +68,21 @@
               <td class="text-center truncate" width="160px">
                 <div class="flex flex-col gap-y-1 py-1">
                   <div
-                    v-for="({ studentInfo }, index) in topic.student"
+                    v-for="({ studentInfo, status }, index) in topic.student"
                     :key="index"
                   >
-                    <v-chip size="small" v-if="studentInfo">{{
-                      studentInfo.name
-                    }}</v-chip>
+                    <v-tooltip :text="getPiConfirmLabel(status)">
+                      <template v-slot:activator="{ props }">
+                        <v-chip
+                          v-bind="props"
+                          size="small"
+                          v-if="studentInfo"
+                          :color="getStatusColor(status)"
+                          :append-icon="getStatusIcon(status)"
+                          >{{ studentInfo.name }}
+                        </v-chip>
+                      </template>
+                    </v-tooltip>
                   </div>
                 </div>
               </td>
@@ -142,6 +151,8 @@ import { ModuleDetails } from "@/apis/models/ModuleDetails";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { TopicStatusEnum } from "@/apis/models/TopicStatusEnum";
+
+import { getStatusIcon } from "@/utils/getStatusColor";
 
 const router = useRouter();
 

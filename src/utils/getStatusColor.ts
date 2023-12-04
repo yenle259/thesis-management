@@ -10,3 +10,12 @@ export function getStatusColor(status: Status): string | undefined {
   };
   return statusColor[status];
 }
+
+export function getStatusIcon(status: Status): string {
+  const iconString: Record<Status, string> = {
+    [RegisterStatusEnum.Pending]: "mdi-progress-helper",
+    [RegisterStatusEnum.Approve]: "mdi-checkbox-marked-circle-outline",
+    [RegisterStatusEnum.Reject]: "mdi-minus-circle-outline",
+  };
+  return iconString[status];
+}
