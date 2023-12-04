@@ -5,7 +5,7 @@
       append-icon="mdi-chevron-down"
       class="self-center me-2 rounded-lg bg-white"
       variant="flat"
-      :disabled="isDisabled"
+      :disabled="isDisabled && actions?.status === RegisterStatusEnum.Approve"
       :color="actions?.color"
       >{{ actions?.label }}</v-btn
     >
@@ -101,10 +101,10 @@ const isDisabled = computed(() => {
   const {
     reportStatus: { piConfirm },
   } = { ...props };
-  if (!props.manage.isReportTime) {
-    return true;
-  } else {
+  if (props.manage.isReportTime) {
     return piConfirm === RegisterStatusEnum.Approve;
+  } else {
+    return true;
   }
 });
 

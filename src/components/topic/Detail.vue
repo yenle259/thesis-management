@@ -281,6 +281,9 @@
                           <v-list-item
                             key="reject"
                             append-icon="mdi-minus-circle-outline"
+                            :disabled="
+                              user.status === RegisterStatusEnum.Reject
+                            "
                             title="Từ chối"
                             class="rounded-lg"
                             @click="handleReject(user)"

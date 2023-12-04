@@ -11,7 +11,7 @@ export const ACCOUNT_TAB: OptionTab[] = [
   },
   {
     label: "Thêm Tài khoản",
-    title: "Thêm hoặc cập nhật tài khoản của sinh viên",
+    title: "Thêm tài khoản hoặc danh danh sách tài khoản sinh viên",
     value: "file",
     icon: "mdi-account-multiple-plus",
   },
@@ -32,7 +32,7 @@ export const LECTURER_TAB: OptionTab[] = [
   },
   {
     label: "Thêm Tài khoản",
-    title: "Thêm hoặc cập nhật tài khoản cán bộ",
+    title: "Thêm tài khoản hoặc danh sách tài khoản cán bộ",
     value: "file",
     icon: "mdi-account-multiple-plus",
   },

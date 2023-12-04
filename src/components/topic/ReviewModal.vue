@@ -166,7 +166,7 @@ const handleUpdateStatus = async (status: RegisterStatusEnum) => {
   try {
     const { data: response } = await API.put(`/topic/review`, payload);
 
-    toast.success("Cập nhật thông tin thành công");
+    toast.success(`Đã ${getStatusNameObject(status)} đăng ký đề tài của sinh viên`);
     handleCancel();
     emit("updated");
     return response;

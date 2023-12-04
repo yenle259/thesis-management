@@ -123,6 +123,7 @@ const getRegisterTopicTime = async () => {
 
 getRegisterTopicTime();
 //student route
+
 if (!user.value?.role) {
   getRecentRegisterModule();
 }
@@ -133,7 +134,11 @@ export default {
   beforeRouteEnter(to, from, next) {
     const auth = useAuthStore();
     if (auth.user?.role) {
-      next("/my-topic");
+      if (auth.user.role === UserRoleEnum.Admin) {
+        next("/manage/topic");
+      } else {
+        next("/my-topic");
+      }
     } else {
       next(true);
     }

@@ -59,7 +59,8 @@
       </div>
       <div v-if="isStudent">
         <!-- <span class="font-bold uppercase">Chú ý: </span> -->
-        Sinh viên có thể thực hiện đăng ký báo cáo cho các đề tài đang thực hiện.
+        Sinh viên có thể thực hiện đăng ký báo cáo cho các đề tài đang thực
+        hiện.
       </div>
     </v-alert>
   </div>
@@ -68,6 +69,8 @@
 <script lang="ts" setup>
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { isBefore } from "date-fns";
+
+const { user } = storeToRefs(useAuthStore());
 
 const props = defineProps<{
   manage: ManageRegisterTime;

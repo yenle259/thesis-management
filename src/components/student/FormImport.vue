@@ -74,13 +74,19 @@
       <hr />
       <v-card-title class="d-flex flex-row text-indigo justify-between mt-4">
         <div>
-          <span class="text-h6"> Xem trước dữ liệu ({{ students.length }}) </span>
+          <span class="text-h6">
+            Xem trước dữ liệu ({{ students.length }})
+          </span>
           <p class="font-light text-caption text-black">
             Xem thông tin sinh viên trong file dữ liệu vừa nhập vào
           </p>
         </div>
         <div>
-          <v-btn variant="tonal" color="blue" @click="handleSubmit"
+          <v-btn
+            variant="tonal"
+            color="blue"
+            @click="handleSubmit"
+            :disabled="!students"
             >Xác nhận nhập</v-btn
           >
         </div>
@@ -153,8 +159,10 @@
 import { read, utils, writeFileXLSX } from "xlsx";
 import { STUDENT_IMPORT } from "@/constants/header";
 
-import "vue3-toastify/dist/index.css";
 import API from "@/apis/helpers/axiosBaseConfig";
+
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const emit = defineEmits(["created"]);
 
@@ -194,9 +202,10 @@ const handleSubmit = async () => {
       `/student/account/import`,
       students.value
     );
-    // emit("created");
     if (response.created !== 0) {
       emit("created");
+    } else {
+      toast.error('Lỗi: không thể thực hiện nhập dữ liệu')
     }
   } catch (error) {
     console.log(error);

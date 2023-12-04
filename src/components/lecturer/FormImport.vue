@@ -218,6 +218,8 @@ const handleSubmit = async () => {
 
     if (response.created !== 0) {
       emit("created");
+    }else {
+      toast.error('Lỗi: không thể thực hiện nhập dữ liệu')
     }
   } catch (error) {
     // toast.error("" + error);

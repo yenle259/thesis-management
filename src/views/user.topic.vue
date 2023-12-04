@@ -19,9 +19,7 @@
             <template v-slot:activator="{ props }">
               <v-btn
                 :disabled="
-                  !manage?.isRegisterTopicTime
-                    ? true
-                    : !module?.moduleType && isDisabledSuggested
+                  manage?.isRegisterTopicTime ? isDisabledSuggested : true
                 "
                 v-bind="props"
                 variant="elevated"
