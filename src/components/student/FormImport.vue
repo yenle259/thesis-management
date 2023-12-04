@@ -74,18 +74,18 @@
       <hr />
       <v-card-title class="d-flex flex-row text-indigo justify-between mt-4">
         <div>
-          <span class="text-h6"> Xem trước dữ liệu </span>
+          <span class="text-h6"> Xem trước dữ liệu ({{ students.length }}) </span>
           <p class="font-light text-caption text-black">
             Xem thông tin sinh viên trong file dữ liệu vừa nhập vào
           </p>
         </div>
         <div>
           <v-btn variant="tonal" color="blue" @click="handleSubmit"
-            >Nhập dữ liệu</v-btn
+            >Xác nhận nhập</v-btn
           >
         </div>
       </v-card-title>
-      <v-table density="comfortable">
+      <v-table density="compact">
         <thead>
           <tr class="text-overline">
             <th v-for="(item, index) in STUDENT_IMPORT" :key="index">
@@ -116,11 +116,11 @@
             >
               <span v-if="STUDENT_IMPORT.password">
                 <v-text-field
-                  disabled
-                  class="w-14"
+                  readonly
+                  class="w-20 h-12 overflow-hidden"
                   variant="plain"
                   density="compact"
-                  :value="STUDENT_IMPORT.password"
+                  value="**********"
                   type="password"
                 >
                 </v-text-field>
@@ -189,14 +189,15 @@ watch(
 );
 
 const handleSubmit = async () => {
-  console.log(students.value);
   try {
     const { data: response } = await API.post(
       `/student/account/import`,
       students.value
     );
-    emit("created");
-    return response;
+    // emit("created");
+    if (response.created !== 0) {
+      emit("created");
+    }
   } catch (error) {
     console.log(error);
   }

@@ -154,7 +154,7 @@ const createDataToExport = (lecturers: LecturerDetails[]) => {
 const handleExport = (lecturers: LecturerDetails[]) => {
   const data = createDataToExport(lecturers);
   data.unshift({
-    userId: "MSSV",
+    userId: "MSCB",
     name: "Họ tên cán bộ",
     email: "Email",
     role: "Vai trò",

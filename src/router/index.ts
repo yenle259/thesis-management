@@ -97,8 +97,8 @@ const routes = [
       },
       {
         path: "/semester",
-        name: "Quản lí học kì niên khóa",
-        component: () => import("@/views/manage.semester.vue"),
+        name: "Quản lí danh mục",
+        component: () => import("@/views/manage.category.vue"),
         meta: {
           requiresAuth: true,
           allowRoles: [UserRoleEnum.Admin],

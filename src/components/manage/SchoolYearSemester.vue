@@ -1,31 +1,45 @@
 <template>
-  <CustomCard :title="'Học kì - Niên khóa'">
-    <template v-slot:action
-      ><v-btn
+  <div v-if="semesters" class="rounded-lg">
+    <div class="flex flex-row justify-end">
+      <v-btn
         color="indigo"
         variant="tonal"
         class="ma-2"
         @click="isShow = !isShow"
+        :disabled="model.isRecent"
       >
         Thiết lập học kì niên khóa
       </v-btn>
-    </template>
-    <template v-slot:content>
-      <div class="py-2 w-2/5" v-if="semesters">
-        <v-autocomplete
-          variant="solo"
-          v-model="model.schoolYear"
-          :items="schoolYearOptions"
-          label="Niên khóa"
-          class="mb-2"
-          chips
-          clearable
-        ></v-autocomplete>
-      </div>
-    </template>
-  </CustomCard>
+    </div>
 
-  <v-dialog v-model="isShow" persistent width="550px">
+    <v-table>
+      <thead class="font-bold text-overline">
+        <tr>
+          <th class="text-left">#</th>
+          <th class="text-left">Mã Học kì - Năm học</th>
+          <th class="text-left">Học kì - Năm học</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-sm" v-for="(item, index) in semesters" :key="index">
+          <td>
+            {{ index + 1 }}
+          </td>
+          <td>
+            {{ item.sysId }}
+          </td>
+          <td>
+            {{ getSchoolYearSemester(item) }}
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+    <div v-if="semesters.length === 0" class="text-body-2 text-center my-4">
+      Không có dữ liệu
+    </div>
+  </div>
+
+  <v-dialog v-model="isShow" persistent width="500px">
     <v-card class="pt-4 pb-2 px-2">
       <v-card-title class="text-h5 text-indigo">
         <span class="mb-1"> Thiết lập Học kì - Niên khóa</span>
@@ -47,43 +61,37 @@
 
 <script setup lang="ts">
 import API from "@/apis/helpers/axiosBaseConfig";
-
 import { SchoolYearSemester } from "@/apis/models/SchoolYearSemester";
+import { isBefore } from "date-fns";
 
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+
+const emit = defineEmits(["updated-semester"]);
+
+const props = defineProps<{ semesters: SchoolYearSemester[] }>();
 
 const model = reactive({
   schoolYear: null,
   semester: null,
   error: "",
+  isRecent: false,
 });
-
-const semesters = ref<SchoolYearSemester[]>();
-
-// const generatedSemesters = ref<{}[]>();
 
 const isShow = ref(false);
 
-const getData = async () => {
-  try {
-    const { data: response } = await API.get(`/sys`);
-    semesters.value = response;
-    // console.log(semesters.value);
-    return response;
-  } catch (error) {
-    console.log(error);
+watch(
+  () => props.semesters,
+  () => {
+    if (props.semesters[0]) {
+      // model.isRecent = props.semesters[0].sysId === "s1b2023";
+      model.isRecent = isBefore(
+        new Date(Date.now()),
+        new Date(props.semesters[0].schoolYear.endAt)
+      );
+    }
   }
-};
-
-getData();
-
-const schoolYearOptions = computed(() => {
-  return semesters.value?.map((item) => ({
-    title: getSchoolYearSemester(item),
-    value: item.sysId,
-  }));
-});
+);
 
 const generatedSemesters = semesterData();
 
@@ -99,17 +107,11 @@ const handleSubmit = async () => {
       generatedSemesters.value
     );
 
-    semesters.value = response;
     handleCancel();
     toast.success("Thiết lập học kì niên khóa thành công");
+    emit("updated-semester");
     return response;
   } catch (error: any) {
-    // const {
-    //   sysId,
-    //   schoolYear: { beginAt, endAt },
-    //   semester,
-    // } = error.response.data.errors;
-    // toast.error(sysId);
     console.log(error);
   }
 };

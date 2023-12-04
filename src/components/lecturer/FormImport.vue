@@ -209,15 +209,16 @@ const handleDownloadSample = () => {
 };
 
 const handleSubmit = async () => {
-  console.log(lecturers.value);
   try {
     const { data: response } = await API.post(
       `/user/account/import`,
       lecturers.value
     );
     // console.log(response);
-    emit("created");
-    return response;
+
+    if (response.created !== 0) {
+      emit("created");
+    }
   } catch (error) {
     // toast.error("" + error);
     console.log(error);
