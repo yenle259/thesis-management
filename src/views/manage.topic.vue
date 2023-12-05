@@ -33,11 +33,12 @@
             prepend-icon="mdi-export-variant"
             variant="tonal"
             color="blue"
-            @click="handleExportReports(reports)"
+            :disabled="reports.length === 0"
+            @click="handleGetReportsExport"
             >Xuất danh sách</v-btn
           >
         </div>
-        <ManageReportTopic :reports="reports || []">
+        <ManageReportTopicList :reports="reports || []">
           <template v-slot:pagination>
             <div class="d-flex justify-between px-2 py-3">
               <div class="d-flex flex-row gap-x-3">
@@ -82,7 +83,7 @@
               ></v-pagination>
             </div>
           </template>
-        </ManageReportTopic>
+        </ManageReportTopicList>
       </template>
     </CustomCard>
   </div>
@@ -92,7 +93,7 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ReportTopic } from "@/apis/models/ReportTopic";
-import { reportStatusLabel } from "@/utils/getRegisterStatusName";
+
 import { PAGINATION_OPTIONS } from "@/constant";
 import { REPORT_TOPIC } from "@/constants/tab";
 import { utils, writeFileXLSX } from "xlsx";
@@ -107,9 +108,12 @@ const model = reactive({
   count: 0,
   totalsPage: 1,
   numberOfItemsPerPage: PAGINATION_OPTIONS[0],
+  isLoading: false,
 });
 
 const reports = ref<ReportTopic[]>();
+
+const exports = ref<ReportTopic[]>();
 
 const manageRegisterTime = ref<ManageRegisterTime>();
 
@@ -135,6 +139,24 @@ const getReports = async () => {
 };
 
 getReports();
+
+const handleGetReportsExport = async () => {
+  model.isLoading = true;
+  try {
+    const { isReport, reportStatus } = model;
+    const { data: response } = await API.get(`/report`, {
+      params: {
+        isReport: !isReport ? null : isReport,
+        reportStatus: reportStatus !== "" ? reportStatus : null,
+      },
+    });
+    exports.value = response.topics;
+    exports.value ? handleExportReports(exports.value) : null;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const getRegisterTopicTime = async () => {
   try {
@@ -170,7 +192,9 @@ const createDataToExport = (reports: ReportTopic[]) => {
     topicName: topic.name,
     moduleId: topic.module.moduleId,
     moduleName: topic.module.name,
-    reportStatus: reportStatus?reportStatusLabel(reportStatus):'Chưa đăng ký',
+    reportStatus: reportStatus
+      ? reportStatusLabel(reportStatus)
+      : "Chưa đăng ký",
   }));
 };
 
@@ -209,6 +233,9 @@ const handleExportReports = (reports: ReportTopic[]) => {
   utils.book_append_sheet(wb, ws, "Data");
   /* export to XLSX */
   writeFileXLSX(wb, "Danh sach huong dan de tai.xlsx", { cellStyles: true });
+
+  //done
+  model.isLoading = false;
 };
 
 //refetch after change register time

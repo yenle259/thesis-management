@@ -115,6 +115,7 @@
     "getRegisterReportShortName": true,
     "getPiConfirmIcon": true,
     "getPiConfirmLabel": true,
-    "reportStatusLabel": true
+    "reportStatusLabel": true,
+    "getStatusIcon": true
   }
 }

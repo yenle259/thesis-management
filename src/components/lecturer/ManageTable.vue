@@ -13,7 +13,9 @@
           prepend-icon="mdi-export-variant"
           variant="tonal"
           color="blue"
-          @click="handleExport(props.lecturers)"
+          :disabled="props.lecturers.length === 0"
+          :loading="model.isLoading"
+          @click="getLecturersExport(props.search, props.role)"
           >Xuất danh sách</v-btn
         >
       </div>
@@ -118,17 +120,49 @@
 </template>
 
 <script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
 import { LecturerDetails } from "@/apis/models/LecturerDetails";
 import { UserRoleEnum } from "@/apis/models/UserRoleEnum";
 import { utils, writeFileXLSX } from "xlsx";
 
-const emit = defineEmits(["edit", "deactive", "deleted", "refetch"]);
+const emit = defineEmits(["edit", "deleted", "export"]);
 
-const props = defineProps<{ lecturers: LecturerDetails[] }>();
+const props = defineProps<{
+  lecturers: LecturerDetails[];
+  role: UserRoleEnum;
+  search: string;
+}>();
+
+const model = reactive({
+  isLoading: false,
+  filterRole: props.role,
+  filterSearch: props.search,
+});
 
 const isShowDeleteModal = ref(false);
 
+const exports = ref<LecturerDetails[]>();
+
 const selectedStudent = ref<LecturerDetails>();
+
+const getLecturersExport = async (search: string, role: UserRoleEnum) => {
+  model.isLoading = true;
+
+  try {
+    const { data: response } = await API.get(`/user/lecturers`, {
+      params: {
+        search,
+        role,
+      },
+    });
+
+    exports.value = response.lecturers;
+    exports.value ? handleExport(exports.value) : null;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const handleEdit = (student: LecturerDetails) => {
   emit("edit", student);
@@ -175,5 +209,6 @@ const handleExport = (lecturers: LecturerDetails[]) => {
   writeFileXLSX(wb, "Danh sach can bo.xlsx", {
     cellStyles: true,
   });
+  model.isLoading = false;
 };
 </script>

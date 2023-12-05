@@ -32,9 +32,10 @@
               <v-window-item key="list" value="list">
                 <StudentManageTable
                   :students="filterStudents ?? []"
+                  :search="model.search || ''"
+                  :module="model.filterModule || ''"
                   @edit="handleEditStudent"
                   @deleted="handleDeleted"
-                  @refetch="useStudent"
                 >
                   <template v-slot:action>
                     <v-text-field
@@ -147,7 +148,8 @@
               <v-window-item key="file" value="file">
                 <div class="pt-4 min-h-screen">
                   <v-expansion-panels v-model="model.panel" multiple>
-                    <v-expansion-panel elevation="1"
+                    <v-expansion-panel
+                      elevation="1"
                       key="account-form"
                       class="rounded-lg"
                       value="1"

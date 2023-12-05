@@ -13,7 +13,9 @@
           prepend-icon="mdi-export-variant"
           variant="tonal"
           color="blue"
-          @click="handleExport(props.students)"
+          :loading="model.isLoading"
+          :disabled="props.students.length === 0"
+          @click="getStudentsExport(props.search, props.module)"
           >Xuất danh sách</v-btn
         >
       </div>
@@ -130,19 +132,48 @@
 </template>
 
 <script setup lang="ts">
+import API from "@/apis/helpers/axiosBaseConfig";
 import { StudentDetails } from "@/apis/models/StudentDetails";
 
 import { RECENT_SEMESTER_ID } from "@/constant";
 
 import { utils, writeFileXLSX } from "xlsx";
 
-const emit = defineEmits(["edit", "deactive", "deleted", "refetch"]);
+const emit = defineEmits(["edit", "deleted", "export"]);
 
-const props = defineProps<{ students: StudentDetails[] }>();
+const props = defineProps<{
+  students: StudentDetails[];
+  search: string;
+  module: string;
+}>();
+
+const model = reactive({
+  isLoading: false,
+});
 
 const isShowDeleteModal = ref(false);
 
+const exports = ref<StudentDetails[]>();
+
 const selectedStudent = ref<StudentDetails>();
+
+const getStudentsExport = async (search: string, module: string) => {
+  model.isLoading = true;
+
+  try {
+    const { data: response } = await API.get(`/student`, {
+      params: {
+        search,
+        module,
+      },
+    });
+    exports.value = response.students;
+    exports.value ? handleExport(exports.value) : null;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const handleEdit = (student: StudentDetails) => {
   emit("edit", student);
@@ -198,5 +229,6 @@ const handleExport = (students: StudentDetails[]) => {
   writeFileXLSX(wb, "Danh sach hoc phan dang ky cua sinh vien.xlsx", {
     cellStyles: true,
   });
+  model.isLoading = false;
 };
 </script>

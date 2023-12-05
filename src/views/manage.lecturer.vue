@@ -32,9 +32,10 @@
               <v-window-item key="list" value="list">
                 <LecturerManageTable
                   :lecturers="lecturers ?? []"
+                  :search="model.search || ''"
+                  :role="model.role || ''"
                   @edit="handleEditStudent"
                   @deleted="handleDeleted"
-                  @refetch="useStudent"
                 >
                   <template v-slot:action>
                     <v-text-field
@@ -224,30 +225,6 @@ const isOpenEditModal = ref(false);
 
 const selectedUser = ref<StudentDetails>();
 
-const useStudent = async () => {
-  try {
-    const { data: response } = await API.get(`/student`, {
-      params: {
-        page: model.page,
-        limit: model.numberOfItemsPerPage,
-        search: model.search,
-      },
-    });
-
-    students.value = response.students;
-    model.page = response.currentPage;
-    model.count = response.count;
-    model.totalsPage = response.totalPages;
-
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-  return students;
-};
-
-// useStudent();
-
 const getLecturers = async () => {
   try {
     const { data: response } = await API.get(`/user/lecturers`, {
@@ -320,4 +297,5 @@ const handleDeleted = () => {
   getLecturers();
   toast.success("Xóa tài khoản cán bộ thành công");
 };
+
 </script>
