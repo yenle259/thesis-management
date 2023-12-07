@@ -4,35 +4,31 @@
     :subTitle="'Đặt lại mật khẩu cho người dùng'"
     width="700px"
   >
-    <template v-slot:action>
-      <!-- <v-btn color="indigo">Thêm mới học phần</v-btn> -->
-    </template>
-
     <template v-slot:content>
-      <v-card class="mx-auto" max-width="450">
+      <v-card class="mx-auto" variant="text" max-width="450">
         <div>
-          <v-text-field
-            v-model="model.userId"
-            :rules="rules.userId"
-            density="comfortable"
-            clearable
-            variant="solo"
-            label="Mã số người dùng"
-            hint="Hãy nhập vào mã số người dùng"
-            single-line
-            hide-details
+          <v-form v-model="form">
+            <v-text-field
+              v-model="model.userId"
+              :rules="rules.userId"
+              density="comfortable"
+              clearable
+              variant="solo"
+              label="Mã số người dùng"
+              single-line
+            >
+              <template v-slot:append-inner>
+                <v-btn
+                  @click="getUserInfo"
+                  :disabled="!form"
+                  variant="text"
+                  prepend-icon="mdi-magnify"
+                  color="indigo"
+                  >Tìm kiếm
+                </v-btn>
+              </template>
+            </v-text-field></v-form
           >
-            <template v-slot:append-inner>
-              <v-btn
-                @click="getUserInfo"
-                :disabled="model.isDisabledSearch"
-                variant="text"
-                icon="mdi-magnify"
-                color="indigo"
-              >
-              </v-btn>
-            </template>
-          </v-text-field>
         </div>
       </v-card>
       <v-expand-transition class="mt-4 mx-auto" max-width="450">
@@ -100,25 +96,28 @@ import "vue3-toastify/dist/index.css";
 
 useTitle("QLĐT - Quản lý mật khẩu");
 
+const { copy, copied } = useClipboard();
+
 const user = ref<StudentDetails | LecturerDetails>();
+
+const form = ref();
 
 const model = reactive({
   userId: "",
-  isDisabledSearch: true,
+  isDisabledSearch: false,
   isLoading: false,
 });
 
 const rules = ref({
   userId: [
     (value: any) => {
-      if (value?.length === 4) return (model.isDisabledSearch = false);
-      if (value?.length === 8) return (model.isDisabledSearch = false);
-      return (model.isDisabledSearch = true);
+      if (value?.length == 0) return "Hãy nhập mã số người dùng";
+      if (value?.length == 4) return true;
+      if (value?.length == 8) return true;
+      return "Mã số người dùng chưa đúng định dạng";
     },
   ],
 });
-
-const { copy, copied } = useClipboard();
 
 const getUserInfo = async () => {
   try {
@@ -141,6 +140,7 @@ const handleResetPassword = async () => {
     return response;
   } catch (error) {
     console.log(error);
+    console.log("jj");
   }
 };
 </script>

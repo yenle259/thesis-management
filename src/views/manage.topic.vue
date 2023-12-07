@@ -222,7 +222,7 @@ const handleExportReports = (reports: ReportTopic[]) => {
     { wch: 20 },
     { wch: 70 },
     { wch: 15 },
-    { wch: 20 },
+  { wch: 20 },
     { wch: 20 },
   ];
 

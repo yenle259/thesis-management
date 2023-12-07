@@ -10,28 +10,24 @@
           variant="text"
           max-width="500"
         >
-          <v-form v-model="form">
-            <v-card-text>
-              <v-tabs
-                class="mb-8"
-                v-model="model.tab"
-                color="indigo"
-                fixed-tabs
+          <div>
+            <v-tabs class="mb-8" v-model="model.tab" color="indigo" fixed-tabs>
+              <v-tab
+                :variant="model.tab === 'info' ? 'tonal' : 'text'"
+                value="info"
+                >CẬP NHẬT THÔNG TIN</v-tab
               >
-                <v-tab
-                  :variant="model.tab === 'info' ? 'tonal' : 'text'"
-                  value="info"
-                  >CẬP NHẬT THÔNG TIN</v-tab
-                >
-                <v-tab
-                  :variant="model.tab === 'password' ? 'tonal' : 'text'"
-                  value="password"
-                  >CẬP NHẬT MẬT KHẨU</v-tab
-                >
-              </v-tabs>
-              <v-window v-model="model.tab" class="mb-4 px-3">
-                <v-window-item key="info" value="info">
-                  <div>
+              <v-tab
+                :variant="model.tab === 'password' ? 'tonal' : 'text'"
+                value="password"
+                >CẬP NHẬT MẬT KHẨU</v-tab
+              >
+            </v-tabs>
+
+            <v-window v-model="model.tab" class="mb-4 px-3">
+              <v-window-item key="info" value="info">
+                <div>
+                  <v-form v-model="formInfo">
                     <v-text-field
                       v-model="model.userId"
                       :required="true"
@@ -43,7 +39,6 @@
                       variant="underlined"
                       density="comfortable"
                     ></v-text-field>
-
                     <v-text-field
                       v-model="model.name"
                       :required="true"
@@ -63,9 +58,19 @@
                       variant="underlined"
                       density="comfortable"
                     ></v-text-field>
-                  </div>
-                </v-window-item>
-                <v-window-item key="password" value="password">
+                    <v-btn
+                      block
+                      :disabled="!formInfo"
+                      color="indigo"
+                      @click="handleEditTopic"
+                    >
+                      <span> Cập nhật </span>
+                    </v-btn>
+                  </v-form>
+                </div>
+              </v-window-item>
+              <v-window-item key="password" value="password">
+                <v-form v-model="formPassword">
                   <v-text-field
                     v-model="model.password"
                     :rules="rules.password"
@@ -85,6 +90,7 @@
                     :append-inner-icon="
                       model.showRePw ? 'mdi-eye' : 'mdi-eye-off'
                     "
+                    :disabled="model.password.length == 0"
                     @click:append-inner="model.showRePw = !model.showRePw"
                     class="mb-2"
                     counter
@@ -92,20 +98,28 @@
                     label="Nhập lại mật khẩu"
                     density="comfortable"
                   ></v-text-field>
-                </v-window-item>
-              </v-window>
-              <v-btn
-                block
-                :disabled="!form"
-                color="indigo"
-                :onclick="
-                  model.tab === 'info' ? handleEditTopic : handleUpdatePassword
-                "
-              >
-                <span> Cập nhật </span>
-              </v-btn>
-            </v-card-text>
-          </v-form>
+                  <v-btn
+                    block
+                    :disabled="!formPassword"
+                    color="indigo"
+                    @click="handleUpdatePassword"
+                  >
+                    <span> Cập nhật </span>
+                  </v-btn>
+                </v-form>
+              </v-window-item>
+            </v-window>
+            <!-- <v-btn
+              block
+              :disabled="!model.formInfo || !model.formPassword"
+              color="indigo"
+              :onclick="
+                model.tab === 'info' ? handleEditTopic : handleUpdatePassword
+              "
+            >
+              <span> Cập nhật </span>
+            </v-btn> -->
+          </div>
         </v-card>
       </template>
     </CustomCard>
@@ -123,7 +137,8 @@ const { user } = storeToRefs(useAuthStore());
 
 const modules = ref<ModuleDetails[]>();
 
-const form = ref();
+const formInfo = ref(false);
+const formPassword = ref(false);
 
 const route = useRoute();
 
@@ -181,10 +196,10 @@ const rules = ref({
   ],
   rePassword: [
     (value: any) => {
-      if (model.password !== model.rePassword)
-        return "Mật khẩu không chính xác";
-      if (value?.length >= 8) return true;
-      return "Mật khẩu phải hơn 8 kí tự";
+      if (value?.length == 0) return "Hãy nhập lại mật khẩu";
+      if (model.rePassword !== model.password)
+        return "Mật khẩu nhập lại không chính xác";
+      return true;
     },
   ],
 });
