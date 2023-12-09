@@ -14,7 +14,7 @@
       @create="isOpenSuggestModal = true"
     >
       <template v-slot:action>
-        <div v-if="!user?.role">
+        <div v-if="!user?.role && module?.moduleType !== ''">
           <v-tooltip text="Đề xuất đề tài muốn thực hiện" location="top">
             <template v-slot:activator="{ props }">
               <v-btn
