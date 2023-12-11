@@ -20,21 +20,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          class="text-sm"
-          v-for="({ moduleId, name }, index) in modules"
-          :key="index"
-        >
+        <tr class="text-sm" v-for="(module, index) in modules" :key="index">
           <td>
             {{ index + 1 }}
           </td>
           <td>
-            <v-chip :color="getTopicModuleColor(moduleId)" size="small">
-              {{ moduleId }}
+            <v-chip :color="getTopicModuleColor(module.moduleId)" size="small">
+              {{ module.moduleId }}
             </v-chip>
           </td>
           <td>
-            {{ name }}
+            {{ module.name }}
           </td>
           <td>
             <v-tooltip text="Xóa học phần" location="top">
@@ -45,7 +41,7 @@
                   variant="plain"
                   icon="mdi-delete-outline"
                   color="red-accent-1"
-                  @click="handleRemove(moduleId)"
+                  @click="handleOpenRemove(module)"
                 ></v-btn>
               </template>
             </v-tooltip>
@@ -105,6 +101,46 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-dialog v-model="model.isDeleteModal" persistent width="500px" closeable>
+    <v-card class="pt-3 rounded-lg pb-2 px-2">
+      <v-card-title class="d-flex text-h5 text-indigo justify-between">
+        <div>
+          <span class="mb-1">Xác nhận xóa học phần</span>
+          <p class="font-light text-caption text-black">
+            Xác nhận xóa học phần với các thông tin bên dưới
+          </p>
+        </div>
+        <v-btn icon @click="handleCancel" variant="flat"
+          ><v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-card-text>
+        <p class="mb-1">
+          <span class="text-subtitle-2">Mã học phần: </span
+          ><span class="uppercase">{{ selectedModule?.moduleId }}</span>
+        </p>
+        <p class="mb-1">
+          <span class="text-subtitle-2">Tên học phần: </span
+          >{{ selectedModule?.name }}
+        </p>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red" variant="text" @click="handleCancel()"> Hủy </v-btn>
+        <v-btn
+          v-if="selectedModule"
+          color="green-darken-1"
+          variant="tonal"
+          @click="handleRemove(selectedModule?.moduleId)"
+        >
+          Xác nhận
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -116,10 +152,13 @@ import "vue3-toastify/dist/index.css";
 
 const emit = defineEmits(["updated-module"]);
 
+const selectedModule = ref<ModuleDetails>();
+
 defineProps<{ modules: ModuleDetails[] }>();
 
 const model = reactive({
   isShow: false,
+  isDeleteModal: false,
   form: false,
   moduleId: "",
   name: "",
@@ -140,8 +179,14 @@ const rules = ref({
   ],
 });
 
+const handleOpenRemove = (module: ModuleDetails) => {
+  model.isDeleteModal = true;
+  selectedModule.value = module;
+};
+
 const handleCancel = () => {
   model.isShow = false;
+  model.isDeleteModal = false;
   model.moduleId = "";
   model.name = "";
 };
@@ -162,10 +207,13 @@ const handleSubmit = async () => {
 };
 
 const handleRemove = async (moduleId: string) => {
+  model.isDeleteModal = false;
   try {
     const { data: response } = await API.delete(`/module/remove/${moduleId}`);
-    emit("updated-module");
-    toast.success(`Đã xóa học phần ${moduleId}`);
+    if (response.statusCode === 200) {
+      toast.success(`Đã xóa học phần với mã số ${moduleId}`);
+      emit("updated-module");
+    }
     return response;
   } catch (error: any) {
     console.log(error);

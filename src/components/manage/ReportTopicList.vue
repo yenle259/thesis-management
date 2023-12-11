@@ -1,4 +1,76 @@
 <template>
+  <!-- <div class="grid grid-cols-4 gap-x-3 mb-3">
+    <v-hover>
+      <template v-slot:default="{ isHovering, props }">
+        <v-card
+          class="d-flex flex-row rounded-lg"
+          :color="isHovering ? 'orange-lighten-5' : undefined"
+          :elevation="isHovering ? 3 : 1"
+          v-bind="props"
+        >
+          <div class="self-center">
+            <p class="uppercase text-sm">Chưa đăng ký</p>
+            <p>
+              <span class="text-2xl"> 0 </span>
+              <span class="text-grey"> /{{ reports?.length }} </span>
+            </p>
+          </div>
+          <template v-slot:prepend>
+            <v-icon color="orange" size="x-large"> mdi-progress-pencil </v-icon>
+          </template>
+        </v-card>
+      </template>
+    </v-hover>
+    <v-hover>
+      <template v-slot:default="{ isHovering, props }">
+        <v-card
+          class="d-flex flex-row rounded-lg"
+          :color="isHovering ? 'green-lighten-5' : undefined"
+          :elevation="isHovering ? 3 : 1"
+          v-bind="props"
+        >
+          <div class="self-center">
+            <p class="uppercase text-sm">Đã đăng ký báo cáo</p>
+            <p>
+              <span class="text-2xl"> 0 </span>
+              <span class="text-grey"> /{{ reports?.length }} </span>
+            </p>
+          </div>
+          <template v-slot:prepend>
+            <v-icon color="green" size="x-large"> mdi-progress-check </v-icon>
+          </template></v-card
+        >
+      </template>
+    </v-hover>
+    <v-hover>
+      <template v-slot:default="{ isHovering, props }">
+        <v-card
+          class="d-flex flex-row rounded-lg"
+          :color="isHovering ? 'green-lighten-5' : undefined"
+          :elevation="isHovering ? 3 : 1"
+          v-bind="props"
+        >
+          <div class="self-center">
+            <p class="uppercase text-sm">Đã đăng ký báo cáo</p>
+            <p>
+              <span class="text-2xl"> 0 </span>
+              <span class="text-grey"> /{{ reports?.length }} </span>
+            </p>
+          </div>
+          <template v-slot:prepend>
+            <v-icon color="green" size="x-large"> mdi-check-circle </v-icon>
+          </template></v-card
+        >
+      </template>
+    </v-hover>
+    <v-list-item variant="elevated" class="rounded-sm" color="orange">
+      <p>Chưa đăng ký báo cáo</p>
+      <p class="text-overline">0/12</p>
+      <template v-slot:prepend>
+        <v-icon color="orange" size="x-large"> mdi-progress-pencil </v-icon>
+      </template>
+    </v-list-item>
+  </div> -->
   <v-card v-if="reports" class="rounded-lg">
     <v-table>
       <thead class="font-bold">
@@ -16,16 +88,26 @@
       <tbody>
         <tr
           class="text-sm"
-          v-for="({ pi, student, topic, reportStatus }, index) in reports"
+          v-for="(
+            { pi: { name, email, userId }, student, topic, reportStatus }, index
+          ) in reports"
           :key="index"
         >
           <td>
-            <v-list-item class="rounded-lg w-38">
+            <v-list-item
+              class="rounded-lg w-38"
+              @click="
+                router.push({
+                  path: '/manage/topic',
+                  query: { userId },
+                })
+              "
+            >
               <p class="text-grey-800 text-xs">
-                {{ pi.name }}
+                {{ name }}
               </p>
               <p class="text-caption text-xs text-grey">
-                {{ pi.email }}
+                {{ email }}
               </p>
             </v-list-item>
           </td>
@@ -74,7 +156,7 @@
                     :id="`review-menu-${index}`"
                     :color="getStatusColor(reportStatus.piConfirm)"
                     variant="tonal"
-                    class="rounded-s-0 ps-1 "
+                    class="rounded-s-0 ps-1"
                     min-width="34px"
                     :ripple="false"
                     size="small"
@@ -121,6 +203,7 @@
 </template>
 
 <script setup lang="ts">
+import router from "@/router";
 import { RegisterStatusEnum } from "@/apis/models/RegisterStatusEnum";
 import { ReportStatus, ReportTopic } from "@/apis/models/ReportTopic";
 import {

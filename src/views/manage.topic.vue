@@ -27,16 +27,36 @@
               >{{ label }}
             </v-tab>
           </v-tabs>
-          <v-btn
-            class="hover:shadow-sm"
-            v-if="reports"
-            prepend-icon="mdi-export-variant"
-            variant="tonal"
-            color="blue"
-            :disabled="reports.length === 0"
-            @click="handleGetReportsExport"
-            >Xuất danh sách</v-btn
-          >
+          <div class="flex flex-row">
+            <!-- <div class="w-60 me-2">
+              <v-autocomplete
+                v-model="model.filterLecturer"
+                :items="lecturerOptions"
+                variant="underlined"
+                density="compact"
+                label="Giảng viên"
+                clearable
+                chips
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    :title="item?.title"
+                    :subtitle="item.raw.subtitle"
+                  ></v-list-item> </template
+              ></v-autocomplete>
+            </div> -->
+            <v-btn
+              class="hover:shadow-sm"
+              v-if="reports"
+              prepend-icon="mdi-export-variant"
+              variant="tonal"
+              color="blue"
+              :disabled="reports.length === 0"
+              @click="handleGetReportsExport"
+              >Xuất danh sách</v-btn
+            >
+          </div>
         </div>
         <ManageReportTopicList :reports="reports || []">
           <template v-slot:pagination>
@@ -93,6 +113,7 @@
 import API from "@/apis/helpers/axiosBaseConfig";
 import { ManageRegisterTime } from "@/apis/models/ManageRegisterTime";
 import { ReportTopic } from "@/apis/models/ReportTopic";
+import { UserDetails } from "@/apis/models/UserDetails";
 
 import { PAGINATION_OPTIONS } from "@/constant";
 import { REPORT_TOPIC } from "@/constants/tab";
@@ -100,10 +121,20 @@ import { utils, writeFileXLSX } from "xlsx";
 
 useTitle("QLĐT - Quản lý đề tài được duyệt");
 
+const route = useRouter();
+
+watch(
+  () => route,
+  () => {
+    console.log(route);
+  }
+);
+
 const model = reactive({
   tab: REPORT_TOPIC[0].value,
   isReport: false,
   reportStatus: "",
+  filterLecturer: null,
   page: 1,
   count: 0,
   totalsPage: 1,
@@ -114,6 +145,8 @@ const model = reactive({
 const reports = ref<ReportTopic[]>();
 
 const exports = ref<ReportTopic[]>();
+
+const lecturers = ref<UserDetails[]>();
 
 const manageRegisterTime = ref<ManageRegisterTime>();
 
@@ -172,6 +205,25 @@ const getRegisterTopicTime = async () => {
 
 getRegisterTopicTime();
 
+const getLecturers = async () => {
+  try {
+    const { data: response } = await API.get("/user/lecturers");
+    lecturers.value = response.lecturers;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getLecturers();
+
+const lecturerOptions = computed(() => {
+  return lecturers.value?.map(({ name, _id, email }) => ({
+    subtitle: email,
+    title: name,
+    value: _id,
+  }));
+});
+
 watch(
   () => model.tab,
   () => {
@@ -222,7 +274,7 @@ const handleExportReports = (reports: ReportTopic[]) => {
     { wch: 20 },
     { wch: 70 },
     { wch: 15 },
-  { wch: 20 },
+    { wch: 20 },
     { wch: 20 },
   ];
 

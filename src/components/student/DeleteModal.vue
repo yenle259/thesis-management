@@ -1,7 +1,7 @@
 <template>
   <div v-if="props.student">
-    <v-dialog v-model="dialog" persistent width="600px">
-      <v-card class="pt-4 pb-2 px-2">
+    <v-dialog v-model="dialog" persistent width="550px">
+      <v-card class="pt-4 pb-2 px-2 rounded-lg">
         <v-card-title class="d-flex text-h5 text-indigo justify-between">
           <div>
             <span class="mb-1">Xóa tài khoản</span>
@@ -61,9 +61,12 @@ const handleCancel = () => {
 };
 
 const handleDelete = async (student: StudentDetails) => {
+  emit("cancel");
   try {
-    await API.delete(`/student/${student._id}`);
-    emit("deleted");
+    const { data: response } = await API.delete(`/student/${student._id}`);
+    if (response.statusCode === 200) {
+      emit("deleted");
+    }
   } catch (error) {
     console.log(error);
   }
