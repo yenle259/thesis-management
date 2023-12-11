@@ -295,7 +295,6 @@ const handleCreated = () => {
 
 const handleDeleted = () => {
   getLecturers();
-  toast.success("Xóa tài khoản cán bộ thành công");
 };
 
 </script>

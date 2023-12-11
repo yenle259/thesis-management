@@ -183,13 +183,6 @@ const isRegister = computed(() => {
   }
 });
 
-watch(
-  () => props.topics,
-  () => {
-    console.log(props.topics.length);
-  }
-);
-
 // const topics = computed(() => {
 //   return props.topics.filter(
 //     ({ module }) => module.moduleId === model.commonModuleType

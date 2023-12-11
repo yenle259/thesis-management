@@ -89,6 +89,7 @@
                       variant="plain"
                       icon="mdi-delete-outline"
                       color="red-accent-1"
+                      @click="handleDeleteLecturer(lecturer)"
                     ></v-btn>
                   </template>
                 </v-tooltip>
@@ -111,9 +112,9 @@
     </div>
   </v-card>
 
-  <StudentDeleteModal
+  <LecturerDeleteModal
     :is-show="isShowDeleteModal"
-    :student="selectedStudent || {}"
+    :lecturer="selectedLecturer || {}"
     @cancel="isShowDeleteModal = false"
     @deleted="handleDeleted"
   />
@@ -143,7 +144,7 @@ const isShowDeleteModal = ref(false);
 
 const exports = ref<LecturerDetails[]>();
 
-const selectedStudent = ref<LecturerDetails>();
+const selectedLecturer = ref<LecturerDetails>();
 
 const getLecturersExport = async (search: string, role: UserRoleEnum) => {
   model.isLoading = true;
@@ -166,6 +167,11 @@ const getLecturersExport = async (search: string, role: UserRoleEnum) => {
 
 const handleEdit = (student: LecturerDetails) => {
   emit("edit", student);
+};
+
+const handleDeleteLecturer = (lecturer: LecturerDetails) => {
+  isShowDeleteModal.value = true;
+  selectedLecturer.value = lecturer;
 };
 
 const handleDeleted = () => {
