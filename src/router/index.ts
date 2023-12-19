@@ -42,12 +42,6 @@ const routes = [
         component: () => import("@/views/home.vue"),
       },
       {
-        path: "/signup",
-        name: "Sign Up",
-        component: () => import("@/views/signup.vue"),
-        meta: { requiresAuth: true },
-      },
-      {
         path: "/user",
         name: "User Profile",
         component: () => import("@/views/user.vue"),
@@ -56,7 +50,7 @@ const routes = [
       {
         path: "/me/profile",
         name: "Profile",
-        component: () => import("@/views/account.vue"),
+        component: () => import("@/views/my.account.vue"),
         meta: { requiresAuth: true },
       },
       {

@@ -109,16 +109,6 @@
                 </v-form>
               </v-window-item>
             </v-window>
-            <!-- <v-btn
-              block
-              :disabled="!model.formInfo || !model.formPassword"
-              color="indigo"
-              :onclick="
-                model.tab === 'info' ? handleEditTopic : handleUpdatePassword
-              "
-            >
-              <span> Cập nhật </span>
-            </v-btn> -->
           </div>
         </v-card>
       </template>
