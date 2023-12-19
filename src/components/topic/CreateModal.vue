@@ -21,7 +21,7 @@
               v-model="model.name"
               :rules="rules.name"
               clearable
-              label="Tên đề tài"
+              label="Tên đề tài / Hướng đề tài"
               hint="Nhập vào tên đề tài"
               variant="outlined"
               class="mb-2"
